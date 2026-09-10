@@ -1,11 +1,24 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, ChangeEvent } from 'react'
 
-const RadioGroup = ({ label, name, defaultValue, items, direction, onSelected, ...props }) => {
-    const [selected, setSelected] = useState("")
+interface RadioItem {
+    id: string | number;
+    name: string;
+}
 
-    const handleChecked = (e) => {
-        const { value, checked } = e.target
+interface RadioGroupProps {
+    label?: string;
+    name: string;
+    defaultValue?: string | number;
+    items: RadioItem[];
+    direction?: 'row' | 'col';
+    onSelected: (data: { name: string; value: string }) => void;
+}
+
+const RadioGroup: React.FC<RadioGroupProps> = ({ label, name, defaultValue, items = [], direction, onSelected }) => {
+    const [selected, setSelected] = useState<string>("")
+
+    const handleChecked = (e: ChangeEvent<HTMLInputElement>) => {
+        const { value } = e.target
 
         setSelected(value)
         onSelected({ name, value })

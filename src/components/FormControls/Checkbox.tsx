@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { Field } from 'formik'
 
-const Checkbox = (props) => {
+interface CheckboxProps {
+    name: string;
+    value?: string | number;
+    label?: React.ReactNode;
+    checked?: number | boolean;
+    handleChange: (checked: boolean) => void;
+}
+
+const Checkbox: React.FC<CheckboxProps> = (props) => {
     const [checked, setChecked] = useState(false)
 
     useEffect(() => {
-        setChecked(props.checked == 1)
+        setChecked(props.checked == 1 || props.checked === true)
     }, [props.checked])
 
     return (
@@ -15,7 +23,7 @@ const Checkbox = (props) => {
                 name={props.name}
                 value={props.value}
                 checked={checked}
-                onChange={(e) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setChecked(e.target.checked)
                     props.handleChange(e.target.checked)
                 }}

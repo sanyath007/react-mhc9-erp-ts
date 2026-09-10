@@ -2,14 +2,23 @@ import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { WatDatePicker } from 'thaidatepicker-react'
 
-const ThDatePicker = ({ onChange, defaultValue, error, ...props}) => {
-    const [selectedDate, setSelectedDate] = useState('')
+interface ThDatePickerProps {
+    onChange: (christDate: string, buddhistDate: string) => void;
+    defaultValue?: string;
+    error?: boolean;
+    [key: string]: any;
+}
+
+const ThDatePicker: React.FC<ThDatePickerProps> = ({ onChange, defaultValue = '', error, ...props }) => {
+    const [selectedDate, setSelectedDate] = useState<string>('')
 
     useEffect(() => {
-        setSelectedDate(defaultValue)
+        if (defaultValue) {
+            setSelectedDate(defaultValue)
+        }
     }, [defaultValue])
 
-    const handleChange = (christDate, buddhistDate) => {
+    const handleChange = (christDate: string, buddhistDate: string) => {
         onChange(christDate, buddhistDate)
 
         setSelectedDate(christDate)

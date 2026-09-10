@@ -1,8 +1,23 @@
 import React from 'react'
 import { Pagination as BsPagination } from 'react-bootstrap'
 
-const Pagination = ({ pager, onPageClick }) => {
-    const handlePageClick = (url) => {
+interface Pager {
+    current_page: number;
+    last_page: number;
+    total: number;
+    first_page_url: string;
+    prev_page_url: string | null;
+    next_page_url: string | null;
+    last_page_url: string;
+}
+
+interface PaginationProps {
+    pager: Pager | null;
+    onPageClick: (url: string) => void;
+}
+
+const Pagination: React.FC<PaginationProps> = ({ pager, onPageClick }) => {
+    const handlePageClick = (url: string) => {
         onPageClick(url);
     };
 
@@ -17,7 +32,7 @@ const Pagination = ({ pager, onPageClick }) => {
 
                     <BsPagination>
                         <BsPagination.First disabled={pager.current_page === 1} onClick={() => handlePageClick(pager.first_page_url)} />
-                        <BsPagination.Prev disabled={!pager.prev_page_url} onClick={() => handlePageClick(pager.prev_page_url)} />
+                        <BsPagination.Prev disabled={!pager.prev_page_url} onClick={() => handlePageClick(pager.prev_page_url as string)} />
                         {/* <BsPagination.Item>{1}</BsPagination.Item>
                         <BsPagination.Ellipsis />
 
@@ -29,7 +44,7 @@ const Pagination = ({ pager, onPageClick }) => {
 
                         <BsPagination.Ellipsis />
                         <BsPagination.Item>{20}</BsPagination.Item> */}
-                        <BsPagination.Next disabled={!pager.next_page_url} onClick={() => handlePageClick(pager.next_page_url)} />
+                        <BsPagination.Next disabled={!pager.next_page_url} onClick={() => handlePageClick(pager.next_page_url as string)} />
                         <BsPagination.Last disabled={pager.current_page === pager.last_page} onClick={() => handlePageClick(pager.last_page_url)} />
                     </BsPagination>
                 </div>

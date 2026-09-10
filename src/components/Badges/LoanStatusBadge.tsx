@@ -1,6 +1,10 @@
 import React from 'react'
 
-const LoanStatusBadge = ({ status }) => {
+interface LoanStatusBadgeProps {
+    status: number;
+}
+
+const LoanStatusBadge: React.FC<LoanStatusBadgeProps> = ({ status }) => {
     return (
         <div className="text-lg text-center mt-1">
             {status === 1 && <span className="badge rounded-pill text-bg-secondary ml-1">รอดำเนินการ</span>}

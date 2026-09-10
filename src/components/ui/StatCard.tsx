@@ -1,7 +1,17 @@
 import React from 'react';
 
-const StatCard = ({ title, icon, target, received, colorTheme = 'blue' }) => {
-    const themeClasses = {
+type ColorTheme = 'blue' | 'green' | 'amber' | 'purple' | 'pink';
+
+interface StatCardProps {
+    title: string;
+    icon: React.ReactNode;
+    target: number | string;
+    received: number | string;
+    colorTheme?: ColorTheme;
+}
+
+const StatCard: React.FC<StatCardProps> = ({ title, icon, target, received, colorTheme = 'blue' }) => {
+    const themeClasses: Record<ColorTheme, string> = {
         blue: 'bg-blue-100 text-blue-600',
         green: 'bg-emerald-100 text-emerald-600',
         amber: 'bg-amber-100 text-amber-600',
