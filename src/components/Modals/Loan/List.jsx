@@ -5,8 +5,8 @@ import { Modal } from 'react-bootstrap'
 import { getLoans } from '../../../features/slices/loan/loanSlice';
 import { currency, generateQueryString, toShortTHDate } from '../../../utils'
 import Loading from '../../ui/Loading';
+import Pagination from '../../ui/Pagination';
 import EmployeeCard from '../../Employee/Card';
-import Pagination from '../../Pagination';
 import FilteringInputs from './FilteringInputs';
 
 const ModalLoanList = ({ isShow, onHide, onSelect }) => {

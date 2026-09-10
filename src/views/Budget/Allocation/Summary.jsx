@@ -7,7 +7,7 @@ import { getAllAllocations } from '../../../features/slices/budget-allocation/bu
 import { currency, getUrlParam } from '../../../utils'
 import FilteringInputs from './FilteringInputs'
 import BudgetTypeBadge from '../../../components/Budget/BudgetTypeBadge'
-import Pagination from '../../../components/Pagination'
+import Pagination from '../../../components/ui/Pagination'
 import moment from 'moment'
 import { useCookies } from 'react-cookie'
 
@@ -69,16 +69,16 @@ const AllocationSummary = () => {
                         <tbody>
                             {budgets && budgets.map((budget, index) => (
                                 <tr key={budget.id}>
-                                    <td className="text-center">{index+pager?.from}</td>
+                                    <td className="text-center">{index + pager?.from}</td>
                                     <td>
                                         <p className="text-sm text-gray-500">{budget.activity?.project?.plan?.name}</p>
-                                        <p className="text-sm font-semibold">{budget.activity?.project?. name}</p>
+                                        <p className="text-sm font-semibold">{budget.activity?.project?.name}</p>
                                         <p>
                                             <span className="font-bold text-blue-600 mr-1">{budget.activity?.name}</span>
                                             <BudgetTypeBadge type={budget.type} />
                                         </p>
                                     </td>
-                                    <td className="text-center">{budget.activity && budget.activity?.year+543}</td>
+                                    <td className="text-center">{budget.activity && budget.activity?.year + 543}</td>
                                     <td className="text-center">{allocationCount(budget.id)}</td>
                                     <td className="text-right">{currency.format(budget.total)}</td>
                                     <td className="text-center">

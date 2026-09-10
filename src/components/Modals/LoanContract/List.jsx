@@ -6,7 +6,7 @@ import { getContracts } from '../../../features/slices/loan-contract/loanContrac
 import { currency, generateQueryString, toShortTHDate } from '../../../utils'
 import FilteringInputs from './FilteringInputs';
 import Loading from '../../ui/Loading';
-import Pagination from '../../Pagination';
+import Pagination from '../../ui/Pagination';
 import EmployeeCard from '../../Employee/Card';
 
 const ModalLoanContractList = ({ isShow, onHide, onSelect }) => {

@@ -5,7 +5,7 @@ import { Breadcrumb, Row } from 'react-bootstrap'
 import { FaPencilAlt, FaSearch, FaTrash } from 'react-icons/fa'
 import { generateQueryString } from '../../../utils'
 import { getSuppliers } from '../../../features/slices/supplier/supplierSlice'
-import Pagination from '../../../components/Pagination'
+import Pagination from '../../../components/ui/Pagination'
 import Loading from '../../../components/ui/Loading'
 import FilteringInputs from '../../../components/Modals/Supplier/FilteringInputs'
 

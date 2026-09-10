@@ -6,7 +6,7 @@ import { getRequisitions } from '../../../features/slices/requisition/requisitio
 import { useGetInitialFormDataQuery } from '../../../features/services/requisition/requisitionApi';
 import { currency, generateQueryString, toShortTHDate } from '../../../utils';
 import Loading from '../../ui/Loading';
-import Pagination from '../../Pagination';
+import Pagination from '../../ui/Pagination';
 import FilteringInputs from '../../Requisition/FilteringInputs';
 
 const initialFormData = {

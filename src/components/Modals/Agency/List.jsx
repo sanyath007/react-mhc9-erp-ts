@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'react-bootstrap'
 import { getAgencies } from '../../../features/slices/agency/agencySlice';
-import Loading from '../../ui/Loading';
 import FilteringInputs from './FilteringInputs';
-import Pagination from '../../Pagination'
+import Loading from '../../ui/Loading';
+import Pagination from '../../ui/Pagination'
 
 const initialFilters = {
     name: '',

@@ -17,7 +17,7 @@ import moment from 'moment'
 import { currency, generateQueryString } from '../../../utils'
 import { getActivities, destroy, toggle, resetDeleted } from '../../../features/slices/budget-activity/budgetActivitySlice'
 import FilteringInputs from './FilteringInputs'
-import Pagination from '../../../components/Pagination'
+import Pagination from '../../../components/ui/Pagination'
 import Loading from '../../../components/ui/Loading'
 
 const BudgetActivityList = () => {

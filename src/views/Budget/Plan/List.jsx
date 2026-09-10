@@ -9,7 +9,7 @@ import { generateQueryString, getUrlParam } from '../../../utils'
 import { getBudgetPlans, resetDeleted, destroy } from '../../../features/slices/budget-plan/budgetPlanSlice'
 import FilteringInputs from './FilteringInputs'
 import Loading from '../../../components/ui/Loading'
-import Pagination from '../../../components/Pagination'
+import Pagination from '../../../components/ui/Pagination'
 import BudgetSummary from '../BudgetSummary'
 
 const BudgetPlanList = () => {

@@ -10,7 +10,7 @@ import { getRefunds, destroy, resetDeleted } from '../../../features/slices/loan
 import { currency, generateQueryString, toShortTHDate } from '../../../utils'
 import FilteringInputs from './FilteringInputs'
 import Loading from '../../../components/ui/Loading'
-import Pagination from '../../../components/Pagination'
+import Pagination from '../../../components/ui/Pagination'
 import EmployeeCard from '../../../components/Employee/Card'
 
 const LoanRefundList = () => {

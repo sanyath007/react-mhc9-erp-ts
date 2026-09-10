@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { useCookies } from 'react-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb } from 'react-bootstrap'
@@ -9,8 +10,7 @@ import { currency, generateQueryString, toShortTHDate } from '../../../utils'
 import { useGetInitialFormDataQuery } from '../../../features/services/inspection/inspectionApi'
 import { getInspections, destroy, resetDeleted } from '../../../features/slices/inspection/inspectionSlice'
 import Loading from '../../../components/ui/Loading'
-import Pagination from '../../../components/Pagination'
-import { toast } from 'react-toastify'
+import Pagination from '../../../components/ui/Pagination'
 import InspectionFilteringInputs from '../../../components/Inspection/FilteringInputs'
 
 const initialFormData = {

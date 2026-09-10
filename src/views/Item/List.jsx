@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { currency } from '../../utils';
 import { getItems, destroy, resetDeleted } from '../../features/slices/item/itemSlice';
 import { useGetInitialFormDataQuery } from '../../features/services/item/itemApi'
-import Pagination from '../../components/Pagination'
+import Pagination from '../../components/ui/Pagination'
 import Loading from '../../components/ui/Loading';
 import Item from '../../components/Item/Item';
 import FilteringInputs from '../../components/Item/FilteringInputs'

@@ -8,7 +8,7 @@ import { getBudgets } from '../../../features/slices/budget/budgetSlice';
 import { useGetInitialFormDataQuery } from '../../../features/services/budget/budgetApi';
 import FilteringInputs from './FilteringInputs';
 import Loading from '../../ui/Loading';
-import Pagination from '../../Pagination';
+import Pagination from '../../ui/Pagination';
 import BudgetTypeBadge from '../../Budget/BudgetTypeBadge';
 
 

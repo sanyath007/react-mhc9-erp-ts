@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { currency, generateQueryString, toShortTHDate } from '../../../utils'
 import { getOrders, destroy, resetDeleted } from '../../../features/slices/order/orderSlice'
 import Loading from '../../../components/ui/Loading'
-import Pagination from '../../../components/Pagination'
+import Pagination from '../../../components/ui/Pagination'
 import OrderFilteringInputs from '../../../components/Order/FilteringInputs'
 
 const OrderList = () => {

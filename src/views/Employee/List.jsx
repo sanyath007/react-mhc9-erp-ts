@@ -7,7 +7,7 @@ import { destroy, getEmployees } from '../../features/slices/employee/employeeSl
 import { useGetInitialFormDataQuery } from '../../features/services/employee/employeeApi'
 import { generateQueryString } from '../../utils'
 import Loading from '../../components/ui/Loading'
-import Pagination from '../../components/Pagination'
+import Pagination from '../../components/ui/Pagination'
 import FilteringInputs from '../../components/Employee/FilteringInputs'
 
 const initialFilters = {

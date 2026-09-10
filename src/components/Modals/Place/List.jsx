@@ -4,7 +4,7 @@ import { Modal } from 'react-bootstrap'
 import { getPlaces } from '../../../features/slices/place/placeSlice';
 import Loading from '../../ui/Loading';
 import FilteringInputs from './FilteringInputs';
-import Pagination from '../../Pagination'
+import Pagination from '../../ui/Pagination'
 
 const initialFilters = {
     name: '',

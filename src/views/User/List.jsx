@@ -8,7 +8,7 @@ import { activate, destroy, getUsers, resetSuccess } from '../../features/slices
 import { useGetInitialFormDataQuery } from '../../features/services/user/userApi'
 import { generateQueryString } from '../../utils'
 import Loading from '../../components/ui/Loading'
-import Pagination from '../../components/Pagination'
+import Pagination from '../../components/ui/Pagination'
 import FilteringInputs from '../../components/Employee/FilteringInputs'
 
 const initialFilters = {

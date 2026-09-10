@@ -5,7 +5,7 @@ import { Breadcrumb } from 'react-bootstrap'
 import { FaPencilAlt, FaSearch, FaTrash } from 'react-icons/fa';
 import { getPlaces } from '../../features/slices/place/placeSlice'
 import Loading from '../../components/ui/Loading'
-import Pagination from '../../components/Pagination'
+import Pagination from '../../components/ui/Pagination'
 import FilteringInputs from './FilteringInputs'
 
 const initialFilters = {

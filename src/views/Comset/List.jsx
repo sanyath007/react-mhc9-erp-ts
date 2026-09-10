@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { FaPencilAlt, FaSearch, FaTrash } from 'react-icons/fa'
 import { getComsets } from '../../features/slices/comset/comsetSlice';
 import Loading from '../../components/ui/Loading';
-import Pagination from '../../components/Pagination';
+import Pagination from '../../components/ui/Pagination';
 import FilteringInputs from './FilteringInputs';
 import { generateQueryString } from '../../utils';
 

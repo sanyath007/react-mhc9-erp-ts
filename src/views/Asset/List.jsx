@@ -7,7 +7,7 @@ import { calcUsedAgeY, generateQueryString } from '../../utils'
 import { getAssets, destroy } from '../../features/slices/asset/assetSlice'
 import Asset from '../../components/Asset/Asset'
 import Loading from '../../components/ui/Loading'
-import Pagination from '../../components/Pagination'
+import Pagination from '../../components/ui/Pagination'
 import AssetFilteringInput from '../../components/Asset/FilteringInput'
 
 const initialFilters = {

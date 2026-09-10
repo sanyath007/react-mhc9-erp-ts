@@ -5,7 +5,7 @@ import { FaPencilAlt, FaTrash } from 'react-icons/fa'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 import { destroy } from '../../features/slices/division/divisionSlice';
 import Loading from '../../components/ui/Loading';
-import Pagination from '../../components/Pagination'
+import Pagination from '../../components/ui/Pagination'
 
 const DivisionList = ({ divisions, pager, onEditting, onPageClick, onDeleted }) => {
     const dispatch = useDispatch();

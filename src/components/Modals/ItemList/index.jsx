@@ -10,7 +10,7 @@ import CardList from './CardList';
 import TableList from './TableList';
 import ControlButtons from './ControlButtons';
 import Loading from '../../ui/Loading';
-import Pagination from '../../Pagination';
+import Pagination from '../../ui/Pagination';
 
 const initialFormData = {
     units: [],

@@ -9,7 +9,7 @@ import { useStyles } from '../../hooks/useStyles'
 import { getReport } from '../../features/slices/loan-contract/loanContractSlice'
 import { currency, generateQueryString, toShortTHDate } from '../../utils'
 import Loading from '../../components/ui/Loading'
-import Pagination from '../../components/Pagination'
+import Pagination from '../../components/ui/Pagination'
 import EmployeeCard from '../../components/Employee/Card'
 
 const initialFilters = {

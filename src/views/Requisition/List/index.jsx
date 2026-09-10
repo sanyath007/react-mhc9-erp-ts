@@ -11,7 +11,7 @@ import { currency, generateQueryString, toShortTHDate } from '../../../utils'
 import DetailList from './DetailList'
 import StatusBadge from '../StatusBadge'
 import FilteringInputs from './FilteringInputs'
-import Pagination from '../../../components/Pagination'
+import Pagination from '../../../components/ui/Pagination'
 import Loading from '../../../components/ui/Loading'
 import EmployeeCard from '../../../components/Employee/Card'
 

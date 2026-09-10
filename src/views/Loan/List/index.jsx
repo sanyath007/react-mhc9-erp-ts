@@ -11,7 +11,7 @@ import { currency, generateQueryString, toShortTHDate } from '../../../utils'
 import LoanListDetail from './ListDetail'
 import FilteringInputs from './FilteringInputs'
 import Loading from '../../../components/ui/Loading'
-import Pagination from '../../../components/Pagination'
+import Pagination from '../../../components/ui/Pagination'
 import EmployeeCard from '../../../components/Employee/Card'
 import LoanStatusBadge from '../../../components/Badges/LoanStatusBadge'
 

@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAssets } from '../../../features/slices/asset/assetSlice';
 import Loading from '../../ui/Loading';
-import Pagination from '../../Pagination';
+import Pagination from '../../ui/Pagination';
 import AssetFilteringInput from '../../Asset/FilteringInput';
 
 const initialFilters = {

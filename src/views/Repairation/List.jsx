@@ -7,7 +7,7 @@ import moment from 'moment'
 import { generateQueryString } from '../../utils'
 import { getRepairations } from '../../features/slices/repairation/repairationSlice'
 import Loading from '../../components/ui/Loading'
-import Pagination from '../../components/Pagination'
+import Pagination from '../../components/ui/Pagination'
 
 const initialFilters = {};
 

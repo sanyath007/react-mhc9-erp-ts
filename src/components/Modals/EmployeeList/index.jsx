@@ -3,10 +3,10 @@ import { Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import { getEmployees } from '../../../features/slices/employee/employeeSlice';
 import { useGetInitialFormDataQuery } from '../../../features/services/employee/employeeApi';
-import Loading from '../../ui/Loading';
-import FilteringInputs from '../../Employee/FilteringInputs';
-import Pagination from '../../Pagination'
 import { generateQueryString } from '../../../utils';
+import FilteringInputs from '../../Employee/FilteringInputs';
+import Loading from '../../ui/Loading';
+import Pagination from '../../ui/Pagination'
 
 const initialFilters = {
     name: '',

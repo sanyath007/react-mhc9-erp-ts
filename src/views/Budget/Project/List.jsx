@@ -9,7 +9,7 @@ import { generateQueryString, getUrlParam } from '../../../utils'
 import { getBudgetProjects, resetDeleted, destroy } from '../../../features/slices/budget-project/budgetProjectSlice'
 import FilteringInputs from './FilteringInputs'
 import Loading from '../../../components/ui/Loading'
-import Pagination from '../../../components/Pagination'
+import Pagination from '../../../components/ui/Pagination'
 
 const BudgetProjectList = () => {
     const { year: _year, plan } = useParams();

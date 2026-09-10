@@ -6,7 +6,7 @@ import { currency, toShortTHDate, generateQueryString } from '../../../utils';
 import { getOrders } from '../../../features/slices/order/orderSlice';
 import { useGetInitialFormDataQuery } from '../../../features/services/order/orderApi';
 import Loading from '../../ui/Loading';
-import Pagination from '../../Pagination';
+import Pagination from '../../ui/Pagination';
 import FilteringInputs from '../../Order/FilteringInputs';
 
 const initialFormData = {
