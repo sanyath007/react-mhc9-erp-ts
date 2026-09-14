@@ -71,7 +71,7 @@ const ModalEmployeeList = ({ isShow, onHide, onSelect }: any) => {
                                     </td>
                                 </tr>
                             )}
-                            {employees && employees.map((employee, index) => (
+                            {employees && employees?.map((employee, index) => (
                                 <tr key={employee.id} className="font-thin">
                                     <td className="text-center">{index + pager.from}</td>
                                     <td><span className="font-bold">{employee.prefix.name}{employee.firstname} {employee.lastname}</span></td>
@@ -90,7 +90,7 @@ const ModalEmployeeList = ({ isShow, onHide, onSelect }: any) => {
                                     </td>
                                 </tr>
                             ))}
-                            {!isLoading && employees.length <= 0 && (
+                            {!isLoading && employees?.length <= 0 && (
                                 <tr>
                                     <td colSpan={4} className="text-center">
                                         -- ไม่มีข้อมูล --
