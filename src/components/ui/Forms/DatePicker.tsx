@@ -38,8 +38,8 @@ const DatePicker = ({
     const [position, setPosition] = useState({ top: 0, left: 0, direction: 'bottom' });
     const [mounted, setMounted] = useState(false);
 
-    const triggerRef = useRef < HTMLButtonElement > (null);
-    const dropdownRef = useRef < HTMLDivElement > (null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     // Mount check for portal
     useEffect(() => {
@@ -233,14 +233,14 @@ const DatePicker = ({
     const dropdownContent = (
         <div
             ref={dropdownRef}
-            className="fixed z-[9999] w-80 rounded-3xl overflow-hidden border border-border shadow-2xl bg-card animate-in fade-in-0 zoom-in-95 duration-150"
+            className="fixed z-[9999] w-80 rounded-lg overflow-hidden border border-border shadow-2xl bg-white animate-in fade-in-0 zoom-in-95 duration-150"
             style={{
                 top: position.top,
                 left: position.left,
             }}
         >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30">
                 <button
                     type="button"
                     onClick={() => navigateMonth('prev')}

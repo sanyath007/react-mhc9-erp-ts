@@ -4,8 +4,9 @@ import { useCookies } from 'react-cookie'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { Col, Row } from 'react-bootstrap'
-import { FaSearch } from 'react-icons/fa'
-import { DatePicker } from '@material-ui/pickers'
+import DatePicker from '../../../components/ui/Forms/DatePicker'
+import YearPicker from '../../../components/ui/Forms/YearPicker'
+import SearchableSelect from '../../../components/ui/Forms/SearchableSelect'
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import {
@@ -274,13 +275,11 @@ const RequisitionForm = ({ requisition }: any) => {
                                         <div className="flex flex-col">
                                             <label htmlFor="">วันที่เอกสาร <span className="text-red-500">*</span></label>
                                             <DatePicker
-                                                format="DD/MM/YYYY"
-                                                value={selectedDate}
-                                                onChange={(date) => {
-                                                    setSelectedDate(date);
-                                                    formik.setFieldValue('pr_date', date.format('YYYY-MM-DD'));
+                                                value={formik.values.pr_date}
+                                                onChange={(date: any) => {
+                                                    formik.setFieldValue('pr_date', date);
                                                 }}
-                                                className={classes.muiTextFieldInput}
+                                                inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
                                             />
                                         </div>
                                         {(formik.errors.pr_date && formik.touched.pr_date) && (
@@ -311,29 +310,25 @@ const RequisitionForm = ({ requisition }: any) => {
                                     </Col>
                                     <Col md={4}>
                                         <label htmlFor="">ประเภทสินค้า <span className="text-red-500">*</span></label>
-                                        <select
-                                            name="category_id"
-                                            value={formik.values.category_id}
-                                            onChange={(e) => {
-                                                formik.handleChange(e);
+                                        <SearchableSelect
+                                            value={formik.values.category_id?.toString()}
+                                            onChange={(val: string) => {
+                                                formik.setFieldValue('category_id', val);
 
                                                 if (parseInt(formik.values.order_type_id, 10) === 1) {
-                                                    formik.setFieldValue('topic', 'ขออนุมัติงบประมาณซื้อ' + getFormDataItem(formData, "categories", parseInt(e.target.value))?.name);
+                                                    formik.setFieldValue('topic', 'ขออนุมัติงบประมาณซื้อ' + getFormDataItem(formData, "categories", parseInt(val))?.name);
                                                 }
                                             }}
-                                            className="form-control text-sm"
-                                        >
-                                            <option value="">-- ประเภทสินค้า --</option>
-                                            {filteredTypes.map(type => (
-                                                <optgroup key={type.id} label={type.name}>
-                                                    {type.categories.map(category => (
-                                                        <option value={category.id} key={category.id}>
-                                                            {category.name}
-                                                        </option>
-                                                    ))}
-                                                </optgroup>
-                                            ))}
-                                        </select>
+                                            options={filteredTypes.flatMap((type: any) =>
+                                                type.categories.map((category: any) => ({
+                                                    value: category.id.toString(),
+                                                    label: category.name,
+                                                    description: type.name
+                                                }))
+                                            )}
+                                            placeholder="-- ประเภทสินค้า --"
+                                            inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
+                                        />
                                         {(formik.errors.category_id && formik.touched.category_id) && (
                                             <span className="text-red-500 text-sm">{formik.errors.category_id as string}</span>
                                         )}
@@ -393,15 +388,12 @@ const RequisitionForm = ({ requisition }: any) => {
                                     </Col>
                                     <Col md={2}>
                                         <label htmlFor="">ปีงบประมาณ <span className="text-red-500">*</span></label>
-                                        <DatePicker
-                                            format="YYYY"
-                                            views={['year']}
-                                            value={selectedYear}
-                                            onChange={(date) => {
-                                                setSelectedYear(date);
-                                                formik.setFieldValue('year', date.year());
+                                        <YearPicker
+                                            value={formik.values.year}
+                                            onChange={(year: string) => {
+                                                formik.setFieldValue('year', year);
                                             }}
-                                            className={classes.muiTextFieldInput}
+                                            inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
                                         />
                                         {(formik.errors.year && formik.touched.year) && (
                                             <span className="text-red-500 text-sm">{formik.errors.year as string}</span>
@@ -598,13 +590,11 @@ const RequisitionForm = ({ requisition }: any) => {
                                                         </label>
                                                         <div className="col-8 w-[50%] pl-1">
                                                             <DatePicker
-                                                                format="DD/MM/YYYY"
-                                                                value={selectedDesiredDate}
-                                                                onChange={(date) => {
-                                                                    setSelectedDesiredDate(date);
-                                                                    formik.setFieldValue('desired_date', date.format('YYYY-MM-DD'));
+                                                                value={formik.values.desired_date}
+                                                                onChange={(date: any) => {
+                                                                    formik.setFieldValue('desired_date', date);
                                                                 }}
-                                                                className={classes.muiTextFieldInput}
+                                                                inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
                                                             />
                                                             {(formik.errors.desired_date && formik.touched.desired_date) && (
                                                                 <span className="text-red-500 text-sm">{formik.errors.desired_date as string}</span>
