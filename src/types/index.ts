@@ -3,14 +3,18 @@ export interface User {
     username: string;
     email: string;
     role_id?: number;
-    // ...other user fields based on backend
+    is_new?: number;
+    name?: string;
+    employee?: Employee;
+    permissions?: any[];
+    [key: string]: any;
 }
 
 export interface Employee {
     id: number | string;
     firstname: string;
     lastname: string;
-    position?: string;
+    position?: any;
     avatar_url?: string;
     [key: string]: any;
 }
