@@ -52,6 +52,7 @@ A comprehensive Enterprise Resource Planning (ERP) system for **Mental Health Ce
 
 ### Core
 - **React 18** - Frontend framework
+- **TypeScript** - Primary language for type safety
 - **React Router 6** - Client-side routing with protected routes
 - **Redux Toolkit** - State management with RTK Query for API services
 
@@ -118,7 +119,7 @@ Before building for production:
 src/
 ├── api/                    # Axios instance (legacy, JWT interceptor)
 ├── features/
-│   ├── store.js           # Redux store (32 slices + 25 RTK Query services)
+│   ├── store.ts           # Redux store (32 slices + 25 RTK Query services)
 │   ├── slices/            # Redux slices for local/global state
 │   └── services/          # RTK Query API services
 ├── views/                 # 27 page modules organized by domain
@@ -140,16 +141,16 @@ src/
 │   └── ...                # Other modules
 ├── components/
 │   ├── DefaultLayout/     # App shell (Navbar + Sidebar + Content + Footer)
-│   ├── Navbar/            # Top navigation with role-based menus
+│   ├── ui/                # Shared UI elements (Navbar, Sidebar, Loading, Pagination, etc.)
 │   ├── FormControls/      # Custom form inputs
 │   ├── Preview/           # 17 document print templates
 │   ├── ReportViewer/      # DevExpress, Stimulsoft, Word viewers
 │   ├── Modals/            # 17 entity picker modals
 │   └── ...
 └── utils/
-    ├── index.js           # Buddhist Era dates, Thai Baht, VAT
-    ├── constraints.js     # Thai constants
-    └── currencyText.js    # Number-to-Thai-text
+    ├── index.ts           # Buddhist Era dates, Thai Baht, VAT
+    ├── constraints.ts     # Thai constants
+    └── currencyText.ts    # Number-to-Thai-text
 ```
 
 ## Role-Based Access Control

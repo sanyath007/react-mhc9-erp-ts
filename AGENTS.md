@@ -3,7 +3,7 @@
 ## Quick Start
 
 - **Start dev server**: `npm start` – runs CRA on http://localhost:3000.
-- **Run tests**: `npm test` (CRA Jest watcher). To run a single test file: `npm test -- <path/to/file.test.js>`.
+- **Run tests**: `npm test` (CRA Jest watcher). To run a single test file: `npm test -- <path/to/file.test.ts>`.
 - **Build for production**: `npm run build` (uses `--max_old_space_size=4096`).
 
 ## Environment / Build Prerequisites
@@ -12,14 +12,14 @@
    - Development: `REACT_APP_API_URL="http://localhost:8081/laravel80-mhc9-erp/public"`
    - Production: uncomment and set the production URL.
 2. In `package.json` ensure the `homepage` field is set to the production base URL (e.g., `"homepage": "https://app.mhc9dmh.com/erp/"`).
-3. In the router component (`src/App.js` or similar) set `basename="/erp"` so the app works under the sub‑path.
+3. In the router component (`src/App.tsx` or similar) set `basename="/erp"` so the app works under the sub‑path.
 4. Remove hard‑coded email/password values from the `initialValues` prop in the Login view before committing.
 
 ## Key Project Structure
 
 ### Core Architecture
-- `src/api/index.js` – custom Axios instance with JWT interceptor (legacy, used by Redux async thunks).
-- `src/features/store.js` – central Redux store configuration (32 slices + 25 RTK Query services).
+- `src/api/index.ts` – custom Axios instance with JWT interceptor (legacy, used by Redux async thunks).
+- `src/features/store.ts` – central Redux store configuration (32 slices + 25 RTK Query services).
 - `src/features/services/` – RTK Query service definitions (preferred for data fetching).
 - `src/features/slices/` – Redux slices for local/global state.
 
@@ -49,22 +49,20 @@
 
 ### Reusable Components (`src/components/`)
 - `DefaultLayout/` – Main app shell (Navbar + Sidebar + Content + Footer)
-- `Navbar/` – Top navigation with role-based menus, active state highlighting, grouped submenus
-- `Sidebar/` – Mobile/responsive sidebar with collapsible menus
-- `GuardRoute.js` – Auth guard (checks JWT expiry, forces password change for new users)
+- `ui/` – Shared UI layout and components (Navbar, Sidebar, Pagination, Loading, StatCard)
+- `GuardRoute.tsx` – Auth guard (checks JWT expiry, forces password change for new users)
 - `FormControls/` – Custom form inputs (Autocomplete, DropdownAutocomplete, EmployeeSelection, ThDatePicker, FileUpload, etc.)
 - `Preview/` – 17 document print templates (Thai government memo formats for Requisition, Inspection, Loan documents)
 - `ReportViewer/` – DevExpress, Stimulsoft, and Word document viewers
 - `Modals/` – 17 entity picker modals (AssetList, BudgetList, EmployeeList, ItemList, Requisition, Order, Loan, LoanContract, Supplier, Place, etc.)
 - `Expense/` – Expense line item management (AddExpense, ExpenseList)
-- `Pagination/`, `Loading/` – UI utilities
 - `Badges/` – Status badges (LoanStatusBadge)
 
 ### Thai-Specific Utilities (`src/utils/`)
-- `index.js` – Buddhist Era date formatting (+543), Thai Baht currency formatting, VAT calculation
-- `constraints.js` – Thai constants (Priorities, Duties, Expenses, Month names)
-- `currencyText.js` – Number-to-Thai-text conversion for official documents
-- `OverwriteMomentBE.js` – Moment.js Buddhist Era year override
+- `index.ts` – Buddhist Era date formatting (+543), Thai Baht currency formatting, VAT calculation
+- `constraints.ts` – Thai constants (Priorities, Duties, Expenses, Month names)
+- `currencyText.ts` – Number-to-Thai-text conversion for official documents
+- `OverwriteMomentBE.ts` – Moment.js Buddhist Era year override
 
 ## Features & Modules
 
@@ -121,7 +119,7 @@ Menu visibility is enforced at both Navbar and Sidebar levels based on `role_id`
 
 ## Routing
 
-- Protected routes are wrapped with `<GuardRoute>` in `src/App.js`.
+- Protected routes are wrapped with `<GuardRoute>` in `src/App.tsx`.
 - Main pages use `DefaultLayout`.
 - Auth guard checks JWT expiry and redirects to login if invalid.
 - New users are forced to ChangePassword page.
@@ -135,7 +133,7 @@ Menu visibility is enforced at both Navbar and Sidebar levels based on `role_id`
 ## Testing
 
 - CRA's default Jest config is used; no extra setup required.
-- Single test execution: `npm test -- <path/to/file.test.js>`.
+- Single test execution: `npm test -- <path/to/file.test.ts>`.
 
 ## Reference
 
