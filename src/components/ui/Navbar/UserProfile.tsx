@@ -18,13 +18,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, isLoading, logout }) =>
                 {isLoading && <Loading />}
                 {(!isLoading && user) && (
                     <div className="flex items-center gap-1">
-                        <div className="w-8 h-8 border-2 rounded-full flex items-start justify-center overflow-hidden">
+                        <div className="w-10 h-10 border-2 rounded-full flex items-start justify-center overflow-hidden">
                             {user.employee?.avatar_url
                                 ? <img src={`${process.env.REACT_APP_API_URL}/uploads/${user.employee?.avatar_url}`} alt="employee-pic" />
                                 : <img src="/img/avatar-heroes.png" alt="employee-pic" className="avatar-img" />
                             }
                         </div>
-                        <i className="fas fa-caret-down"></i>
+                        {/* <i className="fas fa-caret-down"></i> */}
                     </div>
                 )}
             </button>
@@ -40,16 +40,16 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, isLoading, logout }) =>
                     <p className="text-sm">{user?.employee?.position?.name}</p>
                 </div>
                 <ul>
-                    <li className="hover:bg-gray-300 p-2 text-left">
+                    <li className="hover:bg-gray-100 p-2 text-left">
                         <Link to="/profile">
-                            <p className="w-full">
+                            <p className="w-full hover:text-slate-600 hover:font-bold">
                                 <i className="far fa-user-circle mr-1 ml-1"></i>
                                 Profile
                             </p>
                         </Link>
                     </li>
-                    <li className="hover:bg-gray-300 p-2 text-left">
-                        <a href={`${process.env.REACT_APP_API_URL}/manual-user`} target="_blank" rel="noreferrer">
+                    <li className="hover:bg-gray-100 p-2 text-left">
+                        <a href={`${process.env.REACT_APP_API_URL}/manual-user`} className='hover:text-slate-600 hover:font-bold' target="_blank" rel="noreferrer">
                             <p className="w-full">
                                 <i className="far fa-question-circle mr-1 ml-1"></i>
                                 แนะนำการใช้งาน
@@ -57,8 +57,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, isLoading, logout }) =>
                         </a>
                     </li>
                     <li><hr className="dropdown-divider m-0" /></li>
-                    <li className="hover:bg-gray-300 p-2 rounded-b-md">
-                        <button type="button" className="w-full text-left" onClick={logout}>
+                    <li className="hover:bg-gray-100 p-2 rounded-b-md">
+                        <button type="button" className="w-full text-left text-red-500 hover:text-red-600 hover:font-bold" onClick={logout}>
                             <i className="fas fa-sign-out-alt mx-1"></i>
                             Logout
                         </button>

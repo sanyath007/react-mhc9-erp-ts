@@ -16,7 +16,7 @@
     content: "";
     position: absolute;
     top: -20px;
-    right: 18px;
+    right: 10px;
     border: rgba(194, 225, 245, 0);
     border: solid transparent;
     border-bottom-color: white;
@@ -29,7 +29,7 @@
     content: "";
     position: absolute;
     top: -20px;
-    right: 18px;
+    right: 10px;
     width: 0;
     height: 0;
     border: solid transparent;
