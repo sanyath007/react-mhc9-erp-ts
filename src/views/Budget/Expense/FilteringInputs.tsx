@@ -61,24 +61,7 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                 />
                             </FormGroup>
                         </Col>
-                        <Col className="px-1 max-md:mb-2" md={6}>
-                            <FormGroup>
-                                <select
-                                    name="type"
-                                    value={filters.type}
-                                    onChange={handleInputChange}
-                                    className="form-control text-sm"
-                                >
-                                    <option value="">-- ประเภท --</option>
-                                    {formData && formData.types.map(type => (
-                                        <option value={type.id} key={type.id}>
-                                            {type.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </FormGroup>
-                        </Col>
-                        {/* <Col className="px-1 mb-2" md={6}>
+                        <Col className="px-1 mb-2" md={6}>
                             <FormGroup>
                                 <select
                                     name="plan"
@@ -94,7 +77,7 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                     ))}
                                 </select>
                             </FormGroup>
-                        </Col> */}
+                        </Col>
                         <Col className="px-1 max-lg:mb-2" md={6}>
                             <FormGroup>
                                 {isFetching && <div className="form-control text-sm"><Loading /></div>}
@@ -105,7 +88,7 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                         onChange={handleInputChange}
                                         className="form-control text-sm"
                                     >
-                                        <option value="">--เลือกโครงการ/ผลผลิต--</option>
+                                        <option value="">-- โครงการ/ผลผลิต --</option>
                                         {formData.projects.map(project => (
                                             <option value={project.id} key={project.id}>
                                                 {project.name}
@@ -113,6 +96,43 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                         ))}
                                     </select>
                                 )}
+                            </FormGroup>
+                        </Col>
+                        <Col className="px-1 max-lg:mb-2" md={6}>
+                            <FormGroup>
+                                {isFetching && <div className="form-control text-sm"><Loading /></div>}
+                                {(!isFetching && formData) && (
+                                    <select
+                                        name="activity"
+                                        value={filters?.activity}
+                                        onChange={handleInputChange}
+                                        className="form-control text-sm"
+                                    >
+                                        <option value="">-- กิจกรรม --</option>
+                                        {/* {formData?.activities.map(activity => (
+                                            <option value={activity.id} key={activity.id}>
+                                                {activity.name}
+                                            </option>
+                                        ))} */}
+                                    </select>
+                                )}
+                            </FormGroup>
+                        </Col>
+                        <Col className="px-1 max-md:mb-2" md={6}>
+                            <FormGroup>
+                                <select
+                                    name="type"
+                                    value={filters.type}
+                                    onChange={handleInputChange}
+                                    className="form-control text-sm"
+                                >
+                                    <option value="">-- ประเภท --</option>
+                                    {formData && formData.types.map(type => (
+                                        <option value={type.id} key={type.id}>
+                                            {type.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </FormGroup>
                         </Col>
                     </Row>
