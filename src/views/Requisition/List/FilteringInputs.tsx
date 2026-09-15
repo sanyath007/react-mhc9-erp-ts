@@ -20,7 +20,7 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
     return (
         <div className="border rounded-md py-2 px-3 mb-2 flex items-center gap-1">
             <div className="flex max-md:flex-col items-center min-md:gap-2">
-                <label htmlFor="" className="w-[25%] max-md:w-[100%]">ปีงบ :</label>
+                <label htmlFor="" className="min-w-[30%] max-md:w-[100%] text-right pr-1">ปีงบ :</label>
                 <YearPicker
                     value={selectedYear}
                     onChange={(year: string) => {
@@ -31,7 +31,7 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                 />
             </div>
             <div className="flex max-md:flex-col items-center min-md:gap-2 ml-2 w-[30%]">
-                <label htmlFor="" className="w-[30%] max-md:w-[100%]">สถานะ :</label>
+                <label htmlFor="" className="min-w-[30%] max-md:w-[100%] text-right pr-1">สถานะ :</label>
                 <select
                     name="status"
                     value={filters.status}
