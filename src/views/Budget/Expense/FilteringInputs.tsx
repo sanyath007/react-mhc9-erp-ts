@@ -18,7 +18,6 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
     const { data: plans, isLoading: plansLoading } = usePlans(selectedYear);
     const { data: projects, isLoading: projectsLoading } = useProjects(selectedPlan);
     const { data: activities, isLoading: activitiesLoading } = useActivities(selectedProject);
-    console.log(plans);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
