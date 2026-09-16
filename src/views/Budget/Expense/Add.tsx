@@ -34,7 +34,7 @@ const AddBudgetExpense = () => {
                     <h2 className="text-xl">เพิ่มค่าใช้จ่าย</h2>
                 </div>
 
-                <div className="border rounded-md py-5">
+                <div className="border rounded-md py-2">
                     <BudgetExpenseForm />
                 </div>
             </div>

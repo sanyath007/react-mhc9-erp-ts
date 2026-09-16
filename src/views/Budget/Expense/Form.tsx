@@ -9,6 +9,7 @@ import YearPicker from '../../../components/ui/Forms/YearPicker'
 import ModalBudgetList from '../../../components/Modals/BudgetList'
 import DropdownAutocomplete from '../../../components/FormControls/DropdownAutocomplete'
 import { currency } from '../../../utils'
+import DetailModal from './DetailModal'
 
 const mockProjects = [
     { id: 1, label: 'โครงการพัฒนาบุคลากร', name: 'โครงการพัฒนาบุคลากร' },
@@ -73,6 +74,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
     const [masterData, setMasterData] = useState<any>(null);
     const [details, setDetails] = useState<BudgetExpenseDetail[]>([]);
     const [selectedBudget, setSelectedBudget] = useState<any>(null);
+    const [showDetailModal, setShowDetailModal] = useState(false);
 
     const initialValues = {
         year: moment().year(),
@@ -158,7 +160,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                         )}
 
                         <Row className="mb-3">
-                            <Col md={6}>
+                            <Col md={3}>
                                 <label>ประเภทค่าใช้จ่าย <span className="text-red-500">*</span></label>
                                 <DropdownAutocomplete
                                     options={mockExpenseTypes}
@@ -170,7 +172,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                     <div className="text-red-500 text-sm mt-1">{formik.errors.budget_expense_id as string}</div>
                                 )}
                             </Col>
-                            <Col md={6}>
+                            <Col md={9}>
                                 <label>โครงการ/กิจกรรม <span className="text-red-500">*</span></label>
                                 <DropdownAutocomplete
                                     options={mockProjects}
@@ -184,7 +186,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                             </Col>
                         </Row>
                         <Row className="mb-3">
-                            <Col md={4}>
+                            <Col md={3}>
                                 <label>จำนวนเงิน (บาท) <span className="text-red-500">*</span></label>
                                 <input
                                     type="number"
@@ -198,7 +200,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                     <div className="text-red-500 text-sm mt-1">{formik.errors.amount as string}</div>
                                 )}
                             </Col>
-                            <Col md={8}>
+                            <Col md={9}>
                                 <label>คำอธิบาย</label>
                                 <input
                                     type="text"
@@ -249,7 +251,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                         type="button"
                         className="btn btn-success btn-sm"
                         disabled={!isMasterSaved}
-                        onClick={() => { toast.info('เปิดหน้าต่างบันทึกรายละเอียดค่าใช้จ่าย (รอพัฒนาต่อ)') }}
+                        onClick={() => setShowDetailModal(true)}
                     >
                         <FaPlus className="inline mr-1" /> เพิ่มรายละเอียด
                     </button>
@@ -297,6 +299,16 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                         )}
                     </tbody>
                 </table>
+
+                <DetailModal 
+                    isShow={showDetailModal}
+                    onHide={() => setShowDetailModal(false)}
+                    initialYear={masterData?.year}
+                    onSave={(newDetail) => {
+                        setDetails([...details, newDetail]);
+                        toast.success('เพิ่มรายละเอียดเรียบร้อยแล้ว');
+                    }}
+                />
             </div>
         </div>
     )

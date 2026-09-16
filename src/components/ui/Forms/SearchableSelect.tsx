@@ -647,7 +647,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
         onClick={openDropdown}
         className={`
           group relative w-full rounded-xl
-          flex items-center gap-2 px-4
+          flex items-center gap-2 px-2.5
           ${sizes.container}
           border transition-all duration-200 cursor-pointer
           ${inputCss}
@@ -663,9 +663,9 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
       >
         {/* Prefix Icon / Search Icon */}
         {typeToSearch && isTyping ? (
-          <Search size={16} className="shrink-0 text-slate-400" />
+          <Search size={18} className="shrink-0 text-slate-400" />
         ) : prefixIcon ? (
-          <div className="shrink-0 text-slate-400">
+          <div className={`shrink-0 flex items-center [&>svg]:w-[18px] [&>svg]:h-[18px] ${value ? colors.check : 'text-slate-400'}`}>
             {prefixIcon}
           </div>
         ) : null}
