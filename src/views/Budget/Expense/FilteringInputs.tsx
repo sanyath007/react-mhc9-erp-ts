@@ -1,15 +1,24 @@
 import React, { useState } from 'react'
 import { Col, FormGroup, Row } from 'react-bootstrap'
+import moment from 'moment'
 import YearPicker from '../../../components/ui/Forms/YearPicker'
 import { generateQueryString } from '../../../utils'
 import { useGetInitialFormDataQuery } from '../../../features/services/budget-activity/budgetActivityApi'
 import Loading from '../../../components/ui/Loading'
-import moment from 'moment'
+import { usePlans, useProjects, useActivities } from '../../../hooks/useBudget'
 
 const FilteringInputs = ({ initialFilters, onFilter }: any) => {
     const [filters, setFilters] = useState(initialFilters);
-    const [selectedYear, setSelectedYear] = useState(initialFilters?.year)
     const { data: formData, isFetching } = useGetInitialFormDataQuery();
+
+    const [selectedYear, setSelectedYear] = useState(initialFilters?.year)
+    const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
+    const [selectedProject, setSelectedProject] = useState<number | null>(null);
+
+    const { data: plans, isLoading: plansLoading } = usePlans(selectedYear);
+    const { data: projects, isLoading: projectsLoading } = useProjects(selectedPlan);
+    const { data: activities, isLoading: activitiesLoading } = useActivities(selectedProject);
+    console.log(plans);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -66,11 +75,14 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                 <select
                                     name="plan"
                                     value={filters.plan}
-                                    onChange={handleInputChange}
+                                    onChange={(e) => {
+                                        handleInputChange(e);
+                                        setSelectedPlan(Number(e.target.value));
+                                    }}
                                     className="form-control text-sm"
                                 >
                                     <option value="">-- แผนงาน --</option>
-                                    {formData && formData.plans.map(plan => (
+                                    {plans?.map(plan => (
                                         <option value={plan.id} key={plan.id}>
                                             {plan.plan_no} {plan.name}
                                         </option>
@@ -80,16 +92,19 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                         </Col>
                         <Col className="px-1 max-lg:mb-2" md={6}>
                             <FormGroup>
-                                {isFetching && <div className="form-control text-sm"><Loading /></div>}
-                                {(!isFetching && formData) && (
+                                {projectsLoading && <div className="form-control text-sm"><Loading /></div>}
+                                {!projectsLoading && (
                                     <select
                                         name="project"
                                         value={filters?.project}
-                                        onChange={handleInputChange}
+                                        onChange={(e) => {
+                                            handleInputChange(e);
+                                            setSelectedProject(Number(e.target.value));
+                                        }}
                                         className="form-control text-sm"
                                     >
                                         <option value="">-- โครงการ/ผลผลิต --</option>
-                                        {formData.projects.map(project => (
+                                        {projects?.map(project => (
                                             <option value={project.id} key={project.id}>
                                                 {project.name}
                                             </option>
@@ -100,8 +115,8 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                         </Col>
                         <Col className="px-1 max-lg:mb-2" md={6}>
                             <FormGroup>
-                                {isFetching && <div className="form-control text-sm"><Loading /></div>}
-                                {(!isFetching && formData) && (
+                                {activitiesLoading && <div className="form-control text-sm"><Loading /></div>}
+                                {!activitiesLoading && (
                                     <select
                                         name="activity"
                                         value={filters?.activity}
@@ -109,11 +124,11 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                         className="form-control text-sm"
                                     >
                                         <option value="">-- กิจกรรม --</option>
-                                        {/* {formData?.activities.map(activity => (
+                                        {activities?.map(activity => (
                                             <option value={activity.id} key={activity.id}>
                                                 {activity.name}
                                             </option>
-                                        ))} */}
+                                        ))}
                                     </select>
                                 )}
                             </FormGroup>
