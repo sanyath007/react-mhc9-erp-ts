@@ -117,6 +117,7 @@ import AddAllocation from './views/Budget/Allocation/Add';
 import EditAllocation from './views/Budget/Allocation/Edit';
 import AllocationSummary from './views/Budget/Allocation/Summary';
 import BudgetExpenseList from './views/Budget/Expense';
+import AddBudgetExpense from './views/Budget/Expense/Add';
 /** Place */
 import PlaceList from './views/Place/List';
 import AddPlace from './views/Place/Add';
@@ -242,6 +243,7 @@ function App() {
                     <Route path="allocation/budget/:id/:allocationId/edit" element={<GuardRoute><EditAllocation /></GuardRoute>} />
                 </Route>
                 <Route path="budget-expense" element={<GuardRoute><BudgetExpenseList /></GuardRoute>} />
+                <Route path="budget-expense/add" element={<GuardRoute><AddBudgetExpense /></GuardRoute>} />
 
                 {/* Places */}
                 <Route path="place" element={<GuardRoute><PlaceList /></GuardRoute>} />
