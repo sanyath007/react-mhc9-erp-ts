@@ -75,6 +75,11 @@ const BudgetExpenseList = () => {
             <div className="content">
                 <div className="flex items-center justify-between mb-2">
                     <h2 className="text-xl">รายการค่าใช้จ่ายงบประมาณ</h2>
+                    <div className="flex flex-row gap-1">
+                        <Link to="add" className="btn btn-primary">
+                            เพิ่มรายการ
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Using FilteringInputs from Activity for mock filters for now */}
