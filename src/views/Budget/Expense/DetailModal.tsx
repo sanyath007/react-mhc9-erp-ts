@@ -178,7 +178,12 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
                                 </Row>
 
                                 <div className="border border-gray-200 rounded p-3 mb-3 bg-gray-50">
-                                    <h5 className="text-primary text-sm font-bold border-b pb-1 mb-2 flex items-center gap-2"><Receipt className="w-4 h-4" /> ข้อมูลการเบิกจ่าย</h5>
+                                    <h5 className="text-primary text-sm font-bold border-b pb-1 mb-2 flex items-center gap-2">
+                                        <div className="bg-blue-100 text-blue-600 p-1.5 rounded-full flex items-center justify-center">
+                                            <Receipt className="w-4 h-4" />
+                                        </div>
+                                        ข้อมูลการเบิกจ่าย
+                                    </h5>
                                     <Row className="mb-2">
                                         <Col md={3}>
                                             <label className="text-xs font-semibold">เลขที่ขอเบิก</label>
@@ -220,7 +225,12 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
                                 </div>
 
                                 <div className="border border-gray-200 rounded p-3 mb-3 bg-gray-50">
-                                    <h5 className="text-primary text-sm font-bold border-b pb-1 mb-2 flex items-center gap-2"><Users className="w-4 h-4" /> ข้อมูลผู้รับเงินและการจ่ายเงิน</h5>
+                                    <h5 className="text-primary text-sm font-bold border-b pb-1 mb-2 flex items-center gap-2">
+                                        <div className="bg-emerald-100 text-emerald-600 p-1.5 rounded-full flex items-center justify-center">
+                                            <Users className="w-4 h-4" />
+                                        </div>
+                                        ข้อมูลผู้รับเงินและการจ่ายเงิน
+                                    </h5>
                                     <Row className="mb-2">
                                         <Col md={6}>
                                             <label className="text-xs font-semibold">ผู้รับเงิน (จ่ายให้) <span className="text-red-500">*</span></label>
@@ -249,7 +259,12 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
                                 </div>
 
                                 <div className="border border-gray-200 rounded p-3 mb-0 bg-gray-50">
-                                    <h5 className="text-primary text-sm font-bold border-b pb-1 mb-2 flex items-center gap-2"><Paperclip className="w-4 h-4" /> ข้อมูลอ้างอิง</h5>
+                                    <h5 className="text-primary text-sm font-bold border-b pb-1 mb-2 flex items-center gap-2">
+                                        <div className="bg-purple-100 text-purple-600 p-1.5 rounded-full flex items-center justify-center">
+                                            <Paperclip className="w-4 h-4" />
+                                        </div>
+                                        ข้อมูลอ้างอิง
+                                    </h5>
                                     <Row className="mb-2">
                                         <Col md={6}>
                                             <label className="text-xs font-semibold">เลขที่ฎีกา</label>
