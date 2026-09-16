@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Modal, Row, Col } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import moment from 'moment'
+import { getSuppliers } from '../../../features/slices/supplier/supplierSlice'
 import SearchableSelect from '../../../components/ui/Forms/SearchableSelect'
 import EmployeeSelection from '../../../components/FormControls/EmployeeSelection'
 import DatePicker from '../../../components/ui/Forms/DatePicker'
@@ -18,12 +20,6 @@ const mockSources = [
 
 const mockMonths = MONTH_TH_NAMES.map((name, index) => ({ value: String(index + 1), label: name }));
 
-const mockSuppliers = [
-    { value: 'บริษัท เอ บี ซี จำกัด', label: 'บริษัท เอ บี ซี จำกัด' },
-    { value: 'หจก. ดี อี เอฟ', label: 'หจก. ดี อี เอฟ' },
-    { value: 'นายทดสอบ ระบบ', label: 'นายทดสอบ ระบบ' },
-];
-
 type DetailModalProps = {
     isShow: boolean;
     onHide: () => void;
@@ -32,6 +28,20 @@ type DetailModalProps = {
 }
 
 const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) => {
+    const dispatch = useDispatch<any>();
+    const { suppliers, isLoading } = useSelector((state: any) => state.supplier);
+
+    useEffect(() => {
+        if (isShow) {
+            dispatch(getSuppliers({ url: '/api/suppliers/search?status=1' }));
+        }
+    }, [isShow, dispatch]);
+
+    const supplierOptions = suppliers ? suppliers.map((s: any) => ({
+        value: s.name,
+        label: s.name
+    })) : [];
+
     const initialValues = {
         mounth: moment().month() + 1,
         year: initialYear || moment().year(),
@@ -235,8 +245,9 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
                                         <Col md={6}>
                                             <label className="text-xs font-semibold">ผู้รับเงิน (จ่ายให้) <span className="text-red-500">*</span></label>
                                             <SearchableSelect
-                                                options={mockSuppliers}
+                                                options={supplierOptions}
                                                 value={formik.values.paid_to}
+                                                loading={isLoading}
                                                 onChange={(value) => formik.setFieldValue('paid_to', value)}
                                                 error={formik.errors.paid_to && formik.touched.paid_to ? formik.errors.paid_to as string : undefined}
                                                 inputCss="!h-[34px] !bg-white !rounded-[0.375rem]"
