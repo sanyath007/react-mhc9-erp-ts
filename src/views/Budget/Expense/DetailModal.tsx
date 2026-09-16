@@ -8,7 +8,7 @@ import EmployeeSelection from '../../../components/FormControls/EmployeeSelectio
 import DatePicker from '../../../components/ui/Forms/DatePicker'
 import YearPicker from '../../../components/ui/Forms/YearPicker'
 import { MONTH_TH_NAMES } from '../../../constants/date-time'
-import { Calendar1, Wallet, Receipt, Users, Paperclip } from 'lucide-react'
+import { Calendar1, Wallet, Receipt, Users, Paperclip, Store } from 'lucide-react'
 
 const mockSources = [
     { value: '1', label: 'เงินงบประมาณ' },
@@ -17,6 +17,12 @@ const mockSources = [
 ];
 
 const mockMonths = MONTH_TH_NAMES.map((name, index) => ({ value: String(index + 1), label: name }));
+
+const mockSuppliers = [
+    { value: 'บริษัท เอ บี ซี จำกัด', label: 'บริษัท เอ บี ซี จำกัด' },
+    { value: 'หจก. ดี อี เอฟ', label: 'หจก. ดี อี เอฟ' },
+    { value: 'นายทดสอบ ระบบ', label: 'นายทดสอบ ระบบ' },
+];
 
 type DetailModalProps = {
     isShow: boolean;
@@ -218,16 +224,14 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
                                     <Row className="mb-2">
                                         <Col md={6}>
                                             <label className="text-xs font-semibold">ผู้รับเงิน (จ่ายให้) <span className="text-red-500">*</span></label>
-                                            <input
-                                                type="text"
-                                                name="paid_to"
-                                                className={`form-control text-sm ${formik.errors.paid_to && formik.touched.paid_to ? 'is-invalid' : ''}`}
-                                                onChange={formik.handleChange}
+                                            <SearchableSelect
+                                                options={mockSuppliers}
                                                 value={formik.values.paid_to}
+                                                onChange={(value) => formik.setFieldValue('paid_to', value)}
+                                                error={formik.errors.paid_to && formik.touched.paid_to ? formik.errors.paid_to as string : undefined}
+                                                inputCss="!h-[34px] !bg-white !rounded-[0.375rem]"
+                                                prefixIcon={<Store className="w-4 h-4" />}
                                             />
-                                            {formik.errors.paid_to && formik.touched.paid_to && (
-                                                <div className="text-red-500 text-xs mt-1">{formik.errors.paid_to as string}</div>
-                                            )}
                                         </Col>
                                         <Col md={3}>
                                             <label className="text-xs font-semibold">วันที่จ่าย</label>
