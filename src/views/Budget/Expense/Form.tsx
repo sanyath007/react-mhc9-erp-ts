@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { Col, Row } from 'react-bootstrap'
@@ -11,6 +12,7 @@ import DropdownAutocomplete from '../../../components/FormControls/DropdownAutoc
 import { currency } from '../../../utils'
 import DetailModal from './DetailModal'
 import { BudgetExpense, BudgetExpenseDetail } from '../../../types'
+import { store } from '../../../features/slices/budget-expense/budgetExpenseSlice'
 
 const mockProjects = [
     { id: 1, label: 'โครงการพัฒนาบุคลากร', name: 'โครงการพัฒนาบุคลากร' },
@@ -37,6 +39,7 @@ type BudgetExpenseFormProp = {
 };
 
 const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
+    const dispatch = useDispatch<any>();
     const [showBudgetModal, setShowBudgetModal] = useState(false);
     const [isMasterSaved, setIsMasterSaved] = useState(false);
     const [masterData, setMasterData] = useState<BudgetExpense | null>(null);
@@ -50,6 +53,8 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
         budget_name: '',        // สำหรับแสดงผล
         project_id: '',
         expense_type_id: '',
+        unit_text: '',
+        target: 0,
         amount: 0.00,
         description: ''
     };
@@ -67,22 +72,30 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={async (values, { setSubmitting }) => {
                     setSubmitting(true);
-                    setTimeout(() => {
-                        setMasterData({
-                            id: 1,
+                    try {
+                        const payload = {
                             expense_type_id: parseInt(values.expense_type_id),
                             year: values.year,
                             budget_id: parseInt(values.budget_id),
                             project_id: parseInt(values.project_id),
                             amount: values.amount,
                             description: values.description || '',
-                        });
-                        setIsMasterSaved(true);
+                        };
+                        const res = await dispatch(store(payload)).unwrap();
+                        if (res.status === 1) {
+                            setMasterData(res.expense);
+                            setIsMasterSaved(true);
+                            toast.success('บันทึกข้อมูลหลักเรียบร้อยแล้ว');
+                        } else {
+                            toast.error(res.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                        }
+                    } catch (error) {
+                        toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
+                    } finally {
                         setSubmitting(false);
-                        toast.success('บันทึกข้อมูลหลักเรียบร้อยแล้ว');
-                    }, 500);
+                    }
                 }}
             >
                 {(formik) => (
@@ -161,7 +174,35 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                             </Col>
                         </Row>
                         <Row className="mb-3">
-                            <Col md={3}>
+                            <Col md={4}>
+                                <label>หน่วยนับ <span className="text-red-500">*</span></label>
+                                <input
+                                    type="text"
+                                    name="unit_text"
+                                    className={`form-control text-sm ${formik.errors.unit_text && formik.touched.unit_text ? 'is-invalid' : ''}`}
+                                    onChange={formik.handleChange}
+                                    value={formik.values.unit_text}
+                                    disabled={isMasterSaved}
+                                />
+                                {formik.errors.unit_text && formik.touched.unit_text && (
+                                    <div className="text-red-500 text-sm mt-1">{formik.errors.unit_text as string}</div>
+                                )}
+                            </Col>
+                            <Col md={4}>
+                                <label>เป้าหมาย <span className="text-red-500">*</span></label>
+                                <input
+                                    type="number"
+                                    name="target"
+                                    className={`form-control text-sm ${formik.errors.target && formik.touched.target ? 'is-invalid' : ''}`}
+                                    onChange={formik.handleChange}
+                                    value={formik.values.target}
+                                    disabled={isMasterSaved}
+                                />
+                                {formik.errors.target && formik.touched.target && (
+                                    <div className="text-red-500 text-sm mt-1">{formik.errors.target as string}</div>
+                                )}
+                            </Col>
+                            <Col md={4}>
                                 <label>จำนวนเงิน (บาท) <span className="text-red-500">*</span></label>
                                 <input
                                     type="number"
@@ -175,10 +216,11 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                     <div className="text-red-500 text-sm mt-1">{formik.errors.amount as string}</div>
                                 )}
                             </Col>
-                            <Col md={9}>
+                        </Row>
+                        <Row className="mb-3">
+                            <Col>
                                 <label>คำอธิบาย</label>
-                                <input
-                                    type="text"
+                                <textarea
                                     name="description"
                                     className="form-control text-sm"
                                     onChange={formik.handleChange}

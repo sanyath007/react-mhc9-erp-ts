@@ -188,8 +188,10 @@ export type BudgetExpense = {
     budget_id: number;          // รหัสงบประมาณ
     expense_type_id: number;    // ประเภทค่าใช้จ่าย
     project_id: number;         // รหัสโครงการ/กิจกรรม
-    amount: number;             // จำนวนเงิน`
-    description?: string;       // คำอธิบาย`
+    unit_text: string;          // หน่วยนับ
+    target: number;             // เป้าหมาย
+    amount: number;             // จำนวนเงิน
+    description?: string;       // คำอธิบาย
     details?: BudgetExpenseDetail[]; // รายละเอียด
 }
 

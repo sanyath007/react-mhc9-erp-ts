@@ -1,68 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { currency } from '../../../utils'
+import { getBudgetExpenses } from '../../../features/slices/budget-expense/budgetExpenseSlice'
 import FilteringInputs from './FilteringInputs'
 
-const mockData = [
-    {
-        id: 1,
-        plan_no: 'แผนงานที่ 1',
-        plan_name: 'บริหารจัดการ',
-        project_name: 'โครงการบริหารจัดการทั่วไป',
-        activity_name: 'กิจกรรมบริหารงานทั่วไป',
-        expense_name: 'ค่าวัสดุสำนักงาน',
-        unit: 'บาท',
-        target: 1,
-        budget: 120000,
-        expenses: {
-            oct: 10000,
-            nov: 10000,
-            dec: 10000,
-            jan: 10000,
-            feb: 10000,
-            mar: 10000,
-            apr: 10000,
-            may: 10000,
-            jun: 10000,
-            jul: 10000,
-            aug: 10000,
-            sep: 10000,
-        },
-        total: 120000
-    },
-    {
-        id: 2,
-        plan_no: 'แผนงานที่ 2',
-        plan_name: 'แผนงานยุทธศาสตร์',
-        project_name: 'โครงการพัฒนาระบบข้อมูล',
-        activity_name: 'กิจกรรมพัฒนาระบบ ERP',
-        expense_name: 'ค่าจ้างเหมาบริการ',
-        unit: 'เดือน',
-        target: 12,
-        budget: 360000,
-        expenses: {
-            oct: 30000,
-            nov: 30000,
-            dec: 30000,
-            jan: 30000,
-            feb: 30000,
-            mar: 30000,
-            apr: 30000,
-            may: 30000,
-            jun: 30000,
-            jul: 30000,
-            aug: 30000,
-            sep: 30000,
-        },
-        total: 360000
-    }
-];
+const getMonthTotal = (item: any, month: number) => {
+    if (!item.details) return item.expenses ? item.expenses[['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'][month - 1]] || 0 : 0;
+    return item.details
+        .filter((d: any) => Number(d.mounth) === month)
+        .reduce((acc: number, curr: any) => acc + Number(curr.net_total || curr.amount || 0), 0);
+};
 
 const BudgetExpenseList = () => {
+    const dispatch = useDispatch<any>();
+    const { expenses, isLoading } = useSelector((state: any) => state.budgetExpense);
     const [cookies] = useCookies()
     const [year, setYear] = useState(cookies.budgetYear);
+    const [apiEndpoint, setApiEndpoint] = useState('/api/budget-expenses/search');
+    const [params, setParams] = useState(`year=${cookies.budgetYear || ''}`);
+
+    useEffect(() => {
+        dispatch(getBudgetExpenses({ url: `${apiEndpoint}?${params}` }));
+    }, [dispatch, apiEndpoint, params]);
 
     return (
         <div className="content-wrapper">
@@ -91,7 +53,7 @@ const BudgetExpenseList = () => {
                         project: '',
                     }}
                     onFilter={(queryStr: string) => {
-                        console.log('Filter:', queryStr);
+                        setParams(queryStr);
                     }}
                 />
 
@@ -100,7 +62,7 @@ const BudgetExpenseList = () => {
                         <thead>
                             <tr className="bg-gray-100">
                                 <th className="text-center align-middle" rowSpan={2} style={{ width: '3%' }}>#</th>
-                                <th className="align-middle" rowSpan={2} style={{ width: '25%' }}>โครงการ/กิจกรรม (ชื่อรายการค่าใช้จ่าย)</th>
+                                <th className="align-middle" rowSpan={2} style={{ width: '25%' }}>โครงการ/กิจกรรม</th>
                                 <th className="text-center align-middle" rowSpan={2} style={{ width: '10%' }}>หน่วยนับ/เป้า/งบ</th>
                                 <th className="text-center" colSpan={12}>เดือนที่ใช้จ่าย</th>
                                 <th className="text-center align-middle" rowSpan={2} style={{ width: '8%' }}>รวมทั้งสิ้น</th>
@@ -121,44 +83,51 @@ const BudgetExpenseList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {mockData.map((item, index) => (
+                            {isLoading && (
+                                <tr>
+                                    <td colSpan={16} className="text-center py-4">กำลังโหลดข้อมูล...</td>
+                                </tr>
+                            )}
+                            {!isLoading && expenses && expenses.map((item: any, index: number) => (
                                 <tr key={item.id}>
                                     <td className="text-center">{index + 1}</td>
                                     <td>
                                         <p className="font-normal text-gray-500">
-                                            {item.plan_no} {item.plan_name}
+                                            {item.project?.plan?.plan_no || item.plan_no || ''} {item.project?.plan?.name || item.plan_name || ''}
                                         </p>
-                                        <p className="font-normal">{item.project_name}</p>
-                                        <p className="font-bold text-primary">{item.activity_name}</p>
+                                        <p className="font-normal">{item.project?.name || '-'}</p>
+                                        <p className="font-bold text-primary">
+                                            {item.budget?.activity?.name || '-'} ({item.budget?.type?.name || ''})
+                                        </p>
                                         <p className="text-green-600 font-semibold mt-1">
-                                            - {item.expense_name}
+                                            - {item.expense_type?.name || '-'}
                                         </p>
                                     </td>
                                     <td>
-                                        <p><b>หน่วย:</b> {item.unit}</p>
-                                        <p><b>เป้า:</b> {item.target}</p>
-                                        <p className="text-blue-600 font-bold"><b>งบ:</b> {currency.format(item.budget)}</p>
+                                        <p><b>หน่วย:</b> {item.project?.unit?.name || item.unit || '-'}</p>
+                                        <p><b>เป้า:</b> {item.project?.target || item.target || '-'}</p>
+                                        <p className="text-blue-600 font-bold"><b>งบ:</b> {currency.format(item.amount || item.budget || 0)}</p>
                                     </td>
-                                    <td className="text-right">{currency.format(item.expenses.oct)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.nov)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.dec)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.jan)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.feb)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.mar)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.apr)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.may)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.jun)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.jul)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.aug)}</td>
-                                    <td className="text-right">{currency.format(item.expenses.sep)}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 10))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 11))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 12))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 1))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 2))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 3))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 4))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 5))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 6))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 7))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 8))}</td>
+                                    <td className="text-right">{currency.format(getMonthTotal(item, 9))}</td>
                                     <td className="text-right font-bold text-green-700 bg-green-50">
-                                        {currency.format(item.total)}
+                                        {currency.format(item.details?.reduce((acc: number, d: any) => acc + Number(d.net_total || d.amount || 0), 0) || item.total || 0)}
                                     </td>
                                 </tr>
                             ))}
-                            {mockData.length === 0 && (
+                            {!isLoading && (!expenses || expenses.length === 0) && (
                                 <tr>
-                                    <td colSpan={16} className="text-center">ไม่พบข้อมูล</td>
+                                    <td colSpan={16} className="text-center py-4">ไม่พบข้อมูล</td>
                                 </tr>
                             )}
                         </tbody>
