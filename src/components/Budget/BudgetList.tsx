@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react'
 import { FaPencilAlt, FaTrash } from 'react-icons/fa'
 import { currency } from '../../utils'
-import BudgetTypeBadge from './BudgetTypeBadge'
+import BudgetTypeBadge from '../Badges/BudgetTypeBadge'
 
-const BudgetList = ({ budgets, showButtons=true, onRemoveBudget, onEditBudget, newFlagField }: any) => {
+const BudgetList = ({ budgets, showButtons = true, onRemoveBudget, onEditBudget, newFlagField }: any) => {
     return (
         <>
             <table className="table table-bordered table-striped table-hover text-sm mb-2">
@@ -27,7 +27,7 @@ const BudgetList = ({ budgets, showButtons=true, onRemoveBudget, onEditBudget, n
                         <Fragment key={data.id}>
                             {!data.removed && (
                                 <tr className="font-thin">
-                                    <td className="text-center">{index+1}</td>
+                                    <td className="text-center">{index + 1}</td>
                                     <td>
                                         <p className="font-thin text-xs">{data.budget?.activity?.project?.plan?.name}</p>
                                         <p className="text-xs font-semibold">{data.budget?.activity?.project?.name}</p>
@@ -35,13 +35,13 @@ const BudgetList = ({ budgets, showButtons=true, onRemoveBudget, onEditBudget, n
                                             {data.budget?.activity?.name}
                                             <BudgetTypeBadge type={data.budget.type} />
                                         </p>
-                                        </td>
+                                    </td>
                                     <td className="text-right">{currency.format(data.total)}</td>
                                     {showButtons && (
                                         <td className="text-center">
                                             <div className="btn-group" role="group" aria-label="Basic example">
                                                 {/* {(!edittingItem || edittingItem?.expense_id !== data.expense_id) && ( */}
-                                                    {/* <button
+                                                {/* <button
                                                         type="button"
                                                         className="btn btn-sm btn-outline-warning"
                                                         onClick={() => onEditBudget(data)}

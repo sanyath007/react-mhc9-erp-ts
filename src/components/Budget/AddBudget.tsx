@@ -5,7 +5,7 @@ import { FormGroup } from 'react-bootstrap'
 import { FaSearch, FaPlus, FaTimes } from 'react-icons/fa'
 import { v4 as uuid } from 'uuid'
 import ModalBudgetList from '../Modals/BudgetList'
-import BudgetTypeBadge from './BudgetTypeBadge'
+import BudgetTypeBadge from '../Badges/BudgetTypeBadge'
 
 const budgetSchema = Yup.object().shape({
     budget_id: Yup.string().required('กรุณาระบุรายการงบประมาณ'),

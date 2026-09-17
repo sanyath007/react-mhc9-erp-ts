@@ -9,7 +9,7 @@ import { useGetInitialFormDataQuery } from '../../../features/services/budget/bu
 import FilteringInputs from './FilteringInputs';
 import Loading from '../../ui/Loading';
 import Pagination from '../../ui/Pagination';
-import BudgetTypeBadge from '../../Budget/BudgetTypeBadge';
+import BudgetTypeBadge from '../../Badges/BudgetTypeBadge';
 
 
 const ModalBudgetList = ({ isShow, onHide, onSelect }: any) => {

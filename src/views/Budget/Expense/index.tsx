@@ -92,21 +92,23 @@ const BudgetExpenseList = () => {
                                 <tr key={item.id}>
                                     <td className="text-center">{index + 1}</td>
                                     <td>
-                                        <p className="font-normal text-gray-500">
-                                            {item.project?.plan?.plan_no || item.plan_no || ''} {item.project?.plan?.name || item.plan_name || ''}
-                                        </p>
-                                        <p className="font-normal">{item.project?.name || '-'}</p>
-                                        <p className="font-bold text-primary">
-                                            {item.budget?.activity?.name || '-'} ({item.budget?.type?.name || ''})
-                                        </p>
-                                        <p className="text-green-600 font-semibold mt-1">
-                                            - {item.expense_type?.name || '-'}
-                                        </p>
+                                        <Link to={`/budget-expense/${item.id}/detail`} className="block hover:bg-gray-50 rounded p-1 transition-colors">
+                                            <p className="font-normal text-gray-500">
+                                                {item.project?.plan?.plan_no || item.plan_no || ''} {item.project?.plan?.name || item.plan_name || ''}
+                                            </p>
+                                            <p className="font-normal">{item.project?.name || '-'}</p>
+                                            <p className="font-bold text-primary">
+                                                {item.budget?.activity?.name || '-'} ({item.budget?.type?.name || ''})
+                                            </p>
+                                            <p className="text-green-600 font-semibold mt-1">
+                                                - {item.expense_type?.name || '-'}
+                                            </p>
+                                        </Link>
                                     </td>
                                     <td>
-                                        <p><b>หน่วย:</b> {item.project?.unit?.name || item.unit || '-'}</p>
-                                        <p><b>เป้า:</b> {item.project?.target || item.target || '-'}</p>
-                                        <p className="text-blue-600 font-bold"><b>งบ:</b> {currency.format(item.amount || item.budget || 0)}</p>
+                                        <p><b>หน่วย:</b> {item.unit_text || '-'}</p>
+                                        <p><b>เป้า:</b> {item.target || '-'}</p>
+                                        <p className="text-blue-600 font-bold"><b>งบ:</b> {currency.format(item.amount || 0)}</p>
                                     </td>
                                     <td className="text-right">{currency.format(getMonthTotal(item, 10))}</td>
                                     <td className="text-right">{currency.format(getMonthTotal(item, 11))}</td>

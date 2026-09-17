@@ -8,7 +8,7 @@ import * as Yup from 'yup'
 import moment from 'moment'
 import { currency } from '../../../../utils'
 import { store, update } from '../../../../features/slices/budget-allocation/budgetAllocationSlice'
-import BudgetTypeBadge from '../../../../components/Budget/BudgetTypeBadge'
+import BudgetTypeBadge from '../../../../components/Badges/BudgetTypeBadge'
 import ModalAgencyList from '../../../../components/Modals/Agency/List'
 import ModalAgencyForm from '../../../../components/Modals/Agency/Form'
 
@@ -81,10 +81,10 @@ const AllocationForm = ({ budget, allocation }: any) => {
                             <Col md={12} className="mb-2">
                                 <div className="border rounded-md py-3 px-4 mb-2 leading-6">
                                     <p className="text-gray-500">{budget?.activity?.project?.plan?.name}</p>
-                                    <p className="font-semibold">{budget?.activity?.project?. name}</p>
+                                    <p className="font-semibold">{budget?.activity?.project?.name}</p>
                                     <p className="font-bold text-blue-600 mr-1">{budget?.activity?.name}</p>
                                     <p>
-                                        <span className="mr-4"><b>ปีงบประมาณ</b> {budget?.activity && budget?.activity?.year+543}</span>
+                                        <span className="mr-4"><b>ปีงบประมาณ</b> {budget?.activity && budget?.activity?.year + 543}</span>
                                         <span><b>ประเภท</b> {budget?.type && <BudgetTypeBadge type={budget?.type} />}</span>
                                     </p>
                                     <p><b>ยอดจัดสรรแล้ว</b> {currency.format(budget?.total)} <b>บาท</b></p>
@@ -113,7 +113,7 @@ const AllocationForm = ({ budget, allocation }: any) => {
                                             setSelectedDocDate(date);
                                             formik.setFieldValue('doc_date', date.format('YYYY-MM-DD'));
                                         }}
-                                        // className={classes.muiTextFieldInput}
+                                    // className={classes.muiTextFieldInput}
                                     />
                                 </div>
                                 {(formik.errors.doc_date && formik.touched.doc_date) && (
@@ -198,7 +198,7 @@ const AllocationForm = ({ budget, allocation }: any) => {
                                 )}
                             </Col>
                         </Row>
-                        
+
                         <div className="flex justify-end">
                             <button type="submit" className={`btn ${allocation ? 'btn-outline-secondary' : 'btn-outline-primary'} btn-sm`}>
                                 {allocation ? 'บันทึกการแก้ไข' : 'บันทึก'}

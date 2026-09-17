@@ -8,7 +8,7 @@ import { getAllocationsByBudget, destroy, resetDeleted } from '../../../features
 import { getBudget } from '../../../features/slices/budget/budgetSlice'
 import { currency, toShortTHDate } from '../../../utils'
 import Loading from '../../../components/ui/Loading'
-import BudgetTypeBadge from '../../../components/Budget/BudgetTypeBadge'
+import BudgetTypeBadge from '../../../components/Badges/BudgetTypeBadge'
 
 const AllocationList = () => {
     const { id } = useParams();
