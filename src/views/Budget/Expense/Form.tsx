@@ -39,33 +39,34 @@ type BudgetExpense = {
     id: number;
     year: number;               // ปีงบประมาณ
     budget_id: number;          // รหัสงบประมาณ
-    budget_expense_id: number;  // ประเภทค่าใช้จ่าย
+    expense_type_id: number;    // ประเภทค่าใช้จ่าย
     project_id: number;         // รหัสโครงการ/กิจกรรม
-    amount: number;             // จำนวนเงิน
-    description?: string;        // คำอธิบาย
+    amount: number;             // จำนวนเงิน`
+    description?: string;       // คำอธิบาย`
     details?: BudgetExpenseDetail[]; // รายละเอียด
 }
 
 type BudgetExpenseDetail = {
     id: number;
-    budget_expense_id: number;
-    mounth: number;             // เดือน
-    year: number;               // ปี
-    amount: number;             // จำนวนเงิน
-    vat: number;                // ภาษีหัก ณ ที่จ่าย
-    total: number;              // จำนวนเงินสุทธิ
-    paid_to: number;            // จ่ายให้
+    budget_expense_id: number;  // BudgetExpense ID
+    mounth: number;             // เดือน (ที่จ่าย)
+    year: number;               // ปี (ที่จ่าย)
+    amount: number;             // จำนวนเงิน (ที่จ่าย)
+    vat_rate: number;           // อัตราภาษีหัก ณ ที่จ่าย
+    vat_amount: number;         // จำนวนเงินภาษีหัก ณ ที่จ่าย
+    net_total: number;          // จำนวนเงินสุทธิ (ที่จ่าย)
+    paid_to: number;            // จ่ายให้ (ผู้รับ)
     paid_at: Date;              // วันที่จ่าย
     paid_by: number;            // ผู้จ่าย
-    source_id: string;          // แหล่งเงิน
-    withdrawal_no: string;      // เลขที่ขอเบิก
-    withdrawal_at: Date;        // วันที่ขอเบิก
-    payment_no: string          // เลขที่ขอจ่าย
-    payment_at: Date;           // วันที่ขอจ่าย
-    voucher_no: string          // เลขที่ใบสำคัญ
-    ref_no: string              // เลขที่อ้างอิง
-    remark: string;             // หมายเหตุ
-    user_id: number;            // ผู้บันทึก
+    source_id: string;          // แหล่งเงินงบประมาณ
+    withdrawal_no?: string;     // เลขที่ขอเบิก
+    withdrawal_at?: Date;       // วันที่ขอเบิก
+    payment_no?: string         // เลขที่ขอจ่าย
+    payment_at?: Date;          // วันที่ขอจ่าย
+    voucher_no?: string         // เลขที่ฎีกา
+    ref_no?: string             // เลขที่อ้างอิง
+    remark?: string;            // หมายเหตุ
+    created_by: number;         // ผู้บันทึก
 }
 
 const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
@@ -79,10 +80,10 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
     const initialValues = {
         year: moment().year(),
         budget_id: '',
-        budget_name: '', // สำหรับแสดงผล
+        budget_name: '',        // สำหรับแสดงผล
         project_id: '',
-        budget_expense_id: '',
-        amount: '',
+        expense_type_id: '',
+        amount: 0.00,
         description: ''
     };
 
@@ -90,7 +91,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
         year: Yup.string().required('กรุณาระบุปีงบประมาณ'),
         budget_id: Yup.string().required('กรุณาเลือกงบประมาณ'),
         project_id: Yup.string().required('กรุณาเลือกรหัสโครงการ'),
-        budget_expense_id: Yup.string().required('กรุณาเลือกรหัสค่าใช้จ่าย'),
+        expense_type_id: Yup.string().required('กรุณาเลือกรหัสค่าใช้จ่าย'),
         amount: Yup.number().required('กรุณาระบุจำนวนเงิน').min(1, 'จำนวนเงินต้องมากกว่า 0')
     });
 
@@ -104,11 +105,11 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                     setTimeout(() => {
                         setMasterData({
                             id: 1,
-                            budget_expense_id: parseInt(values.budget_expense_id),
+                            expense_type_id: parseInt(values.expense_type_id),
                             year: values.year,
                             budget_id: parseInt(values.budget_id),
                             project_id: parseInt(values.project_id),
-                            amount: parseFloat(values.amount),
+                            amount: values.amount,
                             description: values.description || '',
                         });
                         setIsMasterSaved(true);
@@ -171,12 +172,12 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                 <label>ประเภทค่าใช้จ่าย <span className="text-red-500">*</span></label>
                                 <DropdownAutocomplete
                                     options={mockExpenseTypes}
-                                    onSelect={(item) => formik.setFieldValue('budget_expense_id', item ? item.id : '')}
-                                    defaultVal={mockExpenseTypes.find(e => e.id === Number(formik.values.budget_expense_id))}
-                                    isInvalid={!!(formik.errors.budget_expense_id && formik.touched.budget_expense_id)}
+                                    onSelect={(item) => formik.setFieldValue('expense_type_id', item ? item.id : '')}
+                                    defaultVal={mockExpenseTypes.find(e => e.id === Number(formik.values.expense_type_id))}
+                                    isInvalid={!!(formik.errors.expense_type_id && formik.touched.expense_type_id)}
                                 />
-                                {formik.errors.budget_expense_id && formik.touched.budget_expense_id && (
-                                    <div className="text-red-500 text-sm mt-1">{formik.errors.budget_expense_id as string}</div>
+                                {formik.errors.expense_type_id && formik.touched.expense_type_id && (
+                                    <div className="text-red-500 text-sm mt-1">{formik.errors.expense_type_id as string}</div>
                                 )}
                             </Col>
                             <Col md={9}>
@@ -296,7 +297,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                     <td className="text-center">{detail.mounth}/{detail.year}</td>
                                     <td className="text-center">{detail.withdrawal_no}</td>
                                     <td>{detail.paid_to}</td>
-                                    <td className="text-right">{currency.format(detail.total)}</td>
+                                    <td className="text-right">{currency.format(detail.net_total)}</td>
                                     <td className="text-center">
                                         <button className="btn btn-warning btn-sm mx-1"><FaPencilAlt /></button>
                                         <button className="btn btn-danger btn-sm mx-1"><FaTrash /></button>
