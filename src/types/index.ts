@@ -181,3 +181,37 @@ export interface PaginatedResponse<T> {
     per_page: number;
     total: number;
 }
+
+export type BudgetExpense = {
+    id: number;
+    year: number;               // ปีงบประมาณ
+    budget_id: number;          // รหัสงบประมาณ
+    expense_type_id: number;    // ประเภทค่าใช้จ่าย
+    project_id: number;         // รหัสโครงการ/กิจกรรม
+    amount: number;             // จำนวนเงิน`
+    description?: string;       // คำอธิบาย`
+    details?: BudgetExpenseDetail[]; // รายละเอียด
+}
+
+export type BudgetExpenseDetail = {
+    id: number;
+    budget_expense_id: number;  // BudgetExpense ID
+    mounth: number;             // เดือน (ที่จ่าย)
+    year: number;               // ปี (ที่จ่าย)
+    amount: number;             // จำนวนเงิน (ที่จ่าย)
+    vat_rate: number;           // อัตราภาษีหัก ณ ที่จ่าย
+    vat_amount: number;         // จำนวนเงินภาษีหัก ณ ที่จ่าย
+    net_total: number;          // จำนวนเงินสุทธิ (ที่จ่าย)
+    paid_to: number;            // จ่ายให้ (ผู้รับ)
+    paid_at: Date;              // วันที่จ่าย
+    paid_by: number;            // ผู้จ่าย
+    source_id: string;          // แหล่งเงินงบประมาณ
+    withdrawal_no?: string;     // เลขที่ขอเบิก
+    withdrawal_at?: Date;       // วันที่ขอเบิก
+    payment_no?: string         // เลขที่ขอจ่าย
+    payment_at?: Date;          // วันที่ขอจ่าย
+    voucher_no?: string         // เลขที่ฎีกา
+    ref_no?: string             // เลขที่อ้างอิง
+    remark?: string;            // หมายเหตุ
+    created_by: number;         // ผู้บันทึก
+}

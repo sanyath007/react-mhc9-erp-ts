@@ -15,6 +15,7 @@ import budgetReducer from "./slices/budget/budgetSlice";
 import budgetPlanReducer from "./slices/budget-plan/budgetPlanSlice";
 import budgetProjectReducer from "./slices/budget-project/budgetProjectSlice";
 import budgetActivityReducer from "./slices/budget-activity/budgetActivitySlice";
+import budgetExpenseReducer from "./slices/budget-expense/budgetExpenseSlice";
 import budgetAllocationReducer from "./slices/budget-allocation/budgetAllocationSlice"
 import requisitionReducer from "./slices/requisition/requisitionSlice";
 import unitReducer from './slices/unit/unitSlice';
@@ -96,7 +97,6 @@ const store = configureStore({
         room: roomReducer,
         task: taskRecuer,
         item: itemReducer,
-        budget: budgetReducer,
         requisition: requisitionReducer,
         unit: unitReducer,
         member: memberReducer,
@@ -108,6 +108,8 @@ const store = configureStore({
         loan: loanReducer,
         loanContract: loanContactReducer,
         loanRefund: loanRefundReducer,
+        budget: budgetReducer,
+        budgetExpense: budgetExpenseReducer,
         budgetPlan: budgetPlanReducer,
         budgetProject: budgetProjectReducer,
         budgetActivity: budgetActivityReducer,
@@ -117,7 +119,7 @@ const store = configureStore({
         user: userReducer,
         agency: agencyReducer,
     },
-    middleware: (getDefaultMiddleware) => 
+    middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(
             systemApi.middleware,
             authApi.middleware,
