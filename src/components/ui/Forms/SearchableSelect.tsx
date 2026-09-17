@@ -41,6 +41,7 @@ interface SearchableSelectProps {
   dropdownTitle?: string;
   loading?: boolean;
   typeToSearch?: boolean;
+  onSearch?: (query: string) => void;
 }
 
 // ============================================
@@ -207,6 +208,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
   dropdownTitle,
   loading = false,
   typeToSearch = true,
+  onSearch,
   inputCss,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -374,6 +376,9 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
     setIsTyping(val.length > 0);
     if (!isOpen) {
       openDropdown();
+    }
+    if (onSearch) {
+      onSearch(val);
     }
   };
 

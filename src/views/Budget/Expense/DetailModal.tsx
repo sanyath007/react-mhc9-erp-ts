@@ -30,12 +30,16 @@ type DetailModalProps = {
 const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) => {
     const dispatch = useDispatch<any>();
     const { suppliers, isLoading } = useSelector((state: any) => state.supplier);
+    const [supplierSearchQuery, setSupplierSearchQuery] = useState('');
 
     useEffect(() => {
         if (isShow) {
-            dispatch(getSuppliers({ url: '/api/suppliers/search?status=1' }));
+            const timer = setTimeout(() => {
+                dispatch(getSuppliers({ url: `/api/suppliers/search?status=1&name=${supplierSearchQuery}` }));
+            }, 500);
+            return () => clearTimeout(timer);
         }
-    }, [isShow, dispatch]);
+    }, [isShow, dispatch, supplierSearchQuery]);
 
     const supplierOptions = suppliers ? suppliers.map((s: any) => ({
         value: s.name,
@@ -248,6 +252,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
                                                 options={supplierOptions}
                                                 value={formik.values.paid_to}
                                                 loading={isLoading}
+                                                onSearch={(query) => setSupplierSearchQuery(query)}
                                                 onChange={(value) => formik.setFieldValue('paid_to', value)}
                                                 error={formik.errors.paid_to && formik.touched.paid_to ? formik.errors.paid_to as string : undefined}
                                                 inputCss="!h-[34px] !bg-white !rounded-[0.375rem]"
