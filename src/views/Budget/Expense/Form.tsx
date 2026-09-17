@@ -42,8 +42,8 @@ type BudgetExpense = {
     budget_expense_id: number;  // ประเภทค่าใช้จ่าย
     project_id: number;         // รหัสโครงการ/กิจกรรม
     amount: number;             // จำนวนเงิน
-    description: string;        // คำอธิบาย
-    details: BudgetExpenseDetail[]; // รายละเอียด
+    description?: string;        // คำอธิบาย
+    details?: BudgetExpenseDetail[]; // รายละเอียด
 }
 
 type BudgetExpenseDetail = {
@@ -71,7 +71,7 @@ type BudgetExpenseDetail = {
 const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
     const [showBudgetModal, setShowBudgetModal] = useState(false);
     const [isMasterSaved, setIsMasterSaved] = useState(false);
-    const [masterData, setMasterData] = useState<any>(null);
+    const [masterData, setMasterData] = useState<BudgetExpense | null>(null);
     const [details, setDetails] = useState<BudgetExpenseDetail[]>([]);
     const [selectedBudget, setSelectedBudget] = useState<any>(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
@@ -100,10 +100,17 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
-                    // จำลองการบันทึกข้อมูล
                     setSubmitting(true);
                     setTimeout(() => {
-                        setMasterData({ ...values, id: 1 });
+                        setMasterData({
+                            id: 1,
+                            budget_expense_id: parseInt(values.budget_expense_id),
+                            year: values.year,
+                            budget_id: parseInt(values.budget_id),
+                            project_id: parseInt(values.project_id),
+                            amount: parseFloat(values.amount),
+                            description: values.description || '',
+                        });
                         setIsMasterSaved(true);
                         setSubmitting(false);
                         toast.success('บันทึกข้อมูลหลักเรียบร้อยแล้ว');
@@ -300,7 +307,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                     </tbody>
                 </table>
 
-                <DetailModal 
+                <DetailModal
                     isShow={showDetailModal}
                     onHide={() => setShowDetailModal(false)}
                     initialYear={masterData?.year}
