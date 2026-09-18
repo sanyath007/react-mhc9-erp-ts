@@ -125,7 +125,6 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
                 }}
             >
                 {(formik) => {
-                    console.log(formik.errors);
                     return (
                         <Form>
                             <Modal.Body>

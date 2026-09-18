@@ -6,6 +6,7 @@ import { useCookies } from 'react-cookie'
 import { currency } from '../../../utils'
 import { getBudgetExpenses } from '../../../features/slices/budget-expense/budgetExpenseSlice'
 import FilteringInputs from './FilteringInputs'
+import BudgetTypeBadge from '../../../components/Badges/BudgetTypeBadge'
 
 const getMonthTotal = (item: any, month: number) => {
     if (!item.details) return item.expenses ? item.expenses[['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'][month - 1]] || 0 : 0;
@@ -63,9 +64,9 @@ const BudgetExpenseList = () => {
                             <tr className="bg-gray-100">
                                 <th className="text-center align-middle" rowSpan={2} style={{ width: '3%' }}>#</th>
                                 <th className="align-middle" rowSpan={2} style={{ width: '25%' }}>โครงการ/กิจกรรม</th>
-                                <th className="text-center align-middle" rowSpan={2} style={{ width: '10%' }}>หน่วยนับ/เป้า/งบ</th>
+                                <th className="text-center align-middle" rowSpan={2} style={{ width: '8%' }}>หน่วยนับ/เป้า/งบ</th>
                                 <th className="text-center" colSpan={12}>เดือนที่ใช้จ่าย</th>
-                                <th className="text-center align-middle" rowSpan={2} style={{ width: '8%' }}>รวมทั้งสิ้น</th>
+                                <th className="text-center align-middle" rowSpan={2} style={{ width: '6%' }}>รวมทั้งสิ้น</th>
                             </tr>
                             <tr className="bg-gray-100">
                                 <th className="text-center">ต.ค.</th>
@@ -91,14 +92,14 @@ const BudgetExpenseList = () => {
                             {!isLoading && expenses && expenses.map((item: any, index: number) => (
                                 <tr key={item.id}>
                                     <td className="text-center">{index + 1}</td>
-                                    <td>
+                                    <td className="whitespace-normal text-wrap break-words">
                                         <Link to={`/budget-expense/${item.id}/detail`} className="block hover:bg-gray-50 rounded p-1 transition-colors">
                                             <p className="font-normal text-gray-500">
                                                 {item.project?.plan?.plan_no || item.plan_no || ''} {item.project?.plan?.name || item.plan_name || ''}
                                             </p>
                                             <p className="font-normal">{item.project?.name || '-'}</p>
                                             <p className="font-bold text-primary">
-                                                {item.budget?.activity?.name || '-'} ({item.budget?.type?.name || ''})
+                                                {item.budget?.activity?.name || '-'} <BudgetTypeBadge type={item.budget?.type} />
                                             </p>
                                             <p className="text-green-600 font-semibold mt-1">
                                                 - {item.expense_type?.name || '-'}

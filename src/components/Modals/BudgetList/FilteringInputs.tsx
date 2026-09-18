@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
 import { Col, FormGroup, Row } from 'react-bootstrap';
-import { DatePicker } from '@material-ui/pickers';
+import YearPicker from '../../ui/Forms/YearPicker';
 import moment from 'moment';
-import { useStyles } from '../../../hooks/useStyles';
 import { generateQueryString } from '../../../utils';
 
 const FilteringInputs = ({ initialFilters, onFilter, formData }: any) => {
-    const classes = useStyles();
     const [filters, setFilters] = useState(initialFilters);
-    const [selectedYear, setSelectedYear] = useState(moment(`${filters.year}-01-01`));
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -46,15 +43,12 @@ const FilteringInputs = ({ initialFilters, onFilter, formData }: any) => {
                         </Col>
                         <Col className="px-1 mb-2" md={4}>
                             <FormGroup>
-                                <DatePicker
-                                    format="YYYY"
-                                    views={['year']}
-                                    value={selectedYear}
-                                    onChange={(date) => {
-                                        setSelectedYear(date);
-                                        setFilters(prev => ({ ...prev, ['year']: moment(date).year() }));
+                                <YearPicker
+                                    value={filters.year}
+                                    onChange={(year: string) => {
+                                        setFilters((prev: any) => ({ ...prev, year: year }));
                                     }}
-                                    className={classes.muiTextFieldInput}
+                                    inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
                                 />
                             </FormGroup>
                         </Col>

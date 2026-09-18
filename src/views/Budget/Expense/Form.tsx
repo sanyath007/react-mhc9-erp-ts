@@ -11,7 +11,7 @@ import ModalBudgetList from '../../../components/Modals/BudgetList'
 import DropdownAutocomplete from '../../../components/FormControls/DropdownAutocomplete'
 import { currency, toShortTHDate } from '../../../utils'
 import DetailModal from './DetailModal'
-import { BudgetExpense, BudgetExpenseDetail } from '../../../types'
+import { BudgetExpense } from '../../../types'
 import { store } from '../../../features/slices/budget-expense/budgetExpenseSlice'
 import { getProjects } from '../../../features/slices/project/projectSlice'
 import { useCookies } from 'react-cookie'
@@ -336,6 +336,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                     initialYear={masterData?.year || moment().year()}
                     expenseId={masterData?.id}
                     onSave={(newDetail) => {
+                        console.log(newDetail);
                         setDetails([...details, newDetail]);
                         toast.success('เพิ่มรายละเอียดเรียบร้อยแล้ว');
                     }}
