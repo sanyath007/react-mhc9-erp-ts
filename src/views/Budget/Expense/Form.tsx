@@ -9,12 +9,13 @@ import { toast } from 'react-toastify'
 import YearPicker from '../../../components/ui/Forms/YearPicker'
 import ModalBudgetList from '../../../components/Modals/BudgetList'
 import DropdownAutocomplete from '../../../components/FormControls/DropdownAutocomplete'
-import { currency } from '../../../utils'
+import { currency, toShortTHDate } from '../../../utils'
 import DetailModal from './DetailModal'
 import { BudgetExpense, BudgetExpenseDetail } from '../../../types'
 import { store } from '../../../features/slices/budget-expense/budgetExpenseSlice'
 import { getProjects } from '../../../features/slices/project/projectSlice'
 import { useCookies } from 'react-cookie'
+import { MONTH_TH_SHNAMES } from '../../../constants/date-time'
 
 const mockExpenseTypes = [
     { id: 1, label: 'ค่าตอบแทนใช้สอยและวัสดุ', name: 'ค่าตอบแทนใช้สอยและวัสดุ', budget_type_id: 2 },
@@ -47,7 +48,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
     const projectOptions = projects ? projects.map((p: any) => ({ ...p, label: p.name })) : [];
     const [isMasterSaved, setIsMasterSaved] = useState(false);
     const [masterData, setMasterData] = useState<BudgetExpense | null>(null);
-    const [details, setDetails] = useState<BudgetExpenseDetail[]>([]);
+    const [details, setDetails] = useState<any[]>([]);
     const [selectedBudget, setSelectedBudget] = useState<any>(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
 
@@ -70,8 +71,6 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
         expense_type_id: Yup.string().required('กรุณาเลือกรหัสค่าใช้จ่าย'),
         amount: Yup.number().required('กรุณาระบุจำนวนเงิน').min(1, 'จำนวนเงินต้องมากกว่า 0')
     });
-
-    console.log(projects);
 
     return (
         <div className="p-4">
@@ -292,7 +291,8 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                         <tr>
                             <th className="text-center w-[5%]">#</th>
                             <th className="text-center w-[10%]">เดือน/ปี</th>
-                            <th className="text-center">เลขที่ขอเบิก</th>
+                            <th className="text-center w-[15%]">เลขที่ขอเบิก | วันที่ขอเบิก</th>
+                            <th className="text-center w-[15%]">เลขที่ขอจ่าย | วันที่ขอจ่าย</th>
                             <th className="text-center w-[20%]">ผู้รับเงิน</th>
                             <th className="text-center w-[15%]">จำนวนเงินสุทธิ</th>
                             <th className="text-center w-[10%]">การจัดการ</th>
@@ -301,7 +301,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                     <tbody>
                         {details.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="text-center text-gray-500 py-4">
+                                <td colSpan={7} className="text-center text-gray-500 py-4">
                                     -- ยังไม่มีข้อมูลรายละเอียดค่าใช้จ่าย --
                                 </td>
                             </tr>
@@ -309,9 +309,16 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                             details.map((detail, index) => (
                                 <tr key={index}>
                                     <td className="text-center">{index + 1}</td>
-                                    <td className="text-center">{detail.month}/{detail.year}</td>
-                                    <td className="text-center">{detail.withdrawal_no}</td>
-                                    <td>{detail.paid_to}</td>
+                                    <td className="text-center">{MONTH_TH_SHNAMES[detail.month - 1]}/{detail.year + 543}</td>
+                                    <td className="text-center">
+                                        {detail.withdrawal_no || '-'}{' | '}
+                                        {toShortTHDate(detail.withdrawal_at || '')}
+                                    </td>
+                                    <td className="text-center">
+                                        {detail.payment_no || '-'}{' | '}
+                                        {toShortTHDate(detail.payment_at || '')}
+                                    </td>
+                                    <td>{detail.supplier?.name || '-'}</td>
                                     <td className="text-right">{currency.format(detail.net_total)}</td>
                                     <td className="text-center">
                                         <button className="btn btn-warning btn-sm mx-1"><FaPencilAlt /></button>
