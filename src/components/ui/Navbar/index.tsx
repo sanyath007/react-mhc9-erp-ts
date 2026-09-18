@@ -113,6 +113,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSidebar, toggleSidebar, onLogout })
                                     submenus: [
                                         { type: 'menu', text: 'งบประมาณ', link: '/budget-plan', allowed_users: [1, 4, 5] },
                                         { type: 'menu', text: 'ค่าใช้จ่ายงบประมาณ', link: '/budget-expense', allowed_users: [1, 4, 5] },
+                                        { type: 'menu', text: 'โครงการ/กิจกรรม', link: '/project', allowed_users: [1, 4, 5] },
                                         { type: 'menu', text: 'เลขที่ใบรับใบสำคัญ', link: '/loan-refund/bill', allowed_users: [1, 4, 5] },
                                     ]
                                 },
