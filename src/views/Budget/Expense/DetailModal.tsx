@@ -67,6 +67,8 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
         payment_at: '',
         voucher_no: '',
         ref_no: '',
+        doc_no: '',
+        doc_date: '',
         remark: '',
         created_by: loggedInUser?.id || '',
     };
@@ -78,6 +80,8 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
         vat_amount: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
         vat_rate: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
         paid_to: Yup.string().required('กรุณาระบุผู้รับเงิน'),
+        paid_at: Yup.string().required('กรุณาระบุวันที่'),
+        paid_by: Yup.string().required('กรุณาระบุผู้ออกเงิน'),
         source_id: Yup.string().required('กรุณาระบุแหล่งเงิน')
     });
 
@@ -121,6 +125,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
                 }}
             >
                 {(formik) => {
+                    console.log(formik.errors);
                     return (
                         <Form>
                             <Modal.Body>
@@ -180,7 +185,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
                                             name="vat_rate"
                                             className="form-control text-sm text-center"
                                             onChange={(e) => formik.setFieldValue('vat_rate', Number(e.target.value))}
-                                            onBlur={() => formik.setFieldValue('vat', handleCalculateVat(formik.values.amount, formik.values.vat_rate))}
+                                            onBlur={() => formik.setFieldValue('vat_amount', handleCalculateVat(formik.values.amount, formik.values.vat_rate))}
                                             value={formik.values.vat_rate}
                                             onFocus={(e) => e.target.select()}
                                         />
@@ -281,6 +286,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
                                             <label className="text-xs font-semibold">วันที่จ่าย</label>
                                             <DatePicker
                                                 value={formik.values.paid_at}
+                                                error={formik.errors.paid_at && formik.touched.paid_at ? formik.errors.paid_at as string : undefined}
                                                 onChange={(date: string) => formik.setFieldValue('paid_at', date)}
                                                 inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
                                             />
@@ -300,7 +306,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
                                         ข้อมูลอ้างอิง
                                     </h5>
                                     <Row className="mb-2">
-                                        <Col md={6}>
+                                        <Col md={3}>
                                             <label className="text-xs font-semibold">เลขที่ฎีกา</label>
                                             <input
                                                 type="text"
@@ -310,7 +316,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
                                                 value={formik.values.voucher_no}
                                             />
                                         </Col>
-                                        <Col md={6}>
+                                        <Col md={3}>
                                             <label className="text-xs font-semibold">เลขที่อ้างอิง</label>
                                             <input
                                                 type="text"
@@ -318,6 +324,24 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
                                                 className="form-control text-sm"
                                                 onChange={formik.handleChange}
                                                 value={formik.values.ref_no}
+                                            />
+                                        </Col>
+                                        <Col md={3}>
+                                            <label className="text-xs font-semibold">เลขที่หนังสือขอเบิก</label>
+                                            <input
+                                                type="text"
+                                                name="doc_no"
+                                                className="form-control text-sm"
+                                                onChange={formik.handleChange}
+                                                value={formik.values.doc_no}
+                                            />
+                                        </Col>
+                                        <Col md={3}>
+                                            <label className="text-xs font-semibold">วันที่หนังสือขอเบิก</label>
+                                            <DatePicker
+                                                value={formik.values.doc_date}
+                                                onChange={(date: string) => formik.setFieldValue('doc_date', date)}
+                                                inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
                                             />
                                         </Col>
                                     </Row>

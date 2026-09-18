@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { Col, Row } from 'react-bootstrap'
@@ -13,12 +13,8 @@ import { currency } from '../../../utils'
 import DetailModal from './DetailModal'
 import { BudgetExpense, BudgetExpenseDetail } from '../../../types'
 import { store } from '../../../features/slices/budget-expense/budgetExpenseSlice'
-
-const mockProjects = [
-    { id: 1, label: 'โครงการพัฒนาบุคลากร', name: 'โครงการพัฒนาบุคลากร' },
-    { id: 2, label: 'โครงการพัฒนาระบบสารสนเทศ', name: 'โครงการพัฒนาระบบสารสนเทศ' },
-    { id: 3, label: 'โครงการบริหารจัดการองค์กร', name: 'โครงการบริหารจัดการองค์กร' },
-];
+import { getProjects } from '../../../features/slices/project/projectSlice'
+import { useCookies } from 'react-cookie'
 
 const mockExpenseTypes = [
     { id: 1, label: 'ค่าตอบแทนใช้สอยและวัสดุ', name: 'ค่าตอบแทนใช้สอยและวัสดุ', budget_type_id: 2 },
@@ -39,8 +35,16 @@ type BudgetExpenseFormProp = {
 };
 
 const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
+    const [cookies] = useCookies();
     const dispatch = useDispatch<any>();
+    const { projects } = useSelector((state: any) => state.project);
     const [showBudgetModal, setShowBudgetModal] = useState(false);
+
+    useEffect(() => {
+        dispatch(getProjects({ url: `/api/projects/search?year=${cookies.budgetYear}` }));
+    }, [dispatch]);
+
+    const projectOptions = projects ? projects.map((p: any) => ({ ...p, label: p.name })) : [];
     const [isMasterSaved, setIsMasterSaved] = useState(false);
     const [masterData, setMasterData] = useState<BudgetExpense | null>(null);
     const [details, setDetails] = useState<BudgetExpenseDetail[]>([]);
@@ -66,6 +70,8 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
         expense_type_id: Yup.string().required('กรุณาเลือกรหัสค่าใช้จ่าย'),
         amount: Yup.number().required('กรุณาระบุจำนวนเงิน').min(1, 'จำนวนเงินต้องมากกว่า 0')
     });
+
+    console.log(projects);
 
     return (
         <div className="p-4">
@@ -163,9 +169,9 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                             <Col md={9}>
                                 <label>โครงการ/กิจกรรม <span className="text-red-500">*</span></label>
                                 <DropdownAutocomplete
-                                    options={mockProjects}
+                                    options={projectOptions}
                                     onSelect={(item) => formik.setFieldValue('project_id', item ? item.id : '')}
-                                    defaultVal={mockProjects.find(p => p.id === Number(formik.values.project_id))}
+                                    defaultVal={projectOptions.find((p: any) => p.id === Number(formik.values.project_id))}
                                     isInvalid={!!(formik.errors.project_id && formik.touched.project_id)}
                                 />
                                 {formik.errors.project_id && formik.touched.project_id && (

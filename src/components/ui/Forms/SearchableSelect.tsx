@@ -232,10 +232,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
 
   // Filter options
   const filteredOptions = searchQuery
-    ? normalizedOptions.filter((opt) =>
-      opt.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      opt.value.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    ? normalizedOptions.filter((opt) => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
     : normalizedOptions;
 
   const currentOption = normalizedOptions.find((o) => o.value === value);

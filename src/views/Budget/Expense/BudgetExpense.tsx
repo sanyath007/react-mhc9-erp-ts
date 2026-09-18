@@ -114,7 +114,7 @@ const BudgetExpenseDetail = () => {
                         <tbody>
                             {(!expense.details || expense.details.length === 0) ? (
                                 <tr>
-                                    <td colSpan={6} className="text-center text-gray-500 py-4">
+                                    <td colSpan={7} className="text-center text-gray-500 py-4">
                                         -- ยังไม่มีข้อมูลรายละเอียดค่าใช้จ่าย --
                                     </td>
                                 </tr>

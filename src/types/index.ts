@@ -214,6 +214,8 @@ export type BudgetExpenseDetail = {
     payment_at?: Date;          // วันที่ขอจ่าย
     voucher_no?: string         // เลขที่ฎีกา
     ref_no?: string             // เลขที่อ้างอิง
+    doc_no?: string             // เลขที่หนังสือขอเบิก
+    doc_date?: Date;            // วันที่หนังสือขอเบิก
     remark?: string;            // หมายเหตุ
     created_by: number;         // ผู้บันทึก (User ID)
 }
