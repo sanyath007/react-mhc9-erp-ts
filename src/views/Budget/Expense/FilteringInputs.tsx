@@ -7,6 +7,19 @@ import { useGetInitialFormDataQuery } from '../../../features/services/budget-ac
 import Loading from '../../../components/ui/Loading'
 import { usePlans, useProjects, useActivities } from '../../../hooks/useBudget'
 
+const mockExpenseTypes = [
+    { id: 1, label: 'ค่าตอบแทนใช้สอยและวัสดุ', name: 'ค่าตอบแทนใช้สอยและวัสดุ', budget_type_id: 2 },
+    { id: 2, label: 'ค่าวัสดุ', name: 'ค่าวัสดุ', budget_type_id: 2 },
+    { id: 3, label: 'ค่าสาธารณูปโภค', name: 'ค่าสาธารณูปโภค', budget_type_id: 2 },
+    { id: 4, label: 'ค่าตอบแทนพนักงานราชการ', name: 'ค่าตอบแทนพนักงานราชการ', budget_type_id: 1 },
+    { id: 5, label: 'เงินค่าครองชีพ', name: 'เงินค่าครองชีพ', budget_type_id: 1 },
+    { id: 6, label: 'เงินสมทบกองทุนประกันสังคม', name: 'เงินสมทบกองทุนประกันสังคม', budget_type_id: 2 },
+    { id: 7, label: 'ค่าล่วงเวลา', name: 'ค่าล่วงเวลา', budget_type_id: 99 },
+    { id: 8, label: 'เงินช่วยการศึกษาบุตร', name: 'เงินช่วยการศึกษาบุตร', budget_type_id: 4 },
+    { id: 9, label: 'ค่ารักษาพยาบาล', name: 'ค่ารักษาพยาบาล', budget_type_id: 4 },
+    { id: 10, label: 'เงินนอกงบประมาณ', name: 'เงินนอกงบประมาณ', budget_type_id: 6 },
+];
+
 const FilteringInputs = ({ initialFilters, onFilter }: any) => {
     const [filters, setFilters] = useState(initialFilters);
     const { data: formData, isFetching } = useGetInitialFormDataQuery();
@@ -40,17 +53,21 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
             <Row>
                 <Col lg={11}>
                     <Row>
-
-                        <Col className="px-1 mb-2" md={8}>
+                        <Col className="px-1 max-md:mb-2" md={8}>
                             <FormGroup>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={filters.name}
+                                <select
+                                    name="type"
+                                    value={filters.type}
                                     onChange={handleInputChange}
-                                    placeholder="ชื่อกิจกรรม"
                                     className="form-control text-sm"
-                                />
+                                >
+                                    <option value="">-- ประเภท --</option>
+                                    {mockExpenseTypes.map(type => (
+                                        <option value={type.id} key={type.id}>
+                                            {type.label}
+                                        </option>
+                                    ))}
+                                </select>
                             </FormGroup>
                         </Col>
                         <Col className="px-1 mb-2" md={4}>
@@ -69,7 +86,7 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                 />
                             </FormGroup>
                         </Col>
-                        <Col className="px-1 mb-2" md={6}>
+                        <Col className="px-1 mb-2" md={4}>
                             <FormGroup>
                                 <select
                                     name="plan"
@@ -89,7 +106,7 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                 </select>
                             </FormGroup>
                         </Col>
-                        <Col className="px-1 max-lg:mb-2" md={6}>
+                        <Col className="px-1 max-lg:mb-2" md={8}>
                             <FormGroup>
                                 {projectsLoading && <div className="form-control text-sm"><Loading /></div>}
                                 {!projectsLoading && (
@@ -112,7 +129,7 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                 )}
                             </FormGroup>
                         </Col>
-                        <Col className="px-1 max-lg:mb-2" md={6}>
+                        <Col className="px-1 max-lg:mb-2">
                             <FormGroup>
                                 {activitiesLoading && <div className="form-control text-sm"><Loading /></div>}
                                 {!activitiesLoading && (
@@ -130,23 +147,6 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                         ))}
                                     </select>
                                 )}
-                            </FormGroup>
-                        </Col>
-                        <Col className="px-1 max-md:mb-2" md={6}>
-                            <FormGroup>
-                                <select
-                                    name="type"
-                                    value={filters.type}
-                                    onChange={handleInputChange}
-                                    className="form-control text-sm"
-                                >
-                                    <option value="">-- ประเภท --</option>
-                                    {formData && formData.types.map(type => (
-                                        <option value={type.id} key={type.id}>
-                                            {type.name}
-                                        </option>
-                                    ))}
-                                </select>
                             </FormGroup>
                         </Col>
                     </Row>
