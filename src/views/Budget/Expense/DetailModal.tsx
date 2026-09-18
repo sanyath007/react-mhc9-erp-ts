@@ -11,6 +11,8 @@ import DatePicker from '../../../components/ui/Forms/DatePicker'
 import YearPicker from '../../../components/ui/Forms/YearPicker'
 import { MONTH_TH_NAMES } from '../../../constants/date-time'
 import { Calendar1, Wallet, Receipt, Users, Paperclip, Store } from 'lucide-react'
+import { toast } from 'react-toastify'
+import { storeDetail } from '../../../features/slices/budget-expense/budgetExpenseSlice'
 
 const mockSources = [
     { value: '1', label: 'เงินงบประมาณ' },
@@ -25,11 +27,13 @@ type DetailModalProps = {
     onHide: () => void;
     onSave: (detail: any) => void;
     initialYear: number;
+    expenseId?: string | number;
 }
 
-const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) => {
+const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailModalProps) => {
     const dispatch = useDispatch<any>();
     const { suppliers, isLoading } = useSelector((state: any) => state.supplier);
+    const { loggedInUser } = useSelector((state: any) => state.auth);
     const [supplierSearchQuery, setSupplierSearchQuery] = useState('');
 
     useEffect(() => {
@@ -42,17 +46,17 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
     }, [isShow, dispatch, supplierSearchQuery]);
 
     const supplierOptions = suppliers ? suppliers.map((s: any) => ({
-        value: s.name,
+        value: s.id,
         label: s.name
     })) : [];
 
     const initialValues = {
-        mounth: moment().month() + 1,
+        month: moment().month() + 1,
         year: initialYear || moment().year(),
         amount: 0,
-        vat: 0,
+        vat_amount: 0,
         vat_rate: 0,
-        total: 0,
+        net_total: 0,
         paid_to: '',
         paid_at: '',
         paid_by: '',
@@ -63,14 +67,15 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
         payment_at: '',
         voucher_no: '',
         ref_no: '',
-        remark: ''
+        remark: '',
+        created_by: loggedInUser?.id || '',
     };
 
     const validationSchema = Yup.object().shape({
-        mounth: Yup.number().required('กรุณาระบุเดือน'),
+        month: Yup.number().required('กรุณาระบุเดือน'),
         year: Yup.number().required('กรุณาระบุปี'),
         amount: Yup.number().required('กรุณาระบุจำนวนเงิน').min(0, 'จำนวนเงินต้องไม่ติดลบ'),
-        vat: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
+        vat_amount: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
         vat_rate: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
         paid_to: Yup.string().required('กรุณาระบุผู้รับเงิน'),
         source_id: Yup.string().required('กรุณาระบุแหล่งเงิน')
@@ -92,14 +97,27 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting, resetForm }) => {
+                onSubmit={async (values, { setSubmitting, resetForm }) => {
                     setSubmitting(true);
-                    // Generate mock ID for the new detail
-                    const detailToSave = { ...values, id: Math.floor(Math.random() * 10000) };
-                    onSave(detailToSave);
-                    setSubmitting(false);
-                    resetForm();
-                    onHide();
+                    if (!expenseId) {
+                        toast.error('ไม่พบรหัสค่าใช้จ่ายหลัก กรุณาบันทึกข้อมูลหลักก่อน');
+                        setSubmitting(false);
+                        return;
+                    }
+                    try {
+                        const res = await dispatch(storeDetail({ id: expenseId, data: values })).unwrap();
+                        if (res.status === 1) {
+                            onSave(res.detail || values);
+                            resetForm();
+                            onHide();
+                        } else {
+                            toast.error(res.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                        }
+                    } catch (error) {
+                        toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
+                    } finally {
+                        setSubmitting(false);
+                    }
                 }}
             >
                 {(formik) => {
@@ -111,9 +129,9 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
                                         <label className="text-sm font-semibold">เดือน <span className="text-red-500">*</span></label>
                                         <SearchableSelect
                                             options={mockMonths}
-                                            value={String(formik.values.mounth)}
-                                            onChange={(value) => formik.setFieldValue('mounth', value ? Number(value) : '')}
-                                            error={formik.errors.mounth && formik.touched.mounth ? formik.errors.mounth as string : undefined}
+                                            value={String(formik.values.month)}
+                                            onChange={(value) => formik.setFieldValue('month', value ? Number(value) : '')}
+                                            error={formik.errors.month && formik.touched.month ? formik.errors.month as string : undefined}
                                             inputCss="!h-[34px] !bg-white !rounded-[0.375rem]"
                                             prefixIcon={<Calendar1 className="w-4 h-4" />}
                                         />
@@ -147,7 +165,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
                                             name="amount"
                                             className={`form-control text-sm text-center ${formik.errors.amount && formik.touched.amount ? 'is-invalid' : ''}`}
                                             onChange={(e) => formik.setFieldValue('amount', Number(e.target.value))}
-                                            onBlur={() => formik.setFieldValue('total', handleCalculateTotal(formik.values.amount, formik.values.vat))}
+                                            onBlur={() => formik.setFieldValue('net_total', handleCalculateTotal(formik.values.amount, formik.values.vat_amount))}
                                             value={formik.values.amount}
                                             onFocus={(e) => e.target.select()}
                                         />
@@ -171,11 +189,11 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
                                         <label className="text-sm font-semibold">ภาษีหัก ณ ที่จ่าย (บาท)</label>
                                         <input
                                             type="number"
-                                            name="vat"
+                                            name="vat_amount"
                                             className="form-control text-sm text-center"
-                                            onChange={(e) => formik.setFieldValue('vat', Number(e.target.value))}
-                                            onBlur={() => formik.setFieldValue('total', handleCalculateTotal(formik.values.amount, formik.values.vat))}
-                                            value={formik.values.vat}
+                                            onChange={(e) => formik.setFieldValue('vat_amount', Number(e.target.value))}
+                                            onBlur={() => formik.setFieldValue('net_total', handleCalculateTotal(formik.values.amount, formik.values.vat_amount))}
+                                            value={formik.values.vat_amount}
                                             onFocus={(e) => e.target.select()}
                                         />
                                     </Col>
@@ -183,10 +201,10 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear }: DetailModalProps) 
                                         <label className="text-sm font-semibold">จำนวนเงินสุทธิ (บาท)</label>
                                         <input
                                             type="number"
-                                            name="total"
+                                            name="net_total"
                                             className="form-control text-sm text-center bg-gray-100 font-bold text-blue-600"
                                             readOnly
-                                            value={formik.values.total}
+                                            value={formik.values.net_total}
                                         />
                                     </Col>
                                 </Row>

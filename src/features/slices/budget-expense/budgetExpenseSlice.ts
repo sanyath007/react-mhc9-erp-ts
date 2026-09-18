@@ -76,6 +76,15 @@ export const destroy = createAsyncThunk("budgetExpense/destroy", async (id: numb
     }
 });
 
+export const storeDetail = createAsyncThunk("budgetExpense/storeDetail", async ({ id, data }: { id: number | string, data: any }, { rejectWithValue }) => {
+    try {
+        const res = await api.post(`/api/budget-expenses/${id}/details/store`, data);
+        return res.data;
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
 export const budgetExpenseSlice = createSlice({
     name: 'budgetExpense',
     initialState,
@@ -177,6 +186,23 @@ export const budgetExpenseSlice = createSlice({
             }
         });
         builder.addCase(destroy.rejected, (state, { payload }) => {
+            state.error = payload;
+        });
+        builder.addCase(storeDetail.pending, (state) => {
+            state.isSuccess = false;
+            state.expense = null;
+            state.error = null;
+        });
+        builder.addCase(storeDetail.fulfilled, (state, { payload }: any) => {
+            const { status, message, expense } = payload;
+            if (status === 1) {
+                state.isSuccess = true;
+                state.expense = expense;
+            } else {
+                state.error = { message };
+            }
+        });
+        builder.addCase(storeDetail.rejected, (state, { payload }) => {
             state.error = payload;
         });
     }

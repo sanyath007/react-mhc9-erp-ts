@@ -303,7 +303,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                             details.map((detail, index) => (
                                 <tr key={index}>
                                     <td className="text-center">{index + 1}</td>
-                                    <td className="text-center">{detail.mounth}/{detail.year}</td>
+                                    <td className="text-center">{detail.month}/{detail.year}</td>
                                     <td className="text-center">{detail.withdrawal_no}</td>
                                     <td>{detail.paid_to}</td>
                                     <td className="text-right">{currency.format(detail.net_total)}</td>
@@ -320,7 +320,8 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                 <DetailModal
                     isShow={showDetailModal}
                     onHide={() => setShowDetailModal(false)}
-                    initialYear={masterData?.year}
+                    initialYear={masterData?.year || moment().year()}
+                    expenseId={masterData?.id}
                     onSave={(newDetail) => {
                         setDetails([...details, newDetail]);
                         toast.success('เพิ่มรายละเอียดเรียบร้อยแล้ว');

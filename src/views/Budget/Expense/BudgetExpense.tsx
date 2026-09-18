@@ -4,10 +4,11 @@ import { Breadcrumb } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaPlus, FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { getBudgetExpense, destroy } from '../../../features/slices/budget-expense/budgetExpenseSlice';
-import { currency } from '../../../utils';
+import { currency, toShortTHDate } from '../../../utils';
 import DetailModal from './DetailModal';
 import MasterModal from './MasterModal';
 import BudgetTypeBadge from '../../../components/Badges/BudgetTypeBadge';
+import { MONTH_TH_SHNAMES } from '../../../constants/date-time';
 
 const BudgetExpenseDetail = () => {
     const { id } = useParams();
@@ -103,8 +104,9 @@ const BudgetExpenseDetail = () => {
                             <tr>
                                 <th className="text-center w-[5%]">#</th>
                                 <th className="text-center w-[10%]">เดือน/ปี</th>
-                                <th className="text-center">เลขที่ขอเบิก</th>
-                                <th className="text-center w-[20%]">ผู้รับเงิน</th>
+                                <th className="text-center w-[15%]">เลขที่ขอเบิก | วันที่ขอเบิก</th>
+                                <th className="text-center w-[15%]">เลขที่ขอจ่าย | วันที่ขอจ่าย</th>
+                                <th className="text-center">ผู้รับเงิน</th>
                                 <th className="text-center w-[15%]">จำนวนเงินสุทธิ</th>
                                 <th className="text-center w-[10%]">การจัดการ</th>
                             </tr>
@@ -120,9 +122,16 @@ const BudgetExpenseDetail = () => {
                                 expense.details.map((detail: any, index: number) => (
                                     <tr key={detail.id || index}>
                                         <td className="text-center">{index + 1}</td>
-                                        <td className="text-center">{detail.mounth}/{detail.year}</td>
-                                        <td className="text-center">{detail.withdrawal_no || '-'}</td>
-                                        <td>{detail.supplier?.name || detail.paid_to}</td>
+                                        <td className="text-center">{MONTH_TH_SHNAMES[detail.month - 1]}/{detail.year + 543}</td>
+                                        <td className="text-center">
+                                            {detail.withdrawal_no || '-'}{' | '}
+                                            {toShortTHDate(detail.withdrawal_at || '')}
+                                        </td>
+                                        <td className="text-center">
+                                            {detail.payment_no || '-'}{' | '}
+                                            {toShortTHDate(detail.payment_at || '')}
+                                        </td>
+                                        <td>{detail.supplier?.name || '-'}</td>
                                         <td className="text-right">{currency.format(detail.net_total || detail.amount || 0)}</td>
                                         <td className="text-center">
                                             <button className="btn btn-warning btn-sm mx-1"><FaPencilAlt /></button>
@@ -150,6 +159,7 @@ const BudgetExpenseDetail = () => {
                 isShow={showDetailModal}
                 onHide={() => setShowDetailModal(false)}
                 initialYear={expense.year}
+                expenseId={expense.id}
                 onSave={() => {
                     setShowDetailModal(false);
                     dispatch(getBudgetExpense(id as string));

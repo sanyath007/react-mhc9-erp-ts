@@ -183,7 +183,7 @@ export interface PaginatedResponse<T> {
 }
 
 export type BudgetExpense = {
-    id: number;
+    id: string;
     year: number;               // ปีงบประมาณ
     budget_id: number;          // รหัสงบประมาณ
     expense_type_id: number;    // ประเภทค่าใช้จ่าย
@@ -196,9 +196,9 @@ export type BudgetExpense = {
 }
 
 export type BudgetExpenseDetail = {
-    id: number;
+    id: string;
     budget_expense_id: number;  // BudgetExpense ID
-    mounth: number;             // เดือน (ที่จ่าย)
+    month: number;              // เดือน (ที่จ่าย)
     year: number;               // ปี (ที่จ่าย)
     amount: number;             // จำนวนเงิน (ที่จ่าย)
     vat_rate: number;           // อัตราภาษีหัก ณ ที่จ่าย
@@ -215,5 +215,5 @@ export type BudgetExpenseDetail = {
     voucher_no?: string         // เลขที่ฎีกา
     ref_no?: string             // เลขที่อ้างอิง
     remark?: string;            // หมายเหตุ
-    created_by: number;         // ผู้บันทึก
+    created_by: number;         // ผู้บันทึก (User ID)
 }

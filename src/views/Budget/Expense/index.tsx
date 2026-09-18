@@ -10,7 +10,7 @@ import FilteringInputs from './FilteringInputs'
 const getMonthTotal = (item: any, month: number) => {
     if (!item.details) return item.expenses ? item.expenses[['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'][month - 1]] || 0 : 0;
     return item.details
-        .filter((d: any) => Number(d.mounth) === month)
+        .filter((d: any) => Number(d.month) === month)
         .reduce((acc: number, curr: any) => acc + Number(curr.net_total || curr.amount || 0), 0);
 };
 
