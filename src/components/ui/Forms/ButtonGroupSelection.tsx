@@ -33,11 +33,10 @@ const ButtonGroupSelection: React.FC<ButtonGroupSelectionProps> = ({
                             key={option.value}
                             type="button"
                             onClick={() => onChange(option.value)}
-                            className={`btn flex items-center justify-center flex-1 py-2 text-sm transition-colors duration-200 ${
-                                isSelected
-                                    ? 'btn-primary shadow-sm border-primary text-white font-medium'
-                                    : 'btn-outline-secondary bg-white text-gray-600 hover:bg-gray-50 border-gray-300'
-                            }`}
+                            className={`btn flex items-center justify-center flex-1 py-2 text-sm transition-colors duration-200 ${isSelected
+                                ? 'btn-primary shadow-sm border-primary text-white font-medium'
+                                : 'btn-outline-secondary bg-white text-gray-600 hover:text-gray-800 hover:bg-gray-50 border-gray-300'
+                                }`}
                         >
                             {option.icon && (
                                 <span className={`mr-2 ${isSelected ? 'text-white' : 'text-gray-500'}`}>
