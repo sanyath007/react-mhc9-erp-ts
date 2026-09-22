@@ -130,6 +130,7 @@ import Advice from './views/Advice';
 import LoanRefundBillList from './views/LoanRefund/BillList';
 /** Project */
 import ProjectList from './views/Project';
+import AddProject from './views/Project/Add';
 
 function App() {
     return (
@@ -152,6 +153,7 @@ function App() {
                 {/* ============================= General ============================= */}
                 {/* Project */}
                 <Route path="project" element={<GuardRoute><ProjectList /></GuardRoute>} />
+                <Route path="project/add" element={<GuardRoute><AddProject /></GuardRoute>} />
 
                 {/* ============================= Procurement ============================= */}
                 {/* Requisitions */}
