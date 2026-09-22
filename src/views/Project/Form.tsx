@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import { Row, Col } from 'react-bootstrap';
@@ -44,6 +44,7 @@ const Form = ({ project, onSubmit }: any) => {
     const [selectedBudget, setSelectedBudget] = useState<any>(null);
     const [showPlaceModal, setShowPlaceModal] = useState(false);
     const [showPlaceFormModal, setShowPlaceFormModal] = useState(false);
+    const [selectedDep, setSelectedDep] = useState('');
 
     const initialValues = {
         name: project?.name || '',
@@ -51,6 +52,7 @@ const Form = ({ project, onSubmit }: any) => {
         project_type_id: project?.project_type_id || '',
         budget_id: project?.budget_id || '',
         budget_name: project?.budget ? `${project.budget.activity?.project?.plan?.plan_no} ${project.budget.activity?.project?.plan?.name} - ${project.budget.activity?.name}` : '',
+        department_id: project?.department_id || '',
         division_id: project?.division_id || '',
         owner_id: project?.owner_id || '',
         from_date: project?.from_date || '',
@@ -158,13 +160,43 @@ const Form = ({ project, onSubmit }: any) => {
                         <Row className="mb-3">
                             <Col md={6}>
                                 <label>กลุ่มงาน/หน่วยงานรับผิดชอบ</label>
-                                <SearchableSelect
-                                    value={String(formik.values.division_id)}
-                                    options={(formData?.divisions || []).map((d: any) => ({ value: String(d.id), label: d.name }))}
-                                    onChange={(val: string) => formik.setFieldValue('division_id', val)}
-                                    placeholder="-- เลือกกลุ่มงาน/หน่วยงาน --"
-                                    inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
-                                />
+                                <select
+                                    name="department_id"
+                                    value={selectedDep}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (val.search(/-/i)) {
+                                            const [department, division] = val.split('-');
+
+                                            formik.setFieldValue('department_id', department);
+                                            formik.setFieldValue('division_id', division);
+                                        } else {
+                                            formik.setFieldValue('department_id', val);
+                                            formik.setFieldValue('division_id', '');
+                                        }
+
+                                        setSelectedDep(val)
+                                        setTimeout(() => formik.setFieldTouched('division_id', true), 300);
+                                    }}
+                                    className={`form-control text-sm ${(formik.errors.division_id && formik.touched.division_id) && 'border-red-500'}`}
+                                >
+                                    <option value="">-- หน่วยงาน --</option>
+                                    {formData?.departments && formData.departments.filter(dep => dep.id !== 1).map(dep => (
+                                        <Fragment key={dep.id}>
+                                            <option value={dep.id} className="font-bold">
+                                                {dep.name}
+                                            </option>
+                                            {dep.divisions.length > 0 && dep.divisions.map(division => (
+                                                <option value={`${dep.id}-${division.id}`} key={`${dep.id}-${division.id}`}>
+                                                    {division.name}
+                                                </option>
+                                            ))}
+                                        </Fragment>
+                                    ))}
+                                </select>
+                                {(formik.errors.division_id && formik.touched.division_id) && (
+                                    <span className="text-red-500 text-xs">{formik.errors.division_id as string}</span>
+                                )}
                             </Col>
                             <Col md={6}>
                                 <label>ผู้รับผิดชอบโครงการ</label>
