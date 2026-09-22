@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import { Row, Col } from 'react-bootstrap';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaFolderOpen, FaBox, FaTasks } from 'react-icons/fa';
 import moment from 'moment';
 
 import YearPicker from '../../components/ui/Forms/YearPicker';
@@ -13,20 +13,24 @@ import ModalBudgetList from '../../components/Modals/BudgetList';
 import PlaceSelection from '../../components/ui/Forms/PlaceSelection';
 import ModalPlaceList from '../../components/Modals/Place/List';
 import ModalPlaceForm from '../../components/Modals/Place/Form';
+import ButtonGroupSelection from '../../components/ui/Forms/ButtonGroupSelection';
 import { useGetInitialFormDataQuery } from '../../features/services/project/projectApi';
 
 const PROJECT_TYPES = [
     {
         id: 1,
         name: 'โครงการ',
+        icon: <FaFolderOpen />
     },
     {
         id: 2,
         name: 'ผลผลิต',
+        icon: <FaBox />
     },
     {
         id: 3,
         name: 'กิจกรรม',
+        icon: <FaTasks />
     },
 ];
 
@@ -135,16 +139,13 @@ const Form = ({ project, onSubmit }: any) => {
                         <Row className="mb-3">
                             <Col md={6}>
                                 <label>ประเภทโครงการ <span className="text-red-500">*</span></label>
-                                <SearchableSelect
-                                    value={String(formik.values.project_type_id)}
-                                    options={PROJECT_TYPES.map((t: any) => ({ value: String(t.id), label: t.name }))}
-                                    onChange={(val: string) => formik.setFieldValue('project_type_id', val)}
-                                    placeholder="-- เลือกประเภทโครงการ --"
-                                    inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
+                                <ButtonGroupSelection
+                                    value={formik.values.project_type_id}
+                                    options={PROJECT_TYPES.map((t: any) => ({ value: String(t.id), label: t.name, icon: t.icon }))}
+                                    onChange={(val: string | number) => formik.setFieldValue('project_type_id', val)}
+                                    error={!!(formik.errors.project_type_id && formik.touched.project_type_id)}
+                                    errorMessage={formik.errors.project_type_id as string}
                                 />
-                                {formik.errors.project_type_id && formik.touched.project_type_id && (
-                                    <div className="text-red-500 text-sm mt-1">{formik.errors.project_type_id as string}</div>
-                                )}
                             </Col>
                             <Col md={6}>
                                 <PlaceSelection
