@@ -10,6 +10,9 @@ import SearchableSelect from '../../components/ui/Forms/SearchableSelect';
 import EmployeeSelection from '../../components/FormControls/EmployeeSelection';
 import DatePicker from '../../components/ui/Forms/DatePicker';
 import ModalBudgetList from '../../components/Modals/BudgetList';
+import PlaceSelection from '../../components/ui/Forms/PlaceSelection';
+import ModalPlaceList from '../../components/Modals/Place/List';
+import ModalPlaceForm from '../../components/Modals/Place/Form';
 import { useGetInitialFormDataQuery } from '../../features/services/project/projectApi';
 
 const PROJECT_TYPES = [
@@ -39,6 +42,8 @@ const Form = ({ project, onSubmit }: any) => {
     const { data: formData, isLoading } = useGetInitialFormDataQuery();
     const [showBudgetModal, setShowBudgetModal] = useState(false);
     const [selectedBudget, setSelectedBudget] = useState<any>(null);
+    const [showPlaceModal, setShowPlaceModal] = useState(false);
+    const [showPlaceFormModal, setShowPlaceFormModal] = useState(false);
 
     const initialValues = {
         name: project?.name || '',
@@ -51,6 +56,7 @@ const Form = ({ project, onSubmit }: any) => {
         from_date: project?.from_date || '',
         to_date: project?.to_date || '',
         place_id: project?.place_id || '',
+        place: project?.place || null,
         status: project?.status !== undefined ? project.status : 1,
     };
 
@@ -139,13 +145,12 @@ const Form = ({ project, onSubmit }: any) => {
                                 )}
                             </Col>
                             <Col md={6}>
-                                <label>สถานที่จัดโครงการ</label>
-                                <SearchableSelect
-                                    value={String(formik.values.place_id)}
-                                    options={(formData?.places || []).map((p: any) => ({ value: String(p.id), label: p.name }))}
-                                    onChange={(val: string) => formik.setFieldValue('place_id', val)}
-                                    placeholder="-- เลือกสถานที่ --"
-                                    inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
+                                <PlaceSelection
+                                    place={formik.values.place}
+                                    error={!!(formik.errors.place_id && formik.touched.place_id)}
+                                    errorMessage={formik.errors.place_id as string}
+                                    onSearchClick={() => setShowPlaceModal(true)}
+                                    onAddClick={() => setShowPlaceFormModal(true)}
                                 />
                             </Col>
                         </Row>
@@ -210,6 +215,24 @@ const Form = ({ project, onSubmit }: any) => {
                                 formik.setFieldValue('budget_id', budget.id);
                                 formik.setFieldValue('budget_name', `${budget.activity?.project?.plan?.plan_no} ${budget.activity?.project?.plan?.name} - ${budget.activity?.name}`);
                                 setSelectedBudget(budget);
+                            }}
+                        />
+
+                        <ModalPlaceList
+                            isShow={showPlaceModal}
+                            onHide={() => setShowPlaceModal(false)}
+                            onSelect={(place: any) => {
+                                formik.setFieldValue('place_id', place.id);
+                                formik.setFieldValue('place', place);
+                            }}
+                        />
+
+                        <ModalPlaceForm
+                            isShow={showPlaceFormModal}
+                            onHide={() => setShowPlaceFormModal(false)}
+                            onSubmit={(place: any) => {
+                                formik.setFieldValue('place_id', place?.id);
+                                formik.setFieldValue('place', place);
                             }}
                         />
                     </FormikForm>

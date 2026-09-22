@@ -9,6 +9,7 @@ import moment from 'moment'
 import { useStyles } from '../../../hooks/useStyles'
 import ModalPlaceForm from '../../../components/Modals/Place/Form'
 import ModalPlaceList from '../../../components/Modals/Place/List'
+import PlaceSelection from '../../../components/ui/Forms/PlaceSelection'
 
 const courseSchema = (expenseCalc) => Yup.object().shape({
     course_date: Yup.string().when([], {
@@ -136,21 +137,13 @@ const AddCourse = ({ courses, defaultCourseDate, expenseCalc, onAdd }: any) => {
                                     )}
                                 </Col>
                                 <Col md={expenseCalc === 2 ? 6 : 8} className={`${expenseCalc === 2 ? "mt-2" : ""} pr-1`}>
-                                    <label htmlFor="">สถานที่จัด</label>
-                                    <div className="input-group">
-                                        <div className={`form-control text-sm h-[34px] bg-gray-100 ${(formik.errors.place_id && formik.touched.place_id) && 'border-red-500'}`}>
-                                            {place?.name} {place && <span>จ.{place?.changwat?.name}</span>}
-                                        </div>
-                                        <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => setShowPlaceModal(true)}>
-                                            <FaSearch />
-                                        </button>
-                                        <button type="button" className="btn btn-outline-success btn-sm px-2" onClick={() => setShowPlaceFormModal(true)}>
-                                            <FaPlus />
-                                        </button>
-                                    </div>
-                                    {(formik.errors.place_id && formik.touched.place_id) && (
-                                        <span className="text-red-500 text-xs">{formik.errors.place_id as string}</span>
-                                    )}
+                                    <PlaceSelection
+                                        place={place}
+                                        error={!!(formik.errors.place_id && formik.touched.place_id)}
+                                        errorMessage={formik.errors.place_id as string}
+                                        onSearchClick={() => setShowPlaceModal(true)}
+                                        onAddClick={() => setShowPlaceFormModal(true)}
+                                    />
                                 </Col>
                                 <Col md={expenseCalc === 2 ? 6 : 12} className={`${expenseCalc === 2 ? "px-1" : "pr-1"} mt-2`}>
                                     {expenseCalc === 2 && <label htmlFor="">รายละเอียดเพิ่มเติม <span className="text-red-500">(ถ้ามี)</span></label>}
