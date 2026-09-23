@@ -87,7 +87,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                             expense_type_id: parseInt(values.expense_type_id),
                             year: values.year,
                             budget_id: parseInt(values.budget_id),
-                            project_id: parseInt(values.project_id),
+                            project_id: values.project_id,
                             amount: values.amount,
                             description: values.description || '',
                         };
@@ -106,166 +106,168 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                     }
                 }}
             >
-                {(formik) => (
-                    <Form>
-                        <h4 className="mb-3 text-primary border-b pb-2 font-bold">1. ข้อมูลค่าใช้จ่ายหลัก</h4>
-                        <Row className="mb-3">
-                            <Col md={3}>
-                                <label>ปีงบประมาณ <span className="text-red-500">*</span></label>
-                                <YearPicker
-                                    value={formik.values.year}
-                                    onChange={(year: string) => formik.setFieldValue('year', year)}
-                                    inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
-                                />
-                                {formik.errors.year && formik.touched.year && (
-                                    <div className="text-red-500 text-sm mt-1">{formik.errors.year as string}</div>
-                                )}
-                            </Col>
-                            <Col md={9}>
-                                <label>งบประมาณ <span className="text-red-500">*</span></label>
-                                <div className="input-group">
+                {(formik) => {
+                    return (
+                        <Form>
+                            <h4 className="mb-3 text-primary border-b pb-2 font-bold">1. ข้อมูลค่าใช้จ่ายหลัก</h4>
+                            <Row className="mb-3">
+                                <Col md={3}>
+                                    <label>ปีงบประมาณ <span className="text-red-500">*</span></label>
+                                    <YearPicker
+                                        value={formik.values.year}
+                                        onChange={(year: string) => formik.setFieldValue('year', year)}
+                                        inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
+                                    />
+                                    {formik.errors.year && formik.touched.year && (
+                                        <div className="text-red-500 text-sm mt-1">{formik.errors.year as string}</div>
+                                    )}
+                                </Col>
+                                <Col md={9}>
+                                    <label>งบประมาณ <span className="text-red-500">*</span></label>
+                                    <div className="input-group">
+                                        <input
+                                            type="text"
+                                            className={`form-control text-sm ${formik.errors.budget_id && formik.touched.budget_id ? 'is-invalid' : ''}`}
+                                            value={formik.values.budget_name}
+                                            readOnly
+                                            placeholder="คลิกปุ่มค้นหาเพื่อเลือกรหัสงบประมาณ"
+                                        />
+                                        <button
+                                            type="button"
+                                            className="btn btn-outline-secondary"
+                                            onClick={() => setShowBudgetModal(true)}
+                                            disabled={isMasterSaved}
+                                        >
+                                            <FaSearch />
+                                        </button>
+                                    </div>
+                                    {formik.errors.budget_id && formik.touched.budget_id && (
+                                        <div className="text-red-500 text-sm mt-1">{formik.errors.budget_id as string}</div>
+                                    )}
+                                </Col>
+                            </Row>
+
+                            {selectedBudget && (
+                                <div className="bg-blue-50 rounded-md p-3 mb-3 border border-blue-200 text-sm">
+                                    <p className="mb-1"><span className="font-semibold text-gray-700">แผนงาน:</span> {selectedBudget.activity?.project?.plan?.plan_no} {selectedBudget.activity?.project?.plan?.name}</p>
+                                    <p className="mb-1"><span className="font-semibold text-gray-700">โครงการ/ผลผลิต:</span> {selectedBudget.activity?.project?.name}</p>
+                                    <p className="mb-1"><span className="font-semibold text-gray-700">กิจกรรม:</span> {selectedBudget.activity?.name}</p>
+                                    <p className="mb-0"><span className="font-semibold text-gray-700">รายการงบประมาณ:</span> {selectedBudget.type?.name} {selectedBudget.total ? `(งบจัดสรร: ${currency.format(selectedBudget.total)} บาท)` : ''}</p>
+                                </div>
+                            )}
+
+                            <Row className="mb-3">
+                                <Col md={3}>
+                                    <label>ประเภทค่าใช้จ่าย <span className="text-red-500">*</span></label>
+                                    <SearchableSelect
+                                        value={String(formik.values.expense_type_id)}
+                                        options={mockExpenseTypes.map(e => ({ value: String(e.id), label: e.name }))}
+                                        onChange={(val: string) => formik.setFieldValue('expense_type_id', val)}
+                                        placeholder="-- เลือกประเภทค่าใช้จ่าย --"
+                                        inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
+                                    />
+                                    {formik.errors.expense_type_id && formik.touched.expense_type_id && (
+                                        <div className="text-red-500 text-sm mt-1">{formik.errors.expense_type_id as string}</div>
+                                    )}
+                                </Col>
+                                <Col md={9}>
+                                    <label>โครงการ/กิจกรรม <span className="text-red-500">*</span></label>
+                                    <SearchableSelect
+                                        value={String(formik.values.project_id)}
+                                        options={projectOptions}
+                                        onChange={(val: string) => formik.setFieldValue('project_id', val)}
+                                        placeholder="-- เลือกโครงการ/กิจกรรม --"
+                                        inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
+                                    />
+                                    {formik.errors.project_id && formik.touched.project_id && (
+                                        <div className="text-red-500 text-sm mt-1">{formik.errors.project_id as string}</div>
+                                    )}
+                                </Col>
+                            </Row>
+                            <Row className="mb-3">
+                                <Col md={4}>
+                                    <label>หน่วยนับ <span className="text-red-500">*</span></label>
                                     <input
                                         type="text"
-                                        className={`form-control text-sm ${formik.errors.budget_id && formik.touched.budget_id ? 'is-invalid' : ''}`}
-                                        value={formik.values.budget_name}
-                                        readOnly
-                                        placeholder="คลิกปุ่มค้นหาเพื่อเลือกรหัสงบประมาณ"
-                                    />
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-secondary"
-                                        onClick={() => setShowBudgetModal(true)}
+                                        name="unit_text"
+                                        className={`form-control text-sm ${formik.errors.unit_text && formik.touched.unit_text ? 'is-invalid' : ''}`}
+                                        onChange={formik.handleChange}
+                                        value={formik.values.unit_text}
                                         disabled={isMasterSaved}
-                                    >
-                                        <FaSearch />
-                                    </button>
-                                </div>
-                                {formik.errors.budget_id && formik.touched.budget_id && (
-                                    <div className="text-red-500 text-sm mt-1">{formik.errors.budget_id as string}</div>
-                                )}
-                            </Col>
-                        </Row>
+                                    />
+                                    {formik.errors.unit_text && formik.touched.unit_text && (
+                                        <div className="text-red-500 text-sm mt-1">{formik.errors.unit_text as string}</div>
+                                    )}
+                                </Col>
+                                <Col md={4}>
+                                    <label>เป้าหมาย <span className="text-red-500">*</span></label>
+                                    <input
+                                        type="number"
+                                        name="target"
+                                        className={`form-control text-sm ${formik.errors.target && formik.touched.target ? 'is-invalid' : ''}`}
+                                        onChange={formik.handleChange}
+                                        value={formik.values.target}
+                                        disabled={isMasterSaved}
+                                    />
+                                    {formik.errors.target && formik.touched.target && (
+                                        <div className="text-red-500 text-sm mt-1">{formik.errors.target as string}</div>
+                                    )}
+                                </Col>
+                                <Col md={4}>
+                                    <label>จำนวนเงิน (บาท) <span className="text-red-500">*</span></label>
+                                    <input
+                                        type="number"
+                                        name="amount"
+                                        className={`form-control text-sm ${formik.errors.amount && formik.touched.amount ? 'is-invalid' : ''}`}
+                                        onChange={formik.handleChange}
+                                        value={formik.values.amount}
+                                        disabled={isMasterSaved}
+                                    />
+                                    {formik.errors.amount && formik.touched.amount && (
+                                        <div className="text-red-500 text-sm mt-1">{formik.errors.amount as string}</div>
+                                    )}
+                                </Col>
+                            </Row>
+                            <Row className="mb-3">
+                                <Col>
+                                    <label>คำอธิบาย</label>
+                                    <textarea
+                                        name="description"
+                                        className="form-control text-sm"
+                                        onChange={formik.handleChange}
+                                        value={formik.values.description}
+                                        disabled={isMasterSaved}
+                                    />
+                                </Col>
+                            </Row>
 
-                        {selectedBudget && (
-                            <div className="bg-blue-50 rounded-md p-3 mb-3 border border-blue-200 text-sm">
-                                <p className="mb-1"><span className="font-semibold text-gray-700">แผนงาน:</span> {selectedBudget.activity?.project?.plan?.plan_no} {selectedBudget.activity?.project?.plan?.name}</p>
-                                <p className="mb-1"><span className="font-semibold text-gray-700">โครงการ/ผลผลิต:</span> {selectedBudget.activity?.project?.name}</p>
-                                <p className="mb-1"><span className="font-semibold text-gray-700">กิจกรรม:</span> {selectedBudget.activity?.name}</p>
-                                <p className="mb-0"><span className="font-semibold text-gray-700">รายการงบประมาณ:</span> {selectedBudget.type?.name} {selectedBudget.total ? `(งบจัดสรร: ${currency.format(selectedBudget.total)} บาท)` : ''}</p>
+                            <div className="text-center mb-4 border-b pb-4">
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                    disabled={formik.isSubmitting || isMasterSaved}
+                                >
+                                    {formik.isSubmitting ? 'กำลังบันทึก...' : 'บันทึกข้อมูลหลัก'}
+                                </button>
+                                {isMasterSaved && (
+                                    <span className="ml-2 text-green-600 font-bold">บันทึกข้อมูลส่วนที่ 1 สำเร็จแล้ว</span>
+                                )}
                             </div>
-                        )}
 
-                        <Row className="mb-3">
-                            <Col md={3}>
-                                <label>ประเภทค่าใช้จ่าย <span className="text-red-500">*</span></label>
-                                <SearchableSelect
-                                    value={String(formik.values.expense_type_id)}
-                                    options={mockExpenseTypes.map(e => ({ value: String(e.id), label: e.name }))}
-                                    onChange={(val: string) => formik.setFieldValue('expense_type_id', val)}
-                                    placeholder="-- เลือกประเภทค่าใช้จ่าย --"
-                                    inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
-                                />
-                                {formik.errors.expense_type_id && formik.touched.expense_type_id && (
-                                    <div className="text-red-500 text-sm mt-1">{formik.errors.expense_type_id as string}</div>
-                                )}
-                            </Col>
-                            <Col md={9}>
-                                <label>โครงการ/กิจกรรม <span className="text-red-500">*</span></label>
-                                <SearchableSelect
-                                    value={String(formik.values.project_id)}
-                                    options={projectOptions}
-                                    onChange={(val: string) => formik.setFieldValue('project_id', val)}
-                                    placeholder="-- เลือกโครงการ/กิจกรรม --"
-                                    inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
-                                />
-                                {formik.errors.project_id && formik.touched.project_id && (
-                                    <div className="text-red-500 text-sm mt-1">{formik.errors.project_id as string}</div>
-                                )}
-                            </Col>
-                        </Row>
-                        <Row className="mb-3">
-                            <Col md={4}>
-                                <label>หน่วยนับ <span className="text-red-500">*</span></label>
-                                <input
-                                    type="text"
-                                    name="unit_text"
-                                    className={`form-control text-sm ${formik.errors.unit_text && formik.touched.unit_text ? 'is-invalid' : ''}`}
-                                    onChange={formik.handleChange}
-                                    value={formik.values.unit_text}
-                                    disabled={isMasterSaved}
-                                />
-                                {formik.errors.unit_text && formik.touched.unit_text && (
-                                    <div className="text-red-500 text-sm mt-1">{formik.errors.unit_text as string}</div>
-                                )}
-                            </Col>
-                            <Col md={4}>
-                                <label>เป้าหมาย <span className="text-red-500">*</span></label>
-                                <input
-                                    type="number"
-                                    name="target"
-                                    className={`form-control text-sm ${formik.errors.target && formik.touched.target ? 'is-invalid' : ''}`}
-                                    onChange={formik.handleChange}
-                                    value={formik.values.target}
-                                    disabled={isMasterSaved}
-                                />
-                                {formik.errors.target && formik.touched.target && (
-                                    <div className="text-red-500 text-sm mt-1">{formik.errors.target as string}</div>
-                                )}
-                            </Col>
-                            <Col md={4}>
-                                <label>จำนวนเงิน (บาท) <span className="text-red-500">*</span></label>
-                                <input
-                                    type="number"
-                                    name="amount"
-                                    className={`form-control text-sm ${formik.errors.amount && formik.touched.amount ? 'is-invalid' : ''}`}
-                                    onChange={formik.handleChange}
-                                    value={formik.values.amount}
-                                    disabled={isMasterSaved}
-                                />
-                                {formik.errors.amount && formik.touched.amount && (
-                                    <div className="text-red-500 text-sm mt-1">{formik.errors.amount as string}</div>
-                                )}
-                            </Col>
-                        </Row>
-                        <Row className="mb-3">
-                            <Col>
-                                <label>คำอธิบาย</label>
-                                <textarea
-                                    name="description"
-                                    className="form-control text-sm"
-                                    onChange={formik.handleChange}
-                                    value={formik.values.description}
-                                    disabled={isMasterSaved}
-                                />
-                            </Col>
-                        </Row>
-
-                        <div className="text-center mb-4 border-b pb-4">
-                            <button
-                                type="submit"
-                                className="btn btn-primary"
-                                disabled={formik.isSubmitting || isMasterSaved}
-                            >
-                                {formik.isSubmitting ? 'กำลังบันทึก...' : 'บันทึกข้อมูลหลัก'}
-                            </button>
-                            {isMasterSaved && (
-                                <span className="ml-2 text-green-600 font-bold">บันทึกข้อมูลส่วนที่ 1 สำเร็จแล้ว</span>
-                            )}
-                        </div>
-
-                        {/* Modal เลือกงบประมาณ (Plan -> Project -> Activity -> Budget) */}
-                        <ModalBudgetList
-                            isShow={showBudgetModal}
-                            onHide={() => setShowBudgetModal(false)}
-                            onSelect={(budget: any) => {
-                                formik.setFieldValue('budget_id', budget.id);
-                                formik.setFieldValue('project_id', budget.activity?.project_id);
-                                formik.setFieldValue('budget_name', `${budget.activity?.name} (${budget.type?.name})`);
-                                setSelectedBudget(budget);
-                            }}
-                        />
-                    </Form>
-                )}
+                            {/* Modal เลือกงบประมาณ (Plan -> Project -> Activity -> Budget) */}
+                            <ModalBudgetList
+                                isShow={showBudgetModal}
+                                onHide={() => setShowBudgetModal(false)}
+                                onSelect={(budget: any) => {
+                                    formik.setFieldValue('budget_id', budget.id);
+                                    formik.setFieldValue('project_id', budget.activity?.project_id);
+                                    formik.setFieldValue('budget_name', `${budget.activity?.name} (${budget.type?.name})`);
+                                    setSelectedBudget(budget);
+                                }}
+                            />
+                        </Form>
+                    )
+                }}
             </Formik>
 
             {/* ------------------------------------------------------------- */}
