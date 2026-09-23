@@ -14,6 +14,7 @@ import {
     setFieldTouched,
     sortObjectByDate
 } from '../../../utils'
+import { useStyles } from '../../../hooks/useStyles'
 import { store, update } from '../../../features/slices/loan/loanSlice'
 import { useGetInitialFormDataQuery } from '../../../features/services/loan/loanApi'
 import AddCourse from './AddCourse';
@@ -52,6 +53,7 @@ const loanSchema = Yup.object().shape({
 });
 
 const LoanForm = ({ loan }: any) => {
+    const classes = useStyles()
     const [cookies] = useCookies()
     const dispatch = useDispatch<any>();
     const { data: formData, isLoading } = useGetInitialFormDataQuery();
@@ -261,11 +263,11 @@ const LoanForm = ({ loan }: any) => {
                                     <DatePicker
                                         format="DD/MM/YYYY"
                                         value={selectedDocDate}
+                                        className={classes.muiTextFieldInput}
                                         onChange={(date) => {
                                             setSelectedDocDate(date);
                                             formik.setFieldValue('doc_date', date.format('YYYY-MM-DD'));
                                         }}
-                                        inputVariant="outlined"
                                     />
                                 </div>
                                 {(formik.errors.doc_date && formik.touched.doc_date) && (
@@ -369,6 +371,7 @@ const LoanForm = ({ loan }: any) => {
                                         format="YYYY"
                                         views={['year']}
                                         value={selectedYear}
+                                        className={classes.muiTextFieldInput}
                                         onChange={(date) => {
                                             setSelectedYear(date);
                                             formik.setFieldValue('year', date.year());
@@ -404,11 +407,11 @@ const LoanForm = ({ loan }: any) => {
                                                 <DatePicker
                                                     format="DD/MM/YYYY"
                                                     value={selectedProjectDate}
+                                                    className={classes.muiTextFieldInput}
                                                     onChange={(date) => {
                                                         setSelectedProjectDate(date);
                                                         formik.setFieldValue('project_date', date.format('YYYY-MM-DD'));
                                                     }}
-                                                    inputVariant="outlined"
                                                 />
                                             </div>
                                             {(formik.errors.project_date && formik.touched.project_date) && (
@@ -449,6 +452,7 @@ const LoanForm = ({ loan }: any) => {
                                                 <DatePicker
                                                     format="DD/MM/YYYY"
                                                     value={selectedStartDate}
+                                                    className={classes.muiTextFieldInput}
                                                     onChange={(date) => {
                                                         setSelectedStartDate(date);
                                                         formik.setFieldValue('project_sdate', date.format('YYYY-MM-DD'));
@@ -457,7 +461,6 @@ const LoanForm = ({ loan }: any) => {
                                                         setSelectedEndDate(date);
                                                         formik.setFieldValue('project_edate', date.format('YYYY-MM-DD'));
                                                     }}
-                                                    inputVariant="outlined"
                                                 />
                                             </div>
                                             {(formik.errors.project_sdate && formik.touched.project_sdate) && (
@@ -470,11 +473,11 @@ const LoanForm = ({ loan }: any) => {
                                                 <DatePicker
                                                     format="DD/MM/YYYY"
                                                     value={selectedEndDate}
+                                                    className={classes.muiTextFieldInput}
                                                     onChange={(date) => {
                                                         setSelectedEndDate(date);
                                                         formik.setFieldValue('project_edate', date.format('YYYY-MM-DD'));
                                                     }}
-                                                    inputVariant="outlined"
                                                 />
                                             </div>
                                             {(formik.errors.project_edate && formik.touched.project_edate) && (
