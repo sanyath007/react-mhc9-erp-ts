@@ -7,6 +7,7 @@ import { currency } from '../../../utils'
 import { getBudgetExpenses } from '../../../features/slices/budget-expense/budgetExpenseSlice'
 import FilteringInputs from './FilteringInputs'
 import BudgetTypeBadge from '../../../components/Badges/BudgetTypeBadge'
+import Pagination from '../../../components/ui/Pagination'
 
 const getMonthTotal = (item: any, month: number) => {
     if (!item.details) return item.expenses ? item.expenses[['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'][month - 1]] || 0 : 0;
@@ -17,15 +18,19 @@ const getMonthTotal = (item: any, month: number) => {
 
 const BudgetExpenseList = () => {
     const dispatch = useDispatch<any>();
-    const { expenses, isLoading } = useSelector((state: any) => state.budgetExpense);
+    const { expenses, pager, isLoading } = useSelector((state: any) => state.budgetExpense);
     const [cookies] = useCookies()
     const [year, setYear] = useState(cookies.budgetYear);
-    const [apiEndpoint, setApiEndpoint] = useState('/api/budget-expenses/search');
-    const [params, setParams] = useState(`year=${cookies.budgetYear || ''}`);
+    const [apiEndpoint, setApiEndpoint] = useState('');
+    const [params, setParams] = useState(`&year=${cookies.budgetYear || ''}`);
 
     useEffect(() => {
-        dispatch(getBudgetExpenses({ url: `${apiEndpoint}?${params}` }));
-    }, [dispatch, apiEndpoint, params]);
+        if (apiEndpoint === '') {
+            dispatch(getBudgetExpenses({ url: `/api/budget-expenses/search?page=${params}` }));
+        } else {
+            dispatch(getBudgetExpenses({ url: `${apiEndpoint}${params}` }));
+        }
+    }, [apiEndpoint]);
 
     return (
         <div className="content-wrapper">
@@ -55,6 +60,7 @@ const BudgetExpenseList = () => {
                     }}
                     onFilter={(queryStr: string) => {
                         setParams(queryStr);
+                        setApiEndpoint(prev => prev === '' ? `/api/budget-expenses/search?page=` : '');
                     }}
                 />
 
@@ -136,6 +142,13 @@ const BudgetExpenseList = () => {
                         </tbody>
                     </table>
                 </div>
+
+                {pager && (
+                    <Pagination
+                        pager={pager}
+                        onPageClick={(url: string) => setApiEndpoint(url)}
+                    />
+                )}
             </div>
         </div>
     )
