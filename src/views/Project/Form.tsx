@@ -3,18 +3,13 @@ import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import { Row, Col } from 'react-bootstrap';
 import { FaSearch, FaFolderOpen, FaBox, FaTasks } from 'react-icons/fa';
-import moment from 'moment';
-
+import { useCookies } from 'react-cookie';
+import { useGetInitialFormDataQuery } from '../../features/services/project/projectApi';
 import YearPicker from '../../components/ui/Forms/YearPicker';
-import SearchableSelect from '../../components/ui/Forms/SearchableSelect';
 import EmployeeSelection from '../../components/FormControls/EmployeeSelection';
 import DatePicker from '../../components/ui/Forms/DatePicker';
 import ModalBudgetList from '../../components/Modals/BudgetList';
-import PlaceSelection from '../../components/ui/Forms/PlaceSelection';
-import ModalPlaceList from '../../components/Modals/Place/List';
-import ModalPlaceForm from '../../components/Modals/Place/Form';
 import ButtonGroupSelection from '../../components/ui/Forms/ButtonGroupSelection';
-import { useGetInitialFormDataQuery } from '../../features/services/project/projectApi';
 import BudgetTypeBadge from '../../components/Badges/BudgetTypeBadge';
 
 const PROJECT_TYPES = [
@@ -45,11 +40,10 @@ const ProjectSchema = Yup.object().shape({
 });
 
 const Form = ({ project, onSubmit }: any) => {
+    const [cookies] = useCookies();
     const { data: formData, isLoading } = useGetInitialFormDataQuery();
     const [showBudgetModal, setShowBudgetModal] = useState(false);
     const [selectedBudget, setSelectedBudget] = useState<any>(null);
-    const [showPlaceModal, setShowPlaceModal] = useState(false);
-    const [showPlaceFormModal, setShowPlaceFormModal] = useState(false);
     const [selectedDep, setSelectedDep] = useState('');
 
     useEffect(() => {
@@ -64,17 +58,16 @@ const Form = ({ project, onSubmit }: any) => {
 
     const initialValues = {
         name: project?.name || '',
-        year: project?.year || moment().year(),
+        year: project?.year || cookies.budgetYear,
         project_type_id: project?.project_type_id || '',
         budget_id: project?.budget_id || '',
         budget_name: project?.budget ? `${project.budget.activity?.project?.plan?.plan_no} ${project.budget.activity?.project?.plan?.name} - ${project.budget.activity?.name}` : '',
         department_id: project?.department_id || '',
         division_id: project?.division_id || '',
         owner_id: project?.owner_id || '',
-        from_date: project?.from_date || '',
-        to_date: project?.to_date || '',
-        place_id: project?.place_id || '',
-        place: project?.place || null,
+        from_date: project?.from_date || `${Number(cookies.budgetYear) - 1}-10-01`,
+        to_date: project?.to_date || `${cookies.budgetYear}-09-30`,
+        remark: project?.remark || '',
         status: project?.status !== undefined ? project.status : 1,
     };
 
@@ -93,7 +86,7 @@ const Form = ({ project, onSubmit }: any) => {
                     return (
                         <FormikForm>
                             <Row className="mb-3">
-                                <Col md={10}>
+                                <Col>
                                     <label>ชื่อโครงการ <span className="text-red-500">*</span></label>
                                     <input
                                         type="text"
@@ -104,17 +97,6 @@ const Form = ({ project, onSubmit }: any) => {
                                     />
                                     {formik.errors.name && formik.touched.name && (
                                         <div className="text-red-500 text-sm mt-1">{formik.errors.name as string}</div>
-                                    )}
-                                </Col>
-                                <Col md={2}>
-                                    <label>ปีงบประมาณ <span className="text-red-500">*</span></label>
-                                    <YearPicker
-                                        value={formik.values.year}
-                                        onChange={(year: string) => formik.setFieldValue('year', year)}
-                                        inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
-                                    />
-                                    {formik.errors.year && formik.touched.year && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.year as string}</div>
                                     )}
                                 </Col>
                             </Row>
@@ -168,13 +150,15 @@ const Form = ({ project, onSubmit }: any) => {
                                     />
                                 </Col>
                                 <Col md={6}>
-                                    <PlaceSelection
-                                        place={formik.values.place}
-                                        error={!!(formik.errors.place_id && formik.touched.place_id)}
-                                        errorMessage={formik.errors.place_id as string}
-                                        onSearchClick={() => setShowPlaceModal(true)}
-                                        onAddClick={() => setShowPlaceFormModal(true)}
+                                    <label>ปีงบประมาณ <span className="text-red-500">*</span></label>
+                                    <YearPicker
+                                        value={formik.values.year}
+                                        onChange={(year: string) => formik.setFieldValue('year', year)}
+                                        inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
                                     />
+                                    {formik.errors.year && formik.touched.year && (
+                                        <div className="text-red-500 text-sm mt-1">{formik.errors.year as string}</div>
+                                    )}
                                 </Col>
                             </Row>
 
@@ -252,6 +236,17 @@ const Form = ({ project, onSubmit }: any) => {
                                     )}
                                 </Col>
                             </Row>
+                            <Row className="mb-3">
+                                <Col>
+                                    <label>หมายเหตุ</label>
+                                    <textarea
+                                        name="remark"
+                                        className="form-control text-sm"
+                                        onChange={formik.handleChange}
+                                        value={formik.values.remark}
+                                    />
+                                </Col>
+                            </Row>
 
                             <hr className="my-4" />
 
@@ -268,24 +263,6 @@ const Form = ({ project, onSubmit }: any) => {
                                     formik.setFieldValue('budget_id', budget.id);
                                     formik.setFieldValue('budget_name', `${budget.activity?.project?.plan?.plan_no} ${budget.activity?.project?.plan?.name} - ${budget.activity?.name}`);
                                     setSelectedBudget(budget);
-                                }}
-                            />
-
-                            <ModalPlaceList
-                                isShow={showPlaceModal}
-                                onHide={() => setShowPlaceModal(false)}
-                                onSelect={(place: any) => {
-                                    formik.setFieldValue('place_id', place.id);
-                                    formik.setFieldValue('place', place);
-                                }}
-                            />
-
-                            <ModalPlaceForm
-                                isShow={showPlaceFormModal}
-                                onHide={() => setShowPlaceFormModal(false)}
-                                onSubmit={(place: any) => {
-                                    formik.setFieldValue('place_id', place?.id);
-                                    formik.setFieldValue('place', place);
                                 }}
                             />
                         </FormikForm>
