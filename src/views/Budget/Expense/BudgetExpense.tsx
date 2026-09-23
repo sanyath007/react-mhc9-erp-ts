@@ -70,7 +70,7 @@ const BudgetExpenseDetail = () => {
                             <span className="text-gray-500 font-semibold">แผนงาน:</span>
                             <div className='bg-blue-50 rounded-md p-3 border border-blue-200 text-sm'>
                                 <p>{expense.budget?.activity?.project?.plan?.name} ({expense.budget?.activity?.project?.name})</p>
-                                <p>{expense.budget?.activity?.name} <BudgetTypeBadge type={expense.budget?.type} /></p>
+                                <p>{expense.budget?.activity?.name} {expense.budget?.type && <BudgetTypeBadge type={expense.budget?.type} />}</p>
                             </div>
                         </div>
                         <div className="col-span-2">
@@ -125,11 +125,11 @@ const BudgetExpenseDetail = () => {
                                         <td className="text-center">{MONTH_TH_SHNAMES[detail.month - 1]}/{detail.year + 543}</td>
                                         <td className="text-center">
                                             {detail.withdrawal_no || '-'}{' | '}
-                                            {toShortTHDate(detail.withdrawal_at || '')}
+                                            {detail.withdrawal_at ? toShortTHDate(detail.withdrawal_at) : '-'}
                                         </td>
                                         <td className="text-center">
                                             {detail.payment_no || '-'}{' | '}
-                                            {toShortTHDate(detail.payment_at || '')}
+                                            {detail.payment_at ? toShortTHDate(detail.payment_at) : '-'}
                                         </td>
                                         <td>{detail.supplier?.name || '-'}</td>
                                         <td className="text-right">{currency.format(detail.net_total || detail.amount || 0)}</td>
