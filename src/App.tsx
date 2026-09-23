@@ -131,6 +131,7 @@ import LoanRefundBillList from './views/LoanRefund/BillList';
 /** Project */
 import ProjectList from './views/Project';
 import AddProject from './views/Project/Add';
+import EditProject from './views/Project/Edit';
 
 function App() {
     return (
@@ -154,6 +155,7 @@ function App() {
                 {/* Project */}
                 <Route path="project" element={<GuardRoute><ProjectList /></GuardRoute>} />
                 <Route path="project/add" element={<GuardRoute><AddProject /></GuardRoute>} />
+                <Route path="project/:id/edit" element={<GuardRoute><EditProject /></GuardRoute>} />
 
                 {/* ============================= Procurement ============================= */}
                 {/* Requisitions */}

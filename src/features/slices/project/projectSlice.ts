@@ -49,7 +49,7 @@ export const store = createAsyncThunk("project/store", async (data: any, { rejec
 
 export const update = createAsyncThunk("project/update", async ({ id, data }: { id: number | string, data: any }, { dispatch, rejectWithValue }) => {
     try {
-        const res = await api.put(`/api/projects/${id}`, data);
+        const res = await api.post(`/api/projects/${id}/update`, data);
         dispatch(getProjects({ url: '/api/projects' }));
         return res.data;
     } catch (error) {
@@ -59,7 +59,7 @@ export const update = createAsyncThunk("project/update", async ({ id, data }: { 
 
 export const destroy = createAsyncThunk("project/destroy", async ({ id }: { id: number | string }, { dispatch, rejectWithValue }) => {
     try {
-        const res = await api.delete(`/api/projects/${id}`);
+        const res = await api.post(`/api/projects/${id}/delete`);
         dispatch(getProjects({ url: '/api/projects' }));
         return res.data;
     } catch (error) {
