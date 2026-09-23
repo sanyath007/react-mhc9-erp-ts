@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
@@ -13,7 +13,7 @@ import { currency, toShortTHDate } from '../../../utils'
 import DetailModal from './DetailModal'
 import { BudgetExpense } from '../../../types'
 import { store } from '../../../features/slices/budget-expense/budgetExpenseSlice'
-import { getProjects } from '../../../features/slices/project/projectSlice'
+import { getAllProjects } from '../../../features/slices/project/projectSlice'
 import { useCookies } from 'react-cookie'
 import { MONTH_TH_SHNAMES } from '../../../constants/date-time'
 
@@ -40,17 +40,20 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
     const dispatch = useDispatch<any>();
     const { projects } = useSelector((state: any) => state.project);
     const [showBudgetModal, setShowBudgetModal] = useState(false);
-
-    useEffect(() => {
-        dispatch(getProjects({ url: `/api/projects/search?year=${cookies.budgetYear}` }));
-    }, [dispatch]);
-
-    // const projectOptions = projects ? projects.map((p: any) => ({ ...p, label: p.name })) : [];
     const [isMasterSaved, setIsMasterSaved] = useState(false);
     const [masterData, setMasterData] = useState<BudgetExpense | null>(null);
     const [details, setDetails] = useState<any[]>([]);
     const [selectedBudget, setSelectedBudget] = useState<any>(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
+
+    useEffect(() => {
+        dispatch(getAllProjects({ url: `/api/projects?year=${cookies.budgetYear}` }));
+    }, [dispatch]);
+
+    const projectOptions = useMemo(() => {
+        return selectedBudget ? projects?.filter((p: any) => String(p.budget_id) === String(selectedBudget.id))
+            .map((p: any) => ({ value: String(p.id), label: p.name })) : []
+    }, [projects, selectedBudget]);
 
     const initialValues = {
         year: moment().year(),
@@ -170,9 +173,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                 <label>โครงการ/กิจกรรม <span className="text-red-500">*</span></label>
                                 <SearchableSelect
                                     value={String(formik.values.project_id)}
-                                    options={(projects || [])
-                                        .filter((p: any) => !formik.values.budget_id || String(p.budget_id) === String(formik.values.budget_id))
-                                        .map((p: any) => ({ value: String(p.id), label: p.name }))}
+                                    options={projectOptions}
                                     onChange={(val: string) => formik.setFieldValue('project_id', val)}
                                     placeholder="-- เลือกโครงการ/กิจกรรม --"
                                     inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
