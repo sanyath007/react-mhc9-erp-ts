@@ -19,6 +19,7 @@ import {
     toLongTHDate,
     toShortTHDate
 } from '../../../utils'
+import { useStyles } from '../../../hooks/useStyles'
 import { store, update } from '../../../features/slices/loan-refund/loanRefundSlice'
 import { useGetInitialFormDataQuery } from '../../../features/services/loan/loanApi'
 import AddExpense from './AddExpense';
@@ -85,6 +86,7 @@ const refundSchema = Yup.object().shape({
 });
 
 const LoanRefundForm = ({ refund }: any) => {
+    const classes = useStyles();
     const dispatch = useDispatch<any>();
     const [selectedDocDate, setSelectedDocDate] = useState(moment());
     const [selectedOver20Date, setSelectedOver20Date] = useState(moment());
@@ -434,11 +436,11 @@ const LoanRefundForm = ({ refund }: any) => {
                                                 <DatePicker
                                                     format="DD/MM/YYYY"
                                                     value={selectedDocDate}
+                                                    className={classes.muiTextFieldInput}
                                                     onChange={(date) => {
                                                         setSelectedDocDate(date);
                                                         formik.setFieldValue('doc_date', date.format('YYYY-MM-DD'));
                                                     }}
-                                                    inputVariant="outlined"
                                                 />
                                             </div>
                                             {(formik.errors.doc_date && formik.touched.doc_date) && (
@@ -514,6 +516,7 @@ const LoanRefundForm = ({ refund }: any) => {
                                                     <DatePicker
                                                         format="DD/MM/YYYY"
                                                         value={selectedOver20Date}
+                                                        className={classes.muiTextFieldInput}
                                                         onChange={(date) => {
                                                             setSelectedOver20Date(date);
                                                             formik.setFieldValue('over20_date', date.format('YYYY-MM-DD'));
@@ -641,6 +644,7 @@ const LoanRefundForm = ({ refund }: any) => {
                                                     <DatePicker
                                                         format="DD/MM/YYYY"
                                                         value={selectedOver20Date}
+                                                        className={classes.muiTextFieldInput}
                                                         onChange={(date) => {
                                                             setSelectedOver20Date(date);
                                                             formik.setFieldValue('return_date', date.format('YYYY-MM-DD'));

@@ -14,6 +14,7 @@ import {
     toShortTHDate,
     sortObjectByDate
 } from '../../../utils'
+import { useStyles } from '../../../hooks/useStyles'
 import { store, update } from '../../../features/slices/loan-contract/loanContractSlice'
 import { useGetInitialFormDataQuery } from '../../../features/services/loan/loanApi'
 import Loading from '../../../components/ui/Loading'
@@ -33,6 +34,7 @@ const contractSchema = Yup.object().shape({
 });
 
 const LoanContractForm = ({ contract }: any) => {
+    const classes = useStyles();
     const dispatch = useDispatch<any>();
     const [selectedBk02Date, setSelectedBk02Date] = useState(moment());
     const [selectedSentDate, setSelectedSentDate] = useState(moment());
@@ -269,11 +271,11 @@ const LoanContractForm = ({ contract }: any) => {
                                                     <DatePicker
                                                         format="DD/MM/YYYY"
                                                         value={selectedSentDate}
+                                                        className={classes.muiTextFieldInput}
                                                         onChange={(date) => {
                                                             setSelectedSentDate(date);
                                                             formik.setFieldValue('sent_date', date.format('YYYY-MM-DD'));
                                                         }}
-                                                        inputVariant="outlined"
                                                     />
                                                     {(formik.errors.sent_date && formik.touched.sent_date) && (
                                                         <span className="text-red-500 text-xs">{formik.errors.sent_date as string}</span>
@@ -284,11 +286,11 @@ const LoanContractForm = ({ contract }: any) => {
                                                     <DatePicker
                                                         format="DD/MM/YYYY"
                                                         value={selectedApprovedDate}
+                                                        className={classes.muiTextFieldInput}
                                                         onChange={(date) => {
                                                             setSelectedApprovedDate(date);
                                                             formik.setFieldValue('approved_date', date.format('YYYY-MM-DD'));
                                                         }}
-                                                        inputVariant="outlined"
                                                     />
                                                     {(formik.errors.approved_date && formik.touched.approved_date) && (
                                                         <span className="text-red-500 text-xs">{formik.errors.approved_date as string}</span>
@@ -314,11 +316,11 @@ const LoanContractForm = ({ contract }: any) => {
                                                     <DatePicker
                                                         format="DD/MM/YYYY"
                                                         value={selectedBk02Date}
+                                                        className={classes.muiTextFieldInput}
                                                         onChange={(date) => {
                                                             setSelectedBk02Date(date);
                                                             formik.setFieldValue('bk02_date', date.format('YYYY-MM-DD'));
                                                         }}
-                                                        inputVariant="outlined"
                                                     />
                                                     {(formik.errors.bk02_date && formik.touched.bk02_date) && (
                                                         <span className="text-red-500 text-xs">{formik.errors.bk02_date as string}</span>
