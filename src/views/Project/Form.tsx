@@ -146,9 +146,10 @@ const Form = ({ project, onSubmit }: any) => {
 
                             {selectedBudget && (
                                 <div className="bg-blue-50 rounded-md p-3 mb-3 border border-blue-200 text-sm">
-                                    <p className="mb-1"><span className="font-semibold text-gray-700">แผนงาน:</span> {selectedBudget.activity?.project?.plan?.plan_no} {selectedBudget.activity?.project?.plan?.name}</p>
-                                    <p className="mb-1"><span className="font-semibold text-gray-700">โครงการ/ผลผลิต:</span> {selectedBudget.activity?.project?.name}</p>
-                                    <p className="mb-1"><span className="font-semibold text-gray-700">กิจกรรม:</span>
+                                    <p className="mb-1"><span className="font-semibold text-gray-700 mr-1">แผนงาน:</span>{selectedBudget.activity?.project?.plan?.plan_no} {selectedBudget.activity?.project?.plan?.name}</p>
+                                    <p className="mb-1"><span className="font-semibold text-gray-700 mr-1">โครงการ/ผลผลิต:</span>{selectedBudget.activity?.project?.name}</p>
+                                    <p className="mb-1">
+                                        <span className="font-semibold text-gray-700 mr-1">กิจกรรม:</span>
                                         {selectedBudget.activity?.name}
                                         <BudgetTypeBadge type={selectedBudget?.type} />
                                     </p>
