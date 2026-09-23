@@ -12,7 +12,7 @@ import YearPicker from '../../../components/ui/Forms/YearPicker'
 import { MONTH_TH_NAMES } from '../../../constants/date-time'
 import { Calendar1, Wallet, Receipt, Users, Paperclip, Store } from 'lucide-react'
 import { toast } from 'react-toastify'
-import { storeDetail } from '../../../features/slices/budget-expense/budgetExpenseSlice'
+import { storeDetail, updateDetail } from '../../../features/slices/budget-expense/budgetExpenseSlice'
 
 const mockSources = [
     { value: '1', label: 'เงินงบประมาณ' },
@@ -28,13 +28,20 @@ type DetailModalProps = {
     onSave: (detail: any) => void;
     initialYear: number;
     expenseId?: string | number;
+    detail?: any;
 }
 
-const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailModalProps) => {
+const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }: DetailModalProps) => {
     const dispatch = useDispatch<any>();
     const { suppliers, isLoading } = useSelector((state: any) => state.supplier);
     const { loggedInUser } = useSelector((state: any) => state.auth);
     const [supplierSearchQuery, setSupplierSearchQuery] = useState('');
+
+    useEffect(() => {
+        if (detail) {
+            setSupplierSearchQuery(detail.supplier.name);
+        }
+    }, [detail, isShow]);
 
     useEffect(() => {
         if (isShow) {
@@ -51,26 +58,26 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
     })) : [];
 
     const initialValues = {
-        month: moment().month() + 1,
-        year: initialYear || moment().year(),
-        amount: 0,
-        vat_amount: 0,
-        vat_rate: 0,
-        net_total: 0,
-        paid_to: '',
-        paid_at: '',
-        paid_by: '',
-        source_id: '',
-        withdrawal_no: '',
-        withdrawal_at: '',
-        payment_no: '',
-        payment_at: '',
-        voucher_no: '',
-        ref_no: '',
-        doc_no: '',
-        doc_date: '',
-        remark: '',
-        created_by: loggedInUser?.id || '',
+        month: detail?.month || moment().month() + 1,
+        year: detail?.year || initialYear || moment().year(),
+        amount: detail?.amount || 0,
+        vat_amount: detail?.vat_amount || 0,
+        vat_rate: detail?.vat_rate || 0,
+        net_total: detail?.net_total || 0,
+        paid_to: detail?.paid_to || '',
+        paid_at: detail?.paid_at || '',
+        paid_by: detail?.paid_by || '',
+        source_id: detail?.source_id || '',
+        withdrawal_no: detail?.withdrawal_no || '',
+        withdrawal_at: detail?.withdrawal_at || '',
+        payment_no: detail?.payment_no || '',
+        payment_at: detail?.payment_at || '',
+        voucher_no: detail?.voucher_no || '',
+        ref_no: detail?.ref_no || '',
+        doc_no: detail?.doc_no || '',
+        doc_date: detail?.doc_date || '',
+        remark: detail?.remark || '',
+        created_by: detail?.created_by || loggedInUser?.id || '',
     };
 
     const validationSchema = Yup.object().shape({
@@ -96,7 +103,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
     return (
         <Modal show={isShow} onHide={onHide} size="xl" backdrop="static">
             <Modal.Header closeButton className="py-2">
-                <Modal.Title className="text-lg font-bold">เพิ่มรายละเอียดค่าใช้จ่ายรายเดือน</Modal.Title>
+                <Modal.Title className="text-lg font-bold">{detail ? 'แก้ไขรายละเอียดค่าใช้จ่ายรายเดือน' : 'เพิ่มรายละเอียดค่าใช้จ่ายรายเดือน'}</Modal.Title>
             </Modal.Header>
             <Formik
                 initialValues={initialValues}
@@ -109,7 +116,12 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId }: DetailM
                         return;
                     }
                     try {
-                        const res = await dispatch(storeDetail({ id: expenseId, data: values })).unwrap();
+                        let res;
+                        if (detail?.id) {
+                            res = await dispatch(updateDetail({ id: expenseId, detailId: detail.id, data: values })).unwrap();
+                        } else {
+                            res = await dispatch(storeDetail({ id: expenseId, data: values })).unwrap();
+                        }
                         if (res.status === 1) {
                             onSave(res.detail || values);
                             resetForm();

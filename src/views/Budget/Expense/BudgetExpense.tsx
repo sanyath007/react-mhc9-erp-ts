@@ -18,6 +18,7 @@ const BudgetExpenseDetail = () => {
 
     const [showMasterModal, setShowMasterModal] = useState(false);
     const [showDetailModal, setShowDetailModal] = useState(false);
+    const [selectedDetail, setSelectedDetail] = useState<any>(null);
 
     useEffect(() => {
         if (id) {
@@ -94,7 +95,10 @@ const BudgetExpenseDetail = () => {
                 <div className="bg-white p-4 rounded-md shadow-sm border border-gray-200">
                     <div className="flex justify-between items-center mb-3">
                         <h4 className="text-primary font-bold">2. รายละเอียดการเบิกจ่าย</h4>
-                        <button className="btn btn-success btn-sm" onClick={() => setShowDetailModal(true)}>
+                        <button className="btn btn-success btn-sm" onClick={() => {
+                            setSelectedDetail(null);
+                            setShowDetailModal(true);
+                        }}>
                             <FaPlus className="inline mr-1" /> เพิ่มรายละเอียด
                         </button>
                     </div>
@@ -134,7 +138,13 @@ const BudgetExpenseDetail = () => {
                                         <td>{detail.supplier?.name || '-'}</td>
                                         <td className="text-right">{currency.format(detail.net_total || detail.amount || 0)}</td>
                                         <td className="text-center">
-                                            <button className="btn btn-warning btn-sm mx-1"><FaPencilAlt /></button>
+                                            <button 
+                                                className="btn btn-warning btn-sm mx-1"
+                                                onClick={() => {
+                                                    setSelectedDetail(detail);
+                                                    setShowDetailModal(true);
+                                                }}
+                                            ><FaPencilAlt /></button>
                                             <button className="btn btn-danger btn-sm mx-1"><FaTrash /></button>
                                         </td>
                                     </tr>
@@ -157,9 +167,13 @@ const BudgetExpenseDetail = () => {
 
             <DetailModal
                 isShow={showDetailModal}
-                onHide={() => setShowDetailModal(false)}
+                onHide={() => {
+                    setShowDetailModal(false);
+                    setSelectedDetail(null);
+                }}
                 initialYear={expense.year}
                 expenseId={expense.id}
+                detail={selectedDetail}
                 onSave={() => {
                     setShowDetailModal(false);
                     dispatch(getBudgetExpense(id as string));

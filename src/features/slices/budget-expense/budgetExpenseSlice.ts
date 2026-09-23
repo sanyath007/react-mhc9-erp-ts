@@ -85,6 +85,15 @@ export const storeDetail = createAsyncThunk("budgetExpense/storeDetail", async (
     }
 });
 
+export const updateDetail = createAsyncThunk("budgetExpense/updateDetail", async ({ id, detailId, data }: { id: number | string, detailId: number | string, data: any }, { rejectWithValue }) => {
+    try {
+        const res = await api.post(`/api/budget-expenses/${id}/details/${detailId}/update`, data);
+        return res.data;
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
 export const budgetExpenseSlice = createSlice({
     name: 'budgetExpense',
     initialState,
