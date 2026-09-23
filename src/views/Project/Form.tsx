@@ -38,6 +38,7 @@ const ProjectSchema = Yup.object().shape({
     name: Yup.string().required('กรุณาระบุชื่อโครงการ'),
     year: Yup.string().required('กรุณาระบุปีงบประมาณ'),
     project_type_id: Yup.string().required('กรุณาระบุประเภทโครงการ'),
+    budget_id: Yup.string().required('กรุณาระบุรหัสงบประมาณ'),
     from_date: Yup.string().required('กรุณาระบุวันที่เริ่มดำเนินการ'),
     to_date: Yup.string().required('กรุณาระบุวันที่สิ้นสุด'),
 });
@@ -125,6 +126,9 @@ const Form = ({ project, onSubmit }: any) => {
                                         <FaSearch />
                                     </button>
                                 </div>
+                                {formik.errors.budget_id && formik.touched.budget_id && (
+                                    <div className="text-red-500 text-sm mt-1">{formik.errors.budget_id as string}</div>
+                                )}
                             </Col>
                         </Row>
 

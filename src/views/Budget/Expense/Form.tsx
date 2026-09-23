@@ -8,7 +8,7 @@ import { FaSearch, FaPlus, FaTrash, FaPencilAlt } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import YearPicker from '../../../components/ui/Forms/YearPicker'
 import ModalBudgetList from '../../../components/Modals/BudgetList'
-import DropdownAutocomplete from '../../../components/FormControls/DropdownAutocomplete'
+import SearchableSelect from '../../../components/ui/Forms/SearchableSelect'
 import { currency, toShortTHDate } from '../../../utils'
 import DetailModal from './DetailModal'
 import { BudgetExpense } from '../../../types'
@@ -45,7 +45,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
         dispatch(getProjects({ url: `/api/projects/search?year=${cookies.budgetYear}` }));
     }, [dispatch]);
 
-    const projectOptions = projects ? projects.map((p: any) => ({ ...p, label: p.name })) : [];
+    // const projectOptions = projects ? projects.map((p: any) => ({ ...p, label: p.name })) : [];
     const [isMasterSaved, setIsMasterSaved] = useState(false);
     const [masterData, setMasterData] = useState<BudgetExpense | null>(null);
     const [details, setDetails] = useState<any[]>([]);
@@ -155,11 +155,12 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                         <Row className="mb-3">
                             <Col md={3}>
                                 <label>ประเภทค่าใช้จ่าย <span className="text-red-500">*</span></label>
-                                <DropdownAutocomplete
-                                    options={mockExpenseTypes}
-                                    onSelect={(item) => formik.setFieldValue('expense_type_id', item ? item.id : '')}
-                                    defaultVal={mockExpenseTypes.find(e => e.id === Number(formik.values.expense_type_id))}
-                                    isInvalid={!!(formik.errors.expense_type_id && formik.touched.expense_type_id)}
+                                <SearchableSelect
+                                    value={String(formik.values.expense_type_id)}
+                                    options={mockExpenseTypes.map(e => ({ value: String(e.id), label: e.name }))}
+                                    onChange={(val: string) => formik.setFieldValue('expense_type_id', val)}
+                                    placeholder="-- เลือกประเภทค่าใช้จ่าย --"
+                                    inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
                                 />
                                 {formik.errors.expense_type_id && formik.touched.expense_type_id && (
                                     <div className="text-red-500 text-sm mt-1">{formik.errors.expense_type_id as string}</div>
@@ -167,11 +168,14 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                             </Col>
                             <Col md={9}>
                                 <label>โครงการ/กิจกรรม <span className="text-red-500">*</span></label>
-                                <DropdownAutocomplete
-                                    options={projectOptions}
-                                    onSelect={(item) => formik.setFieldValue('project_id', item ? item.id : '')}
-                                    defaultVal={projectOptions.find((p: any) => p.id === Number(formik.values.project_id))}
-                                    isInvalid={!!(formik.errors.project_id && formik.touched.project_id)}
+                                <SearchableSelect
+                                    value={String(formik.values.project_id)}
+                                    options={(projects || [])
+                                        .filter((p: any) => !formik.values.budget_id || String(p.budget_id) === String(formik.values.budget_id))
+                                        .map((p: any) => ({ value: String(p.id), label: p.name }))}
+                                    onChange={(val: string) => formik.setFieldValue('project_id', val)}
+                                    placeholder="-- เลือกโครงการ/กิจกรรม --"
+                                    inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
                                 />
                                 {formik.errors.project_id && formik.touched.project_id && (
                                     <div className="text-red-500 text-sm mt-1">{formik.errors.project_id as string}</div>
