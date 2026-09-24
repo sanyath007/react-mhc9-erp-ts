@@ -62,6 +62,8 @@ import ItemDetail from './views/Item/Detail';
 /** Supplier */
 import SupplierList from './views/Supplier/List';
 import AddSupplier from './views/Supplier/Add';
+import EditSupplier from './views/Supplier/Edit';
+import SupplierDetail from './views/Supplier/Detail';
 import Unit from './views/Unit'
 /** Viewer */
 import WordViewer from './components/ReportViewer/WordViewer';
@@ -210,6 +212,8 @@ function App() {
                 {/* Suppliers */}
                 <Route path="supplier" element={<GuardRoute><SupplierList /></GuardRoute>} />
                 <Route path="supplier/add" element={<GuardRoute><AddSupplier /></GuardRoute>} />
+                <Route path="supplier/:id/edit" element={<GuardRoute><EditSupplier /></GuardRoute>} />
+                <Route path="supplier/:id/detail" element={<GuardRoute><SupplierDetail /></GuardRoute>} />
 
                 {/* Units */}
                 <Route path="unit" element={<GuardRoute><Unit /></GuardRoute>} />

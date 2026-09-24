@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FaInfoCircle, FaUniversity, FaUserAlt, FaMap } from 'react-icons/fa'
 import { MapPin, Landmark } from 'lucide-react'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { Col, Row } from 'react-bootstrap'
-import { store } from '../../features/slices/supplier/supplierSlice'
+import { store, update } from '../../features/slices/supplier/supplierSlice'
 import { useGetInitialFormDataQuery } from '../../features/services/supplier/supplierApi'
 import SearchableSelect from '../../components/ui/Forms/SearchableSelect'
 import Loading from '../../components/ui/Loading';
@@ -25,62 +25,79 @@ const initialFormData = {
     changwats: [],
     amphurs: [],
     tambons: [],
-    bank: []
+    banks: []
 };
 
-const SupplierForm = () => {
+interface SupplierFormProps {
+    supplier?: any;
+}
+
+const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
     const dispatch = useDispatch<any>();
-    const [filteredAmphurs, setFilteredAmphurs] = useState([]);
-    const [filteredTambons, setFilteredTambons] = useState([]);
+    const [filteredAmphurs, setFilteredAmphurs] = useState<any[]>([]);
+    const [filteredTambons, setFilteredTambons] = useState<any[]>([]);
     const { data: formData = initialFormData, isLoading } = useGetInitialFormDataQuery();
 
-    const handleSubmit = (values, formik) => {
-        dispatch(store(values));
+    useEffect(() => {
+        if (supplier && formData.amphurs?.length > 0) {
+            if (supplier.changwat_id) {
+                setFilteredAmphurs(formData.amphurs.filter((amp: any) => String(amp.chw_id) === String(supplier.changwat_id)));
+            }
+            if (supplier.amphur_id) {
+                setFilteredTambons(formData.tambons.filter((tam: any) => String(tam.amp_id) === String(supplier.amphur_id)));
+            }
+        }
+    }, [supplier, formData]);
 
-        formik.resetForm();
+    const handleSubmit = (values: any, formik: any) => {
+        if (supplier) {
+            dispatch(update({ id: supplier.id, data: values }));
+        } else {
+            dispatch(store(values));
+            formik.resetForm();
+        }
     };
 
-    const handleChangwatSelect = (id) => {
-        setFilteredAmphurs(formData.amphurs.filter(amp => amp.chw_id === id));
+    const handleChangwatSelect = (id: any) => {
+        setFilteredAmphurs(formData.amphurs.filter((amp: any) => String(amp.chw_id) === String(id)));
     };
 
-    const handleAmphurSelect = (id) => {
-        setFilteredTambons(formData.tambons.filter(tam => tam.amp_id === id));
+    const handleAmphurSelect = (id: any) => {
+        setFilteredTambons(formData.tambons.filter((tam: any) => String(tam.amp_id) === String(id)));
     };
 
     return (
         <Formik
+            enableReinitialize
             initialValues={{
-                tax_no: '',
-                name: '',
-                address: '',
-                moo: '',
-                road: '',
-                tambon_id: '',
-                amphur_id: '',
-                changwat_id: '',
-                zipcode: '',
-                tel: '',
-                fax: '',
-                email: '',
-                seller_name: '',
-                seller_tel: '',
-                seller_email: '',
-                manager_name: '',
-                owner_name: '',
-                bank_id: '',
-                bank_acc_no: '',
-                bank_acc_name: '',
-                bank_acc_branch: '',
-                tax_type_id: '',
-                remark: '',
+                tax_no: supplier ? supplier.tax_no || '' : '',
+                name: supplier ? supplier.name || '' : '',
+                address: supplier ? supplier.address || '' : '',
+                moo: supplier ? supplier.moo || '' : '',
+                road: supplier ? supplier.road || '' : '',
+                tambon_id: supplier ? (supplier.tambon_id ? String(supplier.tambon_id) : '') : '',
+                amphur_id: supplier ? (supplier.amphur_id ? String(supplier.amphur_id) : '') : '',
+                changwat_id: supplier ? (supplier.changwat_id ? String(supplier.changwat_id) : '') : '',
+                zipcode: supplier ? supplier.zipcode || '' : '',
+                tel: supplier ? supplier.tel || '' : '',
+                fax: supplier ? supplier.fax || '' : '',
+                email: supplier ? supplier.email || '' : '',
+                seller_name: supplier ? supplier.seller_name || '' : '',
+                seller_tel: supplier ? supplier.seller_tel || '' : '',
+                seller_email: supplier ? supplier.seller_email || '' : '',
+                manager_name: supplier ? supplier.manager_name || '' : '',
+                owner_name: supplier ? supplier.owner_name || '' : '',
+                bank_id: supplier ? (supplier.bank_id ? String(supplier.bank_id) : '') : '',
+                bank_acc_no: supplier ? supplier.bank_acc_no || '' : '',
+                bank_acc_name: supplier ? supplier.bank_acc_name || '' : '',
+                bank_acc_branch: supplier ? supplier.bank_acc_branch || '' : '',
+                tax_type_id: supplier ? (supplier.tax_type_id ? String(supplier.tax_type_id) : '') : '',
+                remark: supplier ? supplier.remark || '' : '',
             }}
             validationSchema={supplierSchema}
             onSubmit={handleSubmit}
         >
             {(formik) => {
-                console.log(formik.errors);
-
                 return (
                     <Form>
                         <div className="mb-4">
@@ -246,6 +263,9 @@ const SupplierForm = () => {
                                             value={String(formik.values.changwat_id)}
                                             onChange={(val) => {
                                                 formik.setFieldValue('changwat_id', val);
+                                                formik.setFieldValue('amphur_id', '');
+                                                formik.setFieldValue('tambon_id', '');
+                                                setFilteredTambons([]);
                                                 handleChangwatSelect(val);
                                             }}
                                             placeholder="-- เลือก --"
@@ -264,6 +284,7 @@ const SupplierForm = () => {
                                             value={String(formik.values.amphur_id)}
                                             onChange={(val) => {
                                                 formik.setFieldValue('amphur_id', val);
+                                                formik.setFieldValue('tambon_id', '');
                                                 handleAmphurSelect(val);
                                             }}
                                             placeholder="-- เลือก --"
@@ -381,7 +402,7 @@ const SupplierForm = () => {
                         <Row>
                             <Col>
                                 <button type="submit" className="btn btn-primary text-sm float-right px-4">
-                                    บันทึกข้อมูล
+                                    {supplier ? 'บันทึกการแก้ไข' : 'บันทึกข้อมูล'}
                                 </button>
                             </Col>
                         </Row>
