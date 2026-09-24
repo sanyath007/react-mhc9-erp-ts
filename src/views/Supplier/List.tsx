@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Breadcrumb, Row } from 'react-bootstrap'
+import { Breadcrumb } from 'react-bootstrap'
 import { FaPencilAlt, FaSearch, FaTrash } from 'react-icons/fa'
-import { Home, Mail, MapPin, Phone } from 'lucide-react'
+import { CheckCircle2, Mail, MapPin, Phone, XCircle } from 'lucide-react'
 import { generateQueryString } from '../../utils'
 import { getSuppliers } from '../../features/slices/supplier/supplierSlice'
 import Pagination from '../../components/ui/Pagination'
@@ -63,7 +63,7 @@ const SupplierList = () => {
                                 <th className="w-[25%]">ชื่อผู้จัดจำหน่าย</th>
                                 <th>ที่อยู่</th>
                                 <th className="text-center w-[15%]">เลขที่ผู้เสียภาษี</th>
-                                <th className="text-center w-[6%]">สถานะ</th>
+                                <th className="text-center w-[10%]">สถานะ</th>
                                 <th className="text-center w-[10%]">Actions</th>
                             </tr>
                         </thead>
@@ -79,25 +79,66 @@ const SupplierList = () => {
                             {!isLoading && suppliers && suppliers.map((supplier, index) => (
                                 <tr className="font-thin" key={supplier.id}>
                                     <td className="text-center">{pager && pager.from + index}</td>
-                                    <td>{supplier.name}</td>
+                                    <td className="text-primary font-semibold">{supplier.name}</td>
                                     <td>
-                                        <p className='flex w-full leading-normal'>
-                                            <Home className="w-4 h-4 mr-1" />
-                                            {supplier.address ? supplier.address + ' ' : ''}หมู่.{supplier.moo ? supplier.moo : '-'} ถ.{supplier.raod ? supplier.raod : '-'}
-                                        </p>
-                                        <p className='flex w-full leading-normal'>
-                                            <MapPin className="w-4 h-4 mr-1" />
-                                            {supplier.tambon?.name} {supplier.amphur?.name} {supplier.changwat?.name} {supplier.zipcode ? supplier.zipcode : '-'}
-                                        </p>
-                                        <p className='flex w-full leading-normal'>
-                                            <Phone className="w-4 h-4 mr-1" />{supplier.tel ? supplier.tel : '-'}
-                                            <Mail className="w-4 h-4 mr-1 ml-4" />{supplier.email ? supplier.email : '-'}
-                                        </p>
+                                        <div className="flex flex-col gap-1.5 py-0.5">
+                                            {/* ที่อยู่ */}
+                                            <div className="flex items-start gap-1.5 text-gray-700 text-xs leading-relaxed">
+                                                <MapPin className="w-3.5 h-3.5 text-rose-500 flex-shrink-0 mt-0.5" />
+                                                <span>
+                                                    {[
+                                                        supplier.address,
+                                                        supplier.moo ? `ม.${supplier.moo}` : null,
+                                                        (supplier.road || supplier.raod) ? `ถ.${supplier.road || supplier.raod}` : null,
+                                                        supplier.tambon?.name ? `ต.${supplier.tambon.name}` : null,
+                                                        supplier.amphur?.name ? `อ.${supplier.amphur.name}` : null,
+                                                        supplier.changwat?.name ? `จ.${supplier.changwat.name}` : null,
+                                                        supplier.zipcode
+                                                    ].filter(Boolean).join(' ') || '-'}
+                                                </span>
+                                            </div>
+
+                                            {/* ช่องทางติดต่อ */}
+                                            <div className="flex flex-wrap items-center gap-1.5">
+                                                {supplier.tel ? (
+                                                    <a
+                                                        href={`tel:${supplier.tel}`}
+                                                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-normal bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 text-decoration-none transition-colors"
+                                                        title="โทรออก"
+                                                    >
+                                                        <Phone className="w-3 h-3 text-emerald-600" />
+                                                        <span>{supplier.tel}</span>
+                                                    </a>
+                                                ) : null}
+
+                                                {supplier.email ? (
+                                                    <a
+                                                        href={`mailto:${supplier.email}`}
+                                                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-normal bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 text-decoration-none transition-colors"
+                                                        title="ส่งอีเมล"
+                                                    >
+                                                        <Mail className="w-3 h-3 text-blue-600" />
+                                                        <span>{supplier.email}</span>
+                                                    </a>
+                                                ) : null}
+
+                                                {!supplier.tel && !supplier.email && (
+                                                    <span className="text-xs text-gray-400 font-thin italic">ไม่มีข้อมูลติดต่อ</span>
+                                                )}
+                                            </div>
+                                        </div>
                                     </td>
                                     <td className="text-center">{supplier.tax_no}</td>
                                     <td className="text-center">
-                                        {supplier.status === 0 && <i className="fas fa-toggle-off text-danger text-lg"></i>}
-                                        {supplier.status === 1 && <i className="fas fa-toggle-on text-primary text-lg"></i>}
+                                        {supplier.status === 1 || supplier.status === '1' ? (
+                                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                                                <CheckCircle2 className="w-3.5 h-3.5" /> ใช้งาน
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-rose-100 text-rose-800">
+                                                <XCircle className="w-3.5 h-3.5" /> ระงับ
+                                            </span>
+                                        )}
                                     </td>
                                     <td className="text-center">
                                         <Link to={`/supplier/${supplier.id}/detail`} className="btn btn-sm btn-info px-1 mr-1">
