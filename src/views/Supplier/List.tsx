@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb, Row } from 'react-bootstrap'
-import { FaPencilAlt, FaSearch, FaTrash } from 'react-icons/fa'
-import { generateQueryString } from '../../../utils'
-import { getSuppliers } from '../../../features/slices/supplier/supplierSlice'
-import Pagination from '../../../components/ui/Pagination'
-import Loading from '../../../components/ui/Loading'
-import FilteringInputs from '../../../components/Modals/Supplier/FilteringInputs'
+import { FaEnvelope, FaPencilAlt, FaPhone, FaSearch, FaTrash } from 'react-icons/fa'
+import { generateQueryString } from '../../utils'
+import { getSuppliers } from '../../features/slices/supplier/supplierSlice'
+import Pagination from '../../components/ui/Pagination'
+import Loading from '../../components/ui/Loading'
+import FilteringInputs from '../../components/Modals/Supplier/FilteringInputs'
+import { Home, Mail, MapPin, Phone } from 'lucide-react'
 
 const initialFilters = {
     name: '',
@@ -36,7 +37,7 @@ const SupplierList = () => {
         <div className="content-wrapper">
             {/* breadcrumb */}
             <Breadcrumb>
-                <Breadcrumb.Item href="/">หน้าหลัก</Breadcrumb.Item>
+                <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>หน้าหลัก</Breadcrumb.Item>
                 <Breadcrumb.Item active>ข้อมูลพื้ฐาน</Breadcrumb.Item>
                 <Breadcrumb.Item active>ผู้จัดจำหน่าย</Breadcrumb.Item>
             </Breadcrumb>
@@ -61,7 +62,7 @@ const SupplierList = () => {
                                 <th className="text-center w-[5%]">#</th>
                                 <th className="w-[25%]">ชื่อผู้จัดจำหน่าย</th>
                                 <th>ที่อยู่</th>
-                                <th className="w-[20%]">เจ้าของ</th>
+                                <th className="text-center w-[15%]">เลขที่ผู้เสียภาษี</th>
                                 <th className="text-center w-[6%]">สถานะ</th>
                                 <th className="text-center w-[10%]">Actions</th>
                             </tr>
@@ -79,12 +80,21 @@ const SupplierList = () => {
                                 <tr className="font-thin" key={supplier.id}>
                                     <td className="text-center">{pager && pager.from + index}</td>
                                     <td>{supplier.name}</td>
-                                    <td className="text-xs">
-                                        {supplier.address ? supplier.address + ' ' : ''}หมู่.{supplier.moo ? supplier.moo : '-'} ถ.{supplier.raod ? supplier.raod : '-'}
-                                        {supplier.tambon?.name} {supplier.amphur?.name} {supplier.changwat?.name} {supplier.zipcode ? supplier.zipcode : '-'}
-                                        <span className="ml-1">โทร.{supplier.tel ? supplier.tel : '-'} Fax.{supplier.fax ? supplier.fax : '-'}</span>
+                                    <td>
+                                        <p className='flex w-full leading-normal'>
+                                            <Home className="w-4 h-4 mr-1" />
+                                            {supplier.address ? supplier.address + ' ' : ''}หมู่.{supplier.moo ? supplier.moo : '-'} ถ.{supplier.raod ? supplier.raod : '-'}
+                                        </p>
+                                        <p className='flex w-full leading-normal'>
+                                            <MapPin className="w-4 h-4 mr-1" />
+                                            {supplier.tambon?.name} {supplier.amphur?.name} {supplier.changwat?.name} {supplier.zipcode ? supplier.zipcode : '-'}
+                                        </p>
+                                        <p className='flex w-full leading-normal'>
+                                            <Phone className="w-4 h-4 mr-1" />{supplier.tel ? supplier.tel : '-'}
+                                            <Mail className="w-4 h-4 mr-1 ml-4" />{supplier.email ? supplier.email : '-'}
+                                        </p>
                                     </td>
-                                    <td>{supplier.owner_name}</td>
+                                    <td className="text-center">{supplier.tax_no}</td>
                                     <td className="text-center">
                                         {supplier.status === 0 && <i className="fas fa-toggle-off text-danger text-lg"></i>}
                                         {supplier.status === 1 && <i className="fas fa-toggle-on text-primary text-lg"></i>}

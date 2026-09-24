@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { Col, Row } from 'react-bootstrap'
-import { store } from '../../../features/slices/supplier/supplierSlice'
-import { useGetInitialFormDataQuery } from '../../../features/services/supplier/supplierApi'
-import Loading from '../../../components/ui/Loading'
+import { store } from '../../features/slices/supplier/supplierSlice'
+import { useGetInitialFormDataQuery } from '../../features/services/supplier/supplierApi'
+import Loading from '../../components/ui/Loading'
 
 const supplierSchema = Yup.object().shape({
 
