@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FaInfoCircle, FaUniversity, FaUserAlt, FaMap } from 'react-icons/fa'
-import { MapPin, Landmark } from 'lucide-react'
+import { MapPin, Landmark, Building2, User } from 'lucide-react'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { Col, Row } from 'react-bootstrap'
 import { store, update } from '../../features/slices/supplier/supplierSlice'
 import { useGetInitialFormDataQuery } from '../../features/services/supplier/supplierApi'
 import SearchableSelect from '../../components/ui/Forms/SearchableSelect'
+import ButtonGroupSelection, { ButtonGroupOption } from '../../components/ui/Forms/ButtonGroupSelection'
 import Loading from '../../components/ui/Loading';
 import ErrorMessage from '../../components/ui/Forms/ErrorMessage'
+import { amber } from '@material-ui/core/colors'
 
 const supplierSchema = Yup.object().shape({
     name: Yup.string().required('กรุณาระบุชื่อผู้ขาย'),
@@ -27,6 +29,11 @@ const initialFormData = {
     tambons: [],
     banks: []
 };
+
+const taxTypeOptions: ButtonGroupOption[] = [
+    { value: '1', label: 'บุคคลธรรมดา', icon: <User className="w-3.5 h-3.5" />, color: 'rose' },
+    { value: '2', label: 'นิติบุคคล', icon: <Building2 className="w-3.5 h-3.5" />, color: 'blue' },
+];
 
 interface SupplierFormProps {
     supplier?: any;
@@ -108,7 +115,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
                                 ข้อมูลทั่วไป
                             </h4>
                             <Row className="mb-2">
-                                <Col md={6}>
+                                <Col md={9}>
                                     <label>ชื่อผู้จัดจำหน่าย</label>
                                     <input
                                         type="text"
@@ -134,25 +141,19 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
                                         <ErrorMessage className='mt-1' message={formik.errors.tax_no as string} />
                                     )}
                                 </Col>
-                                <Col md={3}>
-                                    <label>ประเภทภาษี</label>
-                                    <select
-                                        name="tax_type_id"
-                                        value={formik.values.tax_type_id}
-                                        onChange={formik.handleChange}
-                                        className={`form-control text-sm ${formik.errors.tax_type_id && formik.touched.tax_type_id ? 'is-invalid' : ''}`}
-                                    >
-                                        <option value="">-- เลือก --</option>
-                                        <option value="1">ภาษีเงินได้บุคคลธรรมดา</option>
-                                        <option value="2">ภาษีเงินได้นิติบุคคล</option>
-                                    </select>
-                                    {formik.errors.tax_type_id && formik.touched.tax_type_id && (
-                                        <ErrorMessage className='mt-1' message={formik.errors.tax_type_id as string} />
-                                    )}
-                                </Col>
                             </Row>
                             <Row className="mb-2">
-                                <Col md={6}>
+                                <Col md={4}>
+                                    <label>ประเภทภาษี</label>
+                                    <ButtonGroupSelection
+                                        options={taxTypeOptions}
+                                        value={formik.values.tax_type_id}
+                                        onChange={(val) => formik.setFieldValue('tax_type_id', String(val))}
+                                        error={!!(formik.errors.tax_type_id && formik.touched.tax_type_id)}
+                                        errorMessage={formik.errors.tax_type_id as string}
+                                    />
+                                </Col>
+                                <Col md={4}>
                                     <label>ชื่อเจ้าของ</label>
                                     <input
                                         type="text"
@@ -162,7 +163,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
                                         className="form-control font-thin text-sm"
                                     />
                                 </Col>
-                                <Col md={6}>
+                                <Col md={4}>
                                     <label>ชื่อผู้จัดการ</label>
                                     <input
                                         type="text"
