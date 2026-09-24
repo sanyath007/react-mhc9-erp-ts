@@ -48,21 +48,22 @@ const SupplierList = () => {
                     <Link to="add" className="btn btn-primary">เพิ่มผู้จัดจำหน่าย</Link>
                 </div>
 
-                <div className="border pt-2 px-2 mb-2 rounded-md">
+                <div className="border pt-2 px-2 mb-2 rounded-lg">
                     <FilteringInputs
                         initialFilters={initialFilters}
                         onFilter={(queryStr) => setParams(queryStr)}
                     />
                 </div>
 
-                <div>
-                    <table className="table table-bordered text-sm">
+                {/* table with scroll x */}
+                <div className="overflow-x-auto border border-gray-300 rounded-lg">
+                    <table className="table table-striped text-sm mb-0">
                         <thead>
                             <tr>
                                 <th className="text-center w-[5%]">#</th>
                                 <th className="w-[25%]">ชื่อผู้จัดจำหน่าย</th>
-                                <th>ที่อยู่</th>
-                                <th className="text-center w-[15%]">เลขที่ผู้เสียภาษี</th>
+                                <th className="max-lg:hidden">ที่อยู่</th>
+                                <th className="text-center w-[15%] max-lg:hidden">เลขที่ผู้เสียภาษี</th>
                                 <th className="text-center w-[10%]">สถานะ</th>
                                 <th className="text-center w-[10%]">Actions</th>
                             </tr>
@@ -80,7 +81,7 @@ const SupplierList = () => {
                                 <tr className="font-thin" key={supplier.id}>
                                     <td className="text-center">{pager && pager.from + index}</td>
                                     <td className="text-primary font-semibold">{supplier.name}</td>
-                                    <td>
+                                    <td className="max-lg:hidden">
                                         <div className="flex flex-col gap-1.5 py-0.5">
                                             {/* ที่อยู่ */}
                                             <div className="flex items-start gap-1.5 text-gray-700 text-xs leading-relaxed">
@@ -128,7 +129,7 @@ const SupplierList = () => {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="text-center">{supplier.tax_no}</td>
+                                    <td className="text-center max-lg:hidden">{supplier.tax_no}</td>
                                     <td className="text-center">
                                         {supplier.status === 1 || supplier.status === '1' ? (
                                             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
@@ -155,12 +156,15 @@ const SupplierList = () => {
                             ))}
                         </tbody>
                     </table>
-                </div>
 
-                <Pagination
-                    pager={pager}
-                    onPageClick={(url) => setApiEndpoint(url)}
-                />
+                    {/* Pagination */}
+                    <div className="px-3 py-2">
+                        <Pagination
+                            pager={pager}
+                            onPageClick={(url) => setApiEndpoint(url)}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     )
