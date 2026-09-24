@@ -22,7 +22,7 @@ export const getExpense = (id: number | string) => {
 export const calcAgeY = (birthdate: string) => {
     if (!birthdate) return 0
 
-    return moment().diff(moment(birthdate), "years") 
+    return moment().diff(moment(birthdate), "years")
 };
 
 export const calcUsedAgeY = (firstYear: number) => {
@@ -39,13 +39,13 @@ export const calculateNetTotal = (items: any[] = [], condition: (args: any) => b
     }, 0);
 };
 
-export const calculateVat = function(netTotal: number, vatRate: number) {
+export const calculateVat = function (netTotal: number, vatRate: number) {
     return (netTotal * vatRate) / (100 + vatRate);
 };
 
-export const currency = Intl.NumberFormat('th-TH', {maximumFractionDigits:2});
+export const currency = Intl.NumberFormat('th-TH', { maximumFractionDigits: 2 });
 
-export const currencyToNumber = function(currency: string | number): number {
+export const currencyToNumber = function (currency: string | number): number {
     if (typeof currency === 'number') return currency;
     if (currency == '') return 0;
 
@@ -80,7 +80,7 @@ export const toShortTHDateRange = (startDate: string, endDate?: string) => {
     if (!startDate || startDate === '') return '';
 
     const [syear, smonth, sday] = startDate.split('-');
-    
+
     if (!endDate) {
         return `${sday}/${smonth}/${parseInt(syear, 10) + 543}`;
     } else {
