@@ -12,7 +12,7 @@ import FilteringInputs from '../../components/Modals/Supplier/FilteringInputs'
 
 const initialFilters = {
     name: '',
-    status: '0',
+    status: '1',
 };
 
 const SupplierList = () => {

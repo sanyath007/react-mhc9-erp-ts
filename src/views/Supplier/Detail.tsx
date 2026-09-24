@@ -42,11 +42,11 @@ const SupplierDetail = () => {
                         {supplier && (
                             supplier.status === 1 || supplier.status === '1' ? (
                                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                                    <CheckCircle2 className="w-3.5 h-3.5" /> ใช้งานปกติ
+                                    <CheckCircle2 className="w-3.5 h-3.5" /> ใช้งาน
                                 </span>
                             ) : (
                                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800">
-                                    <XCircle className="w-3.5 h-3.5" /> ระงับการใช้งาน
+                                    <XCircle className="w-3.5 h-3.5" /> ระงับ
                                 </span>
                             )
                         )}
