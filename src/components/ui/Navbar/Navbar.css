@@ -1,0 +1,64 @@
+.navbar .dropdown-menu {
+    position: absolute;
+    top: 45px;
+    right: 0px;
+    opacity: 0;
+    visibility: hidden;
+    display: block;
+    width: 220px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    @apply rounded-lg bg-white text-gray-700 p-0;
+}
+
+.navbar .dropdown-menu:before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: 10px;
+    border: rgba(194, 225, 245, 0);
+    border: solid transparent;
+    border-bottom-color: white;
+    border-width: 11px;
+    margin-left: -10px;
+    z-index: 1;
+}
+
+.navbar .dropdown-menu:after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: solid transparent;
+    border-width: 10px;
+    border-bottom-color: #2B1A41;
+    z-index: 0;
+}
+
+.navbar .menu-item .dropdown-menu.active,
+.navbar .user-profile .dropdown-menu.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.navbar .menu-item .dropdown-menu li:first-child {
+    @apply rounded-t-md;
+}
+
+.navbar .menu-item .dropdown-menu li:last-child {
+    @apply rounded-b-md;
+}
+
+.navbar .menu-item .dropdown-menu li p,
+.navbar .menu-item .dropdown-menu li button {
+    padding-left: 1rem;
+    transition: all 0.3s;
+}
+
+.navbar .menu-item .dropdown-menu li:hover p,
+.navbar .menu-item .dropdown-menu li:hover button {
+    transform: translateX(5px);
+}

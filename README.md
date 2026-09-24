@@ -1,77 +1,165 @@
-# Getting Started with Create React App
+# MHC9 ERP System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive Enterprise Resource Planning (ERP) system for **Mental Health Center 9** (ศูนย์สุขภาพจิตที่ 9), a Thai government health organization. Built with React, this application manages various aspects of the organization including IT helpdesk, procurement, loan management, asset management, and budgeting.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+### Authentication & User Management
+- JWT-based authentication with token refresh
+- User registration and password management
+- Forgot password and email verification flows
+- Forced password change for new users
+- Role-based access control (5 roles with different permission levels)
 
-### `npm start`
+### IT Helpdesk / Services
+- Task management with full CRUD operations
+- Task handling workflow
+- Asset assignment within tasks
+- Equipment repair tracking (Repairation)
+- Task summary and reporting
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Procurement Module
+- **Requisition**: Purchase/hire requests with approval workflow
+- **Order**: Purchase orders management
+- **Inspection**: Goods receiving inspection
+- **Reports**: Procurement summary and attachment reports
+- **Document Generation**: Official Thai government memo formats for printing
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Financial Loans Module
+- **Loan Requests**: Government loan applications
+- **Loan Contracts**: Contract management and tracking
+- **Loan Refund**: Settlement and bill management
+- **Loan Reports**: Contract register and reporting
 
-### `npm test`
+### Master Data Management
+- **Assets**: Fixed assets and equipment (ครุภัณฑ์)
+- **Computer Sets**: Computer set management (ชุดคอมพิวเตอร์)
+- **Materials**: Consumable materials (วัสดุ)
+- **Asset Classification**: Types and categories
+- **Personnel**: Employees, departments, divisions, rooms
+- **Catalog**: Products/services, suppliers, measurement units
+- **Budget**: Plans, projects, activities, and allocations
+- **Locations**: Place and room management
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Document Generation & Reporting
+- 17 document print templates (Thai government memo formats)
+- Procurement documents (Requisition, Order, Inspection)
+- Loan documents (Request, Contract, Refund, Bill)
+- Project verification and review forms
+- Multiple report viewer integrations (DevExpress, Stimulsoft, Word)
 
-### `npm run build`
+## Tech Stack
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Core
+- **React 18** - Frontend framework
+- **TypeScript** - Primary language for type safety
+- **React Router 6** - Client-side routing with protected routes
+- **Redux Toolkit** - State management with RTK Query for API services
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### UI Libraries
+- **Tailwind CSS + DaisyUI** - Primary styling
+- **Bootstrap 5 + React-Bootstrap** - Layout and components
+- **Material-UI** (Legacy) - Date pickers and some components
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Forms & Validation
+- **Formik** - Form state management
+- **Yup** - Schema validation
 
-### `npm run eject`
+### Reporting & Documents
+- **DevExpress Reporting** - Advanced report generation
+- **Stimulsoft Reports** - Report viewer
+- **PDFTron WebViewer** - PDF viewing
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Utilities
+- **Moment.js** - Date manipulation with Buddhist Era support
+- **Axios** - HTTP client with JWT interceptor
+- **jwt-decode** - JWT token decoding
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Getting Started
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Prerequisites
+- Node.js (LTS version recommended, compatible with CRA 5)
+- npm or yarn package manager
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Installation
 
-## Learn More
+```bash
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Development
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm start
+```
 
-### Code Splitting
+Opens the app at http://localhost:3000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Production Build
 
-### Analyzing the Bundle Size
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Uses `--max_old_space_size=4096` for large builds.
 
-### Making a Progressive Web App
+## Build Precautions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Before building for production:
 
-### Advanced Configuration
+1. Comment `REACT_APP_API_URL` key of development and uncomment production one in `.env.local` file
+2. Update `REACT_APP_ROOT_PATH=/erp` in `.env.local` file
+3. Set property `"homepage": "https://app.mhc9dmh.com/erp/"` in package.json
+4. Set prop `basename="/erp"` to Router component
+5. Remove email and password values of `initialValues` prop in Login view (optional)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Project Structure
 
-### Deployment
+```
+src/
+├── api/                    # Axios instance (legacy, JWT interceptor)
+├── features/
+│   ├── store.ts           # Redux store (32 slices + 25 RTK Query services)
+│   ├── slices/            # Redux slices for local/global state
+│   └── services/          # RTK Query API services
+├── views/                 # 27 page modules organized by domain
+│   ├── Auth/              # Login, Register, ForgotPassword, ChangePassword
+│   ├── Task/              # IT Helpdesk tasks
+│   ├── Repairation/       # Equipment repair tracking
+│   ├── Requisition/       # Purchase requisitions
+│   ├── Order/             # Purchase orders
+│   ├── Inspection/        # Goods receiving
+│   ├── Procurement/       # Reports (Summary, Attachment)
+│   ├── Loan/              # Government loan requests
+│   ├── LoanContract/      # Loan contracts
+│   ├── LoanRefund/        # Loan refund/settlement
+│   ├── Asset/             # Fixed assets
+│   ├── Comset/            # Computer sets
+│   ├── Material/          # Consumable materials
+│   ├── Employee/          # Personnel
+│   ├── Budget/            # Budget management
+│   └── ...                # Other modules
+├── components/
+│   ├── DefaultLayout/     # App shell (Navbar + Sidebar + Content + Footer)
+│   ├── ui/                # Shared UI elements (Navbar, Sidebar, Loading, Pagination, etc.)
+│   ├── FormControls/      # Custom form inputs
+│   ├── Preview/           # 17 document print templates
+│   ├── ReportViewer/      # DevExpress, Stimulsoft, Word viewers
+│   ├── Modals/            # 17 entity picker modals
+│   └── ...
+└── utils/
+    ├── index.ts           # Buddhist Era dates, Thai Baht, VAT
+    ├── constraints.ts     # Thai constants
+    └── currencyText.ts    # Number-to-Thai-text
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Role-Based Access Control
 
-### `npm run build` fails to minify
+| Role ID | Access Level |
+|---------|--------------|
+| 1 (Admin) | Full access to all modules |
+| 3 | Procurement (orders, inspections, reports) + master data |
+| 4 | Loan contract/report access + budget management |
+| 5 | Combined procurement + loan + budget access |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-# Before build app
-1. comment REACT_APP_API_URL key of development and uncomment production one in .env.local file
-2. update REACT_APP_ROOT_PATH=/erp in .env.local file
-3. set property "homepage": "https://app.mhc9dmh.com/erp/" in package.json
-4. set prop basename="/erp" to Router component
-5. remove email and password values of initialValues prop in Login view (optional)
+Menu visibility is enforced at both Navbar and Sidebar levels based on `role_id`.
