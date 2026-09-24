@@ -11,6 +11,7 @@ import Loading from '../../components/ui/Loading';
 import Pagination from '../../components/ui/Pagination';
 import { getUrlParam, toShortTHDate } from '../../utils';
 import { toast } from 'react-toastify';
+import BudgetTypeBadge from '../../components/Badges/BudgetTypeBadge';
 
 const ProjectList = () => {
     const dispatch = useDispatch<any>();
@@ -90,6 +91,21 @@ const ProjectList = () => {
                                             <Link to={`/project/${project.id}/detail`} className="font-bold text-primary hover:underline">
                                                 {project.name}
                                             </Link>
+                                            <div className="text-xs">
+                                                <p className="mb-1">
+                                                    <span className="font-semibold text-gray-700 mr-1">แผนงาน:</span>
+                                                    {project?.budget?.activity?.project?.plan?.plan_no} {project?.budget?.activity?.project?.plan?.name}
+                                                </p>
+                                                <p className="mb-1">
+                                                    <span className="font-semibold text-gray-700 mr-1">โครงการ/ผลผลิต:</span>
+                                                    {project?.budget?.activity?.project?.name}
+                                                </p>
+                                                <p className="mb-1">
+                                                    <span className="font-semibold text-gray-700 mr-1">กิจกรรม:</span>
+                                                    {project?.budget?.activity?.name}
+                                                    <BudgetTypeBadge type={project?.budget?.type} />
+                                                </p>
+                                            </div>
                                             {project.year && (
                                                 <div className="text-gray-500 text-xs">
                                                     ปีงบประมาณ: {project.year + 543}
