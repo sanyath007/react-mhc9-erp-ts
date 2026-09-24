@@ -9,6 +9,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Search, X, Loader2 } from 'lucide-react';
 import { cn } from '../../../utils/tailwindcss';
+import ErrorMessage from './ErrorMessage';
 
 interface Option {
   value: string;
@@ -656,7 +657,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
           ${isOpen && showBackdrop ? 'invisible' : ''}
           ${disabled || loading ? 'opacity-50 cursor-not-allowed bg-slate-50/50' : ''}
           ${error
-            ? 'border-rose-300 bg-rose-50/30'
+            ? 'border !border-rose-400 bg-rose-50/30'
             : isOpen
               ? `ring-2 ${colors.ring} ${colors.border} bg-white shadow-lg`
               : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm'
@@ -730,10 +731,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
 
       {/* Error message */}
       {error && (
-        <p className="mt-1.5 text-xs text-rose-500 flex items-center gap-1 font-bold">
-          <span className="size-1 rounded-full bg-rose-500" />
-          {error}
-        </p>
+        <ErrorMessage className='mt-1' message={error} />
       )}
 
       {/* Dropdown */}

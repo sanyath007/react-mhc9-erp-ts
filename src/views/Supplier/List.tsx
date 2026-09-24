@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb, Row } from 'react-bootstrap'
-import { FaEnvelope, FaPencilAlt, FaPhone, FaSearch, FaTrash } from 'react-icons/fa'
+import { FaPencilAlt, FaSearch, FaTrash } from 'react-icons/fa'
+import { Home, Mail, MapPin, Phone } from 'lucide-react'
 import { generateQueryString } from '../../utils'
 import { getSuppliers } from '../../features/slices/supplier/supplierSlice'
 import Pagination from '../../components/ui/Pagination'
 import Loading from '../../components/ui/Loading'
 import FilteringInputs from '../../components/Modals/Supplier/FilteringInputs'
-import { Home, Mail, MapPin, Phone } from 'lucide-react'
 
 const initialFilters = {
     name: '',
