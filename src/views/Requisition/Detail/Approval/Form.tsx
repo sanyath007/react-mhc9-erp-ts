@@ -4,11 +4,11 @@ import { useDispatch } from 'react-redux';
 import { Col, Modal, Row } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup'
-import { DatePicker } from '@material-ui/pickers'
 import { toast } from 'react-toastify';
-import moment from 'moment';
+import DatePicker from '../../../../components/ui/Forms/DatePicker'
 import { useGetInitialFormDataQuery } from '../../../../features/services/approval/approvalApi'
 import { store, update } from '../../../../features/slices/approval/approvalSlice'
+import ErrorMessage from '../../../../components/ui/Forms/ErrorMessage';
 
 const approvalSchema = Yup.object().shape({
     procuring_id: Yup.string().required('กรุณาเลือกวิธีการจัดหา'),
@@ -17,32 +17,13 @@ const approvalSchema = Yup.object().shape({
     directive_no: Yup.string().required('กรุณาระบุเลขที่คำสั่ง'),
     directive_date: Yup.string().required('กรุณาเลือกวันที่คำสั่ง'),
     deliver_date: Yup.string().required('กรุณาเลือกวันที่ส่งมอบ'),
-    // deliver_date: Yup.mixed()
-    // .test({
-    //     name: 'cannotLessThanNoticeDate',
-    //     exclusive: true,
-    //     message: 'ไม่สามารถกำหนดวันที่ส่งมอบก่อนวันที่ประกาศผู้ชนะได้',
-    //     test: function (val) {
-    //         return moment(val).toDate() > moment(this.parent.notice_date).toDate()
-    //     },
-    // }).required('กรุณาเลือกวันที่ส่งมอบ'),
-    // deliver_days: Yup.number().min(1, "ส่งมอบภายในต้องมากกว่า 0 (วัน)").required('กรุณาระบุเลขที่รายงาน'),
 });
 
 const ModalApprovalForm = ({ isShow, onHide, approval, requisition }: any) => {
     const dispatch = useDispatch<any>();
-    const [selectedReportDate, setSelectedReportDate] = useState(moment());
-    const [selectedDirectiveDate, setSelectedDirectiveDate] = useState(moment());
-    const [selectedDeliverDate, setSelectedDeliverDate] = useState(moment());
     const { data: formData, isLoading } = useGetInitialFormDataQuery();
 
-    useEffect(() => {
-        if (approval) {
-            setSelectedReportDate(moment(approval.report_date));
-            setSelectedDirectiveDate(moment(approval.directive_date));
-            setSelectedDeliverDate(moment(approval.deliver_date));
-        }
-    }, [approval]);
+    console.log(approval);
 
     const handleSubmit = (values, formik) => {
         if (approval) {
@@ -62,6 +43,7 @@ const ModalApprovalForm = ({ isShow, onHide, approval, requisition }: any) => {
 
         >
             <Formik
+                enableReinitialize
                 initialValues={{
                     requisition_id: requisition.id,
                     procuring_id: approval ? approval.procuring_id : '1',
@@ -89,7 +71,7 @@ const ModalApprovalForm = ({ isShow, onHide, approval, requisition }: any) => {
                                             name="procuring_id"
                                             value={formik.values.procuring_id}
                                             onChange={formik.handleChange}
-                                            className="form-control text-sm"
+                                            className={`form-control text-sm ${formik.errors.procuring_id && formik.touched.procuring_id ? 'is-invalid' : ''}`}
                                         >
                                             <option value="">-- เลือก --</option>
                                             {formData && formData.procurings.map(proc => (
@@ -97,34 +79,21 @@ const ModalApprovalForm = ({ isShow, onHide, approval, requisition }: any) => {
                                             ))}
                                         </select>
                                         {(formik.errors.procuring_id && formik.touched.procuring_id) && (
-                                            <span className="text-red-500 text-sm">{formik.errors.procuring_id as string}</span>
+                                            <ErrorMessage className='mt-1' message={formik.errors.procuring_id as string} />
                                         )}
                                     </Col>
                                     <Col className="mt-2">
                                         <div className="flex flex-col">
                                             <label htmlFor="">วันที่ส่งมอบ</label>
                                             <DatePicker
-                                                inputVariant="outlined"
-                                                format="DD/MM/YYYY"
-                                                value={selectedDeliverDate}
-                                                onChange={(date) => {
-                                                    setSelectedDeliverDate(date);
-                                                    formik.setFieldValue('deliver_date', date.format('YYYY-MM-DD'));
+                                                value={formik.values.deliver_date}
+                                                onChange={(date: string) => {
+                                                    formik.setFieldValue('deliver_date', date);
                                                     setTimeout(() => formik.setFieldTouched('deliver_date', true), 300);
-
-                                                    /** คำนวณวันกำหนดส่งมอบภายใน (วัน) */
-                                                    // if (moment(date).toDate() <= moment(formik.values.notice_date).toDate()) {
-                                                    //     toast.error('วันที่ส่งมอบต้องหลังวันที่ประกาศผู้ชนะได้!!');
-
-                                                    //     formik.setFieldValue('deliver_days', 0);
-                                                    // } else {
-                                                    //     formik.setFieldValue('deliver_days', moment(date).diff(moment(formik.values.notice_date), "day"));
-                                                    // }
                                                 }}
+                                                inputCss={`!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !text-sm w-full ${formik.errors.deliver_date && formik.touched.deliver_date ? '!border-red-500' : '!border-[#dee2e6]'}`}
+                                                error={formik.errors.deliver_date && formik.touched.deliver_date ? (formik.errors.deliver_date as string) : undefined}
                                             />
-                                            {(formik.errors.deliver_date && formik.touched.deliver_date) && (
-                                                <span className="text-red-500 text-sm">{formik.errors.deliver_date as string}</span>
-                                            )}
                                         </div>
                                     </Col>
                                 </Row>
@@ -135,27 +104,23 @@ const ModalApprovalForm = ({ isShow, onHide, approval, requisition }: any) => {
                                             name="report_no"
                                             value={formik.values.report_no}
                                             onChange={formik.handleChange}
-                                            className="form-control text-sm"
+                                            className={`form-control text-sm ${formik.errors.report_no && formik.touched.report_no ? 'is-invalid' : ''}`}
                                         />
                                         {(formik.errors.report_no && formik.touched.report_no) && (
-                                            <span className="text-red-500 text-sm">{formik.errors.report_no as string}</span>
+                                            <ErrorMessage className='mt-1' message={formik.errors.report_no as string} />
                                         )}
                                     </Col>
                                     <Col>
                                         <div className="flex flex-col">
                                             <label htmlFor="">วันที่รายงาน</label>
                                             <DatePicker
-                                                inputVariant="outlined"
-                                                format="DD/MM/YYYY"
-                                                value={selectedReportDate}
-                                                onChange={(date) => {
-                                                    setSelectedReportDate(date);
-                                                    formik.setFieldValue('report_date', date.format('YYYY-MM-DD'));
+                                                value={formik.values.report_date}
+                                                onChange={(date: string) => {
+                                                    formik.setFieldValue('report_date', date);
                                                 }}
+                                                inputCss={`!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !text-sm w-full ${formik.errors.report_date && formik.touched.report_date ? '!border-red-500' : '!border-[#dee2e6]'}`}
+                                                error={formik.errors.report_date && formik.touched.report_date ? (formik.errors.report_date as string) : undefined}
                                             />
-                                            {(formik.errors.report_date && formik.touched.report_date) && (
-                                                <span className="text-red-500 text-sm">{formik.errors.report_date as string}</span>
-                                            )}
                                         </div>
                                     </Col>
                                 </Row>
@@ -166,27 +131,23 @@ const ModalApprovalForm = ({ isShow, onHide, approval, requisition }: any) => {
                                             name="directive_no"
                                             value={formik.values.directive_no}
                                             onChange={formik.handleChange}
-                                            className="form-control text-sm"
+                                            className={`form-control text-sm ${formik.errors.directive_no && formik.touched.directive_no ? 'is-invalid' : ''}`}
                                         />
                                         {(formik.errors.directive_no && formik.touched.directive_no) && (
-                                            <span className="text-red-500 text-sm">{formik.errors.directive_no as string}</span>
+                                            <ErrorMessage className='mt-1' message={formik.errors.directive_no as string} />
                                         )}
                                     </Col>
                                     <Col>
                                         <div className="flex flex-col">
                                             <label htmlFor="">วันที่คำสั่ง</label>
                                             <DatePicker
-                                                inputVariant="outlined"
-                                                format="DD/MM/YYYY"
-                                                value={selectedDirectiveDate}
-                                                onChange={(date) => {
-                                                    setSelectedDirectiveDate(date);
-                                                    formik.setFieldValue('directive_date', date.format('YYYY-MM-DD'));
+                                                value={formik.values.directive_date}
+                                                onChange={(date: string) => {
+                                                    formik.setFieldValue('directive_date', date);
                                                 }}
+                                                inputCss={`!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !text-sm w-full ${formik.errors.directive_date && formik.touched.directive_date ? '!border-red-500' : '!border-[#dee2e6]'}`}
+                                                error={formik.errors.directive_date && formik.touched.directive_date ? (formik.errors.directive_date as string) : undefined}
                                             />
-                                            {(formik.errors.directive_date && formik.touched.directive_date) && (
-                                                <span className="text-red-500 text-sm">{formik.errors.directive_date as string}</span>
-                                            )}
                                         </div>
                                     </Col>
                                 </Row>

@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { FaSearch } from 'react-icons/fa'
-import { DatePicker } from '@material-ui/pickers'
 import { Col, Row } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-import moment from 'moment'
 import { consider } from '../../../../features/slices/approval/approvalSlice'
 import ModalSupplierList from '../../../../components/Modals/Supplier'
+import DatePicker from '../../../../components/ui/Forms/DatePicker'
 
 const approvalSchema = Yup.object().shape({
     consider_no: Yup.string().required('กรุณาระบุเลขที่รายงาน'),
     consider_date: Yup.string().required('กรุณาเลือกวันที่รายงาน'),
-    notice_date: Yup.string().required('กรุณาเลือกวันที่ประกาศผู้ชน'),
+    notice_date: Yup.string().required('กรุณาเลือกวันที่ประกาศผู้ชนะ'),
     supplier_id: Yup.string().required('กรุณาเลือกผู้ขาย/ผู้จัดจำหน่าย')
 });
 
@@ -21,16 +20,12 @@ const ConsiderationForm = ({ approval, requisition, onSubmitted, onCancel }: any
     const dispatch = useDispatch<any>();
     const [showSupplierModal, setShowSupplierModal] = useState(false);
     const [selectedSupplier, setSelectedSupplier] = useState(null);
-    const [selectedConsiderDate, setSelectedConsiderDate] = useState(moment());
-    const [selectedNoticeDate, setSelectedNoticeDate] = useState(moment());
 
     useEffect(() => {
         if (approval && approval.consider_no !== '') {
             setSelectedSupplier(approval.supplier);
-            setSelectedConsiderDate(moment(approval.consider_date));
-            setSelectedNoticeDate(moment(approval.notice_date));
         }
-    }, []);
+    }, [approval]);
 
     const handleSubmit = (values, formik) => {
         dispatch(consider({
@@ -43,6 +38,7 @@ const ConsiderationForm = ({ approval, requisition, onSubmitted, onCancel }: any
 
     return (
         <Formik
+            enableReinitialize
             initialValues={{
                 requisition_id: requisition.id,
                 consider_no: (approval && approval.consider_no) ? approval.consider_no : '',
@@ -68,7 +64,7 @@ const ConsiderationForm = ({ approval, requisition, onSubmitted, onCancel }: any
                         />
 
                         <Row>
-                            <Col md={5}>
+                            <Col md={4}>
                                 <label htmlFor="">เลขที่รายงาน</label>
                                 <input
                                     type="text"
@@ -81,45 +77,37 @@ const ConsiderationForm = ({ approval, requisition, onSubmitted, onCancel }: any
                                     <span className="text-red-500 text-sm">{formik.errors.consider_no as string}</span>
                                 )}
                             </Col>
-                            <Col md={3}>
+                            <Col md={4}>
                                 <div className="flex flex-col">
                                     <label htmlFor="">วันที่รายงาน</label>
                                     <DatePicker
-                                        format="DD/MM/YYYY"
-                                        value={selectedConsiderDate}
-                                        onChange={(date) => {
-                                            setSelectedConsiderDate(date);
-                                            formik.setFieldValue('consider_date', date.format('YYYY-MM-DD'));
+                                        value={formik.values.consider_date}
+                                        onChange={(date: string) => {
+                                            formik.setFieldValue('consider_date', date);
                                         }}
-                                        inputVariant="outlined"
+                                        inputCss={`!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !text-sm w-full ${formik.errors.consider_date && formik.touched.consider_date ? '!border-red-500' : '!border-[#dee2e6]'}`}
+                                        error={formik.errors.consider_date && formik.touched.consider_date ? (formik.errors.consider_date as string) : undefined}
                                     />
                                 </div>
-                                {(formik.errors.consider_date && formik.touched.consider_date) && (
-                                    <span className="text-red-500 text-sm">{formik.errors.consider_date as string}</span>
-                                )}
                             </Col>
-                            <Col md={3}>
+                            <Col md={4}>
                                 <div className="flex flex-col">
                                     <label htmlFor="">วันที่ประกาศผู้ชนะ</label>
                                     <DatePicker
-                                        format="DD/MM/YYYY"
-                                        value={selectedNoticeDate}
-                                        onChange={(date) => {
-                                            setSelectedNoticeDate(date);
-                                            formik.setFieldValue('notice_date', date.format('YYYY-MM-DD'));
+                                        value={formik.values.notice_date}
+                                        onChange={(date: string) => {
+                                            formik.setFieldValue('notice_date', date);
                                         }}
-                                        inputVariant="outlined"
+                                        inputCss={`!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !text-sm w-full ${formik.errors.notice_date && formik.touched.notice_date ? '!border-red-500' : '!border-[#dee2e6]'}`}
+                                        error={formik.errors.notice_date && formik.touched.notice_date ? (formik.errors.notice_date as string) : undefined}
                                     />
                                 </div>
-                                {(formik.errors.notice_date && formik.touched.notice_date) && (
-                                    <span className="text-red-500 text-sm">{formik.errors.notice_date as string}</span>
-                                )}
                             </Col>
-                            <Col md={11} className="mt-2">
+                            <Col className="mt-2">
                                 <label htmlFor="">ผู้ขาย/ผู้จัดจำหน่าย</label>
                                 <div className="input-group">
                                     <div className="min-h-[34px] form-control font-thin text-sm bg-gray-100">
-                                        {selectedSupplier && selectedSupplier.tax_no+ ' ' +selectedSupplier.name}
+                                        {selectedSupplier && selectedSupplier.tax_no + ' ' + selectedSupplier.name}
                                     </div>
                                     <input
                                         type="hidden"

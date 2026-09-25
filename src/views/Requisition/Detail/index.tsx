@@ -16,6 +16,7 @@ import Loading from '../../../components/ui/Loading'
 import DropdownButton from '../../../components/FormControls/DropdownButton'
 import DropdownItem from '../../../components/FormControls/DropdownButton/DropdownItem'
 import BudgetList from '../../../components/Budget/BudgetList'
+import { CheckCircle2, RotateCcwClock } from 'lucide-react'
 
 const RequisitionDetail = () => {
     const { id } = useParams();
@@ -123,13 +124,29 @@ const RequisitionDetail = () => {
                                         )}
 
                                         <Row>
-                                            <Col md={9} className="pb-1">
+                                            <Col md={6} className="pb-1">
                                                 <label htmlFor="">เรื่อง</label>
                                                 <div className="text-sm font-thin">
                                                     {requisition.topic} จำนวน {requisition.item_count} รายการ
                                                 </div>
                                             </Col>
-                                            <Col className="pb-1">
+                                            <Col md={3} className="pb-1">
+                                                <label htmlFor="">ประเภทคำขอ</label>
+                                                <div className="text-sm font-thin">
+                                                    {requisition.requisition_type_id &&
+                                                        requisition.requisition_type_id === 1 ? (
+                                                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                                                            <CheckCircle2 className="w-3.5 h-3.5" /> ปกติ
+                                                        </span>
+                                                    ) : (
+                                                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800">
+                                                            <RotateCcwClock className="w-3.5 h-3.5" /> จัดซื้อซ้ำได้
+                                                        </span>
+                                                    )
+                                                    }
+                                                </div>
+                                            </Col>
+                                            <Col md={3} className="pb-1">
                                                 <label htmlFor="">ปีงบประมาณ</label>
                                                 <div className="text-sm font-thin">
                                                     {requisition.year && requisition.year + 543}
@@ -325,10 +342,15 @@ const RequisitionDetail = () => {
                                                             <p className='mt-2'>วันที่กำหนดส่งมอบ</p>
                                                             <p><span className='font-semibold'>{toShortTHDate(requisition.approvals[0].deliver_date)}</span></p>
                                                         </div>
-                                                        <div className='w-[5%]'>
-                                                            <button type="button" className="btn btn-light">
-                                                                <FaEdit className="text-warning" onClick={() => setShowApprovalForm(true)} />
-                                                            </button>
+                                                        <div className='w-[5%] relative'>
+                                                            {requisition.requisition_type_id === 1 && requisition.approvals.length === 0 && (
+                                                                <span className="absolute top-0 right-0 group bg-amber-50 hover:bg-amber-100 p-1.5 hover:p-2 rounded-full cursor-pointer">
+                                                                    <FaEdit
+                                                                        className="text-warning group-hover:scale-110 transition-all duration-150"
+                                                                        onClick={() => setShowApprovalForm(true)}
+                                                                    />
+                                                                </span>
+                                                            )}
                                                         </div>
                                                     </div>
 
@@ -388,11 +410,14 @@ const RequisitionDetail = () => {
                                                                 </div>
                                                             )}
                                                         </div>
-                                                        <div className='w-[5%]'>
+                                                        <div className='w-[5%] relative'>
                                                             {approval.consider_no && (
-                                                                <button type="button" className="btn btn-light">
-                                                                    <FaEdit className="text-warning" onClick={() => setShowConsiderForm(true)} />
-                                                                </button>
+                                                                <span className="absolute top-0 right-0 group bg-amber-50 hover:bg-amber-100 p-1.5 hover:p-2 rounded-full cursor-pointer">
+                                                                    <FaEdit
+                                                                        className="text-warning group-hover:scale-110 transition-all duration-150"
+                                                                        onClick={() => setShowConsiderForm(true)}
+                                                                    />
+                                                                </span>
                                                             )}
                                                         </div>
                                                     </div>
