@@ -153,10 +153,18 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                 </Col>
                 <Col lg={1} className="max-lg:pr-1 lg:pl-1">
                     <div className="max-lg:float-right">
-                        <button type="button" className="btn btn-outline-secondary btn-sm lg:mb-1 px-[0.7rem]" onClick={() => handleFilter()}>
+                        <button
+                            type="button"
+                            className="btn btn-outline-secondary btn-sm lg:mb-1 px-[0.7rem]"
+                            onClick={() => handleFilter()}
+                        >
                             ค้นหา
                         </button>
-                        <button type="button" className="btn btn-outline-danger btn-sm max-lg:ml-1" onClick={() => handleClear()}>
+                        <button
+                            type="button"
+                            className="btn btn-outline-danger btn-sm max-lg:ml-1"
+                            onClick={() => handleClear()}
+                        >
                             เคลียร์
                         </button>
                     </div>

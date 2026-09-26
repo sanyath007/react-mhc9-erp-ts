@@ -47,6 +47,15 @@ export const store = createAsyncThunk("supplier/store", async (data: any, { reje
     }
 });
 
+export const update = createAsyncThunk("supplier/update", async ({ id, data }: { id: number | string, data: any }, { rejectWithValue }) => {
+    try {
+        const res = await api.post(`/api/suppliers/${id}/update`, data);
+        return res.data;
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
 export const supplierSlice = createSlice({
     name: 'supplier',
     initialState,
@@ -99,6 +108,23 @@ export const supplierSlice = createSlice({
             }
         });
         builder.addCase(store.rejected, (state, { payload }) => {
+            state.error = payload;
+            state.isSuccess = false;
+        });
+        builder.addCase(update.pending, (state) => {
+            state.error = null;
+            state.isSuccess = false;
+        });
+        builder.addCase(update.fulfilled, (state, { payload }: any) => {
+            const { status, message } = payload;
+            if (status === 1) {
+                state.isSuccess = true;
+            } else {
+                state.error = message;
+                state.isSuccess = false;
+            }
+        });
+        builder.addCase(update.rejected, (state, { payload }) => {
             state.error = payload;
             state.isSuccess = false;
         });

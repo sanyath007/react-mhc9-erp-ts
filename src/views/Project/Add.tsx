@@ -25,22 +25,22 @@ const AddProject = () => {
         <div className="content-wrapper">
             <Breadcrumb>
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>หน้าหลัก</Breadcrumb.Item>
-                <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/project' }}>โครงการ</Breadcrumb.Item>
+                <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/project' }}>โครงการ/กิจกรรม</Breadcrumb.Item>
                 <Breadcrumb.Item active>เพิ่มข้อมูล</Breadcrumb.Item>
             </Breadcrumb>
 
             <div className="content">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-xl font-bold">เพิ่มโครงการใหม่</h2>
+                    <h2 className="text-xl font-bold">เพิ่มโครงการ/กิจกรรมใหม่</h2>
                     <Link to="/project" className="btn btn-secondary text-sm">
                         <i className="fas fa-arrow-left mr-1"></i> กลับหน้าหลัก
                     </Link>
                 </div>
 
                 <div className="bg-white rounded-lg shadow-sm border p-4 mb-4">
-                    <Form 
-                        project={null} 
-                        onSubmit={handleSubmit} 
+                    <Form
+                        project={null}
+                        onSubmit={handleSubmit}
                     />
                 </div>
             </div>

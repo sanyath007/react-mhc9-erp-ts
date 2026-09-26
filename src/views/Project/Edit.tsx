@@ -34,13 +34,13 @@ const EditProject = () => {
         <div className="content-wrapper">
             <Breadcrumb>
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>หน้าหลัก</Breadcrumb.Item>
-                <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/project' }}>โครงการ</Breadcrumb.Item>
+                <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/project' }}>โครงการ/กิจกรรม</Breadcrumb.Item>
                 <Breadcrumb.Item active>แก้ไขข้อมูล</Breadcrumb.Item>
             </Breadcrumb>
 
             <div className="content">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-xl font-bold">แก้ไขโครงการ</h2>
+                    <h2 className="text-xl font-bold">แก้ไขโครงการ/กิจกรรม</h2>
                     <Link to="/project" className="btn btn-secondary text-sm">
                         <i className="fas fa-arrow-left mr-1"></i> กลับหน้าหลัก
                     </Link>
@@ -52,9 +52,9 @@ const EditProject = () => {
                             <Loading />
                         </div>
                     ) : (
-                        <Form 
-                            project={project} 
-                            onSubmit={handleSubmit} 
+                        <Form
+                            project={project}
+                            onSubmit={handleSubmit}
                         />
                     )}
                 </div>

@@ -11,6 +11,7 @@ import Loading from '../../components/ui/Loading';
 import Pagination from '../../components/ui/Pagination';
 import { getUrlParam, toShortTHDate } from '../../utils';
 import { toast } from 'react-toastify';
+import BudgetTypeBadge from '../../components/Badges/BudgetTypeBadge';
 
 const ProjectList = () => {
     const dispatch = useDispatch<any>();
@@ -44,12 +45,12 @@ const ProjectList = () => {
         <div className="content-wrapper">
             <Breadcrumb>
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>หน้าหลัก</Breadcrumb.Item>
-                <Breadcrumb.Item active>โครงการ</Breadcrumb.Item>
+                <Breadcrumb.Item active>โครงการ/กิจกรรม</Breadcrumb.Item>
             </Breadcrumb>
 
             <div className="content">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-xl font-bold">รายการโครงการ</h2>
+                    <h2 className="text-xl font-bold">รายการโครงการ/กิจกรรม</h2>
                     <Link to="/project/add" className="btn btn-primary text-sm flex items-center">
                         <FaPlus className="mr-1" /> เพิ่มโครงการ
                     </Link>
@@ -90,6 +91,21 @@ const ProjectList = () => {
                                             <Link to={`/project/${project.id}/detail`} className="font-bold text-primary hover:underline">
                                                 {project.name}
                                             </Link>
+                                            <div className="text-xs">
+                                                <p className="mb-1">
+                                                    <span className="font-semibold text-gray-700 mr-1">แผนงาน:</span>
+                                                    {project?.budget?.activity?.project?.plan?.plan_no} {project?.budget?.activity?.project?.plan?.name}
+                                                </p>
+                                                <p className="mb-1">
+                                                    <span className="font-semibold text-gray-700 mr-1">โครงการ/ผลผลิต:</span>
+                                                    {project?.budget?.activity?.project?.name}
+                                                </p>
+                                                <p className="mb-1">
+                                                    <span className="font-semibold text-gray-700 mr-1">กิจกรรม:</span>
+                                                    {project?.budget?.activity?.name}
+                                                    <BudgetTypeBadge type={project?.budget?.type} />
+                                                </p>
+                                            </div>
                                             {project.year && (
                                                 <div className="text-gray-500 text-xs">
                                                     ปีงบประมาณ: {project.year + 543}
@@ -97,8 +113,8 @@ const ProjectList = () => {
                                             )}
                                         </td>
                                         <td className="text-center">
-                                            {project.from_date ? toShortTHDate(project.from_date) : '-'} <br/> 
-                                            ถึง <br/> 
+                                            {project.from_date ? toShortTHDate(project.from_date) : '-'} <br />
+                                            ถึง <br />
                                             {project.to_date ? toShortTHDate(project.to_date) : '-'}
                                         </td>
                                         <td className="text-center">
@@ -120,8 +136,8 @@ const ProjectList = () => {
                                                 <Link to={`/project/${project.id}/edit`} className="btn btn-sm btn-warning px-2" title="แก้ไข">
                                                     <FaPencilAlt />
                                                 </Link>
-                                                <button 
-                                                    className="btn btn-sm btn-danger px-2" 
+                                                <button
+                                                    className="btn btn-sm btn-danger px-2"
                                                     onClick={() => handleDelete(project.id)}
                                                     title="ลบ"
                                                 >
@@ -143,9 +159,9 @@ const ProjectList = () => {
                 </div>
 
                 {pager && (
-                    <Pagination 
-                        pager={pager} 
-                        onPageClick={(url: string) => setEndpoint(url)} 
+                    <Pagination
+                        pager={pager}
+                        onPageClick={(url: string) => setEndpoint(url)}
                     />
                 )}
             </div>
