@@ -107,8 +107,8 @@ Uses `--max_old_space_size=4096` for large builds.
 
 Before building for production:
 
-1. Comment `REACT_APP_API_URL` key of development and uncomment production one in `.env.local` file
-2. Update `REACT_APP_ROOT_PATH=/erp` in `.env.local` file
+1. Update `REACT_APP_ROOT_PATH=/erp` in `.env.local` file
+2. Comment `REACT_APP_API_URL` key of development and uncomment production one in `.env.local` file
 3. Set property `"homepage": "https://app.mhc9dmh.com/erp/"` in package.json
 4. Set prop `basename="/erp"` to Router component
 5. Remove email and password values of `initialValues` prop in Login view (optional)
