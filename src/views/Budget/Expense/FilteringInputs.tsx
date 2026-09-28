@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Col, FormGroup, Row } from 'react-bootstrap'
 import moment from 'moment'
-import YearPicker from '../../../components/ui/Forms/YearPicker'
 import { generateQueryString } from '../../../utils'
 import { useGetInitialFormDataQuery } from '../../../features/services/budget-activity/budgetActivityApi'
 import Loading from '../../../components/ui/Loading'
 import { usePlans, useProjects, useActivities } from '../../../hooks/useBudget'
+import { X } from 'lucide-react'
 
 const mockExpenseTypes = [
     { id: 1, label: 'ค่าตอบแทนใช้สอยและวัสดุ', name: 'ค่าตอบแทนใช้สอยและวัสดุ', budget_type_id: 2 },
@@ -53,7 +53,32 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
             <Row>
                 <Col lg={11}>
                     <Row>
-                        <Col className="px-1 max-md:mb-2" md={8}>
+                        <Col className="px-1" md={8}>
+                            <FormGroup className="relative">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={filters.name}
+                                    onChange={handleInputChange}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleFilter()
+                                        }
+                                    }}
+                                    placeholder='ค้นหาชื่อรายการ...'
+                                    className='form-control text-sm'
+                                />
+                                {filters.name !== '' && <X
+                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 transition hover:text-gray-600 hover:font-bold cursor-pointer"
+                                    onClick={() => {
+                                        const updated = { ...filters, name: '' };
+                                        setFilters(updated);
+                                        onFilter(generateQueryString(updated));
+                                    }}
+                                />}
+                            </FormGroup>
+                        </Col>
+                        <Col className="px-1" md={4}>
                             <FormGroup>
                                 <select
                                     name="type"
@@ -70,96 +95,10 @@ const FilteringInputs = ({ initialFilters, onFilter }: any) => {
                                 </select>
                             </FormGroup>
                         </Col>
-                        <Col className="px-1 mb-2" md={4}>
-                            <FormGroup>
-                                <YearPicker
-                                    value={selectedYear}
-                                    onChange={(year: string) => {
-                                        setSelectedYear(year);
-                                        setFilters(prev => ({
-                                            ...prev,
-                                            project: '',
-                                            year: year
-                                        }));
-                                    }}
-                                    inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
-                                />
-                            </FormGroup>
-                        </Col>
-                        <Col className="px-1 mb-2" md={4}>
-                            <FormGroup>
-                                <select
-                                    name="plan"
-                                    value={filters.plan}
-                                    onChange={(e) => {
-                                        handleInputChange(e);
-                                        setSelectedPlan(Number(e.target.value));
-                                    }}
-                                    className="form-control text-sm"
-                                >
-                                    <option value="">-- แผนงาน --</option>
-                                    {plans?.map(plan => (
-                                        <option value={plan.id} key={plan.id}>
-                                            {plan.plan_no} {plan.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </FormGroup>
-                        </Col>
-                        <Col className="px-1 max-lg:mb-2" md={8}>
-                            <FormGroup>
-                                {projectsLoading && <div className="form-control text-sm"><Loading /></div>}
-                                {!projectsLoading && (
-                                    <select
-                                        name="project"
-                                        value={filters?.project}
-                                        onChange={(e) => {
-                                            handleInputChange(e);
-                                            setSelectedProject(Number(e.target.value));
-                                        }}
-                                        className="form-control text-sm"
-                                    >
-                                        <option value="">-- โครงการ/ผลผลิต --</option>
-                                        {projects?.map(project => (
-                                            <option value={project.id} key={project.id}>
-                                                {project.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                )}
-                            </FormGroup>
-                        </Col>
-                        <Col className="px-1 max-lg:mb-2">
-                            <FormGroup>
-                                {activitiesLoading && <div className="form-control text-sm"><Loading /></div>}
-                                {!activitiesLoading && (
-                                    <select
-                                        name="activity"
-                                        value={filters?.activity}
-                                        onChange={handleInputChange}
-                                        className="form-control text-sm"
-                                    >
-                                        <option value="">-- กิจกรรม --</option>
-                                        {activities?.map(activity => (
-                                            <option value={activity.id} key={activity.id}>
-                                                {activity.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                )}
-                            </FormGroup>
-                        </Col>
                     </Row>
                 </Col>
                 <Col lg={1} className="max-lg:pr-1 lg:pl-1">
                     <div className="max-lg:float-right">
-                        <button
-                            type="button"
-                            className="btn btn-outline-secondary btn-sm lg:mb-1 px-[0.7rem]"
-                            onClick={() => handleFilter()}
-                        >
-                            ค้นหา
-                        </button>
                         <button
                             type="button"
                             className="btn btn-outline-danger btn-sm max-lg:ml-1"
