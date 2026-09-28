@@ -81,33 +81,35 @@ const ModalBudgetList = ({ isShow, onHide, onSelect }: any) => {
                                     </td>
                                 </tr>
                             )}
-                            {(!isLoading && budgets) && budgets.map((budget, index) => (
-                                <tr key={budget.id}>
-                                    <td className="text-center">{index + pager?.from}</td>
-                                    {/* <td className="text-center">{budget.budget_no}</td> */}
-                                    <td>
-                                        <p className="text-gray-400 text-xs">{budget.activity?.project?.plan?.plan_no} {budget.activity?.project?.plan?.name}</p>
-                                        <p className="text-xs font-semibold">{budget.activity?.project?.name}</p>
-                                        <p className="text-blue-500 text-sm">
-                                            {budget.activity?.name}
-                                            <BudgetTypeBadge type={budget.type} />
-                                        </p>
-                                    </td>
-                                    <td className="text-center">{budget.activity?.year && budget.activity?.year + 543}</td>
-                                    <td className="text-center">
-                                        <button
-                                            className="btn btn-primary btn-sm"
-                                            onClick={() => {
-                                                setApiEndpoint('');
-                                                onSelect(budget);
-                                                onHide();
-                                            }}
-                                        >
-                                            เลือก
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                            {(!isLoading && budgets) &&
+                                [...budgets].sort((a: any, b: any) => a.activity.project.plan_id - b.activity.project.plan_id).map((budget, index) => (
+                                    <tr key={budget.id}>
+                                        <td className="text-center">{index + pager?.from}</td>
+                                        {/* <td className="text-center">{budget.budget_no}</td> */}
+                                        <td>
+                                            <p className="text-gray-400 text-xs">{budget.activity?.project?.plan?.plan_no} {budget.activity?.project?.plan?.name}</p>
+                                            <p className="text-xs font-semibold">{budget.activity?.project?.name}</p>
+                                            <p className="text-blue-500 text-sm">
+                                                {budget.activity?.name}
+                                                <BudgetTypeBadge type={budget.type} />
+                                            </p>
+                                        </td>
+                                        <td className="text-center">{budget.activity?.year && budget.activity?.year + 543}</td>
+                                        <td className="text-center">
+                                            <button
+                                                className="btn btn-primary btn-sm"
+                                                onClick={() => {
+                                                    setApiEndpoint('');
+                                                    onSelect(budget);
+                                                    onHide();
+                                                }}
+                                            >
+                                                เลือก
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                 </div>

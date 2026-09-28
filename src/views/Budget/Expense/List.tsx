@@ -46,7 +46,7 @@ const BudgetExpenseList = () => {
                 <div className="flex items-center justify-between mb-2">
                     <h2 className="text-xl">รายการค่าใช้จ่ายงบประมาณ</h2>
                     <div className="flex flex-row gap-1">
-                        <Link to="add" className="btn btn-primary">
+                        <Link to="/budget-expense/add" className="btn btn-primary">
                             เพิ่มรายการ
                         </Link>
                     </div>
@@ -115,8 +115,11 @@ const BudgetExpenseList = () => {
                                     </td>
                                     <td>
                                         <p><b>หน่วย:</b> {item.unit_text || '-'}</p>
-                                        <p><b>เป้า:</b> {item.target || '-'}</p>
-                                        <p className="text-blue-600 font-bold"><b>งบ:</b> {currency.format(item.amount || 0)}</p>
+                                        <p><b>เป้า (บาท):</b> {currency.format(item.target) || '-'}</p>
+                                        <p className="text-blue-600 grid grid-cols-1">
+                                            <b>ครั้ง/คน/วัน:</b>
+                                            <span>{item.target_details?.times || 0} / {item.target_details?.persons || 0} / {item.target_details?.days || 0}</span>
+                                        </p>
                                     </td>
                                     <td className="text-right">{currency.format(getMonthTotal(item, 10))}</td>
                                     <td className="text-right">{currency.format(getMonthTotal(item, 11))}</td>

@@ -16,6 +16,7 @@ import { store } from '../../../features/slices/budget-expense/budgetExpenseSlic
 import { getAllProjects } from '../../../features/slices/project/projectSlice'
 import { useCookies } from 'react-cookie'
 import { MONTH_TH_SHNAMES } from '../../../constants/date-time'
+import ErrorMessage from '../../../components/ui/Forms/ErrorMessage'
 
 const mockExpenseTypes = [
     { id: 1, label: 'ค่าตอบแทนใช้สอยและวัสดุ', name: 'ค่าตอบแทนใช้สอยและวัสดุ', budget_type_id: 2 },
@@ -63,7 +64,11 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
         expense_type_id: '',
         unit_text: '',
         target: 0,
-        amount: 0.00,
+        target_details: {
+            times: 0,
+            persons: 0,
+            days: 0,
+        },
         description: ''
     };
 
@@ -72,7 +77,6 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
         budget_id: Yup.string().required('กรุณาเลือกงบประมาณ'),
         project_id: Yup.string().required('กรุณาเลือกรหัสโครงการ'),
         expense_type_id: Yup.string().required('กรุณาเลือกรหัสค่าใช้จ่าย'),
-        amount: Yup.number().required('กรุณาระบุจำนวนเงิน').min(1, 'จำนวนเงินต้องมากกว่า 0')
     });
 
     return (
@@ -88,7 +92,9 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                             year: values.year,
                             budget_id: parseInt(values.budget_id),
                             project_id: values.project_id,
-                            amount: values.amount,
+                            unit_text: values.unit_text,
+                            target: values.target,
+                            target_details: values.target_details,
                             description: values.description || '',
                         };
                         const res = await dispatch(store(payload)).unwrap();
@@ -107,6 +113,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                 }}
             >
                 {(formik) => {
+                    console.log(formik.errors);
                     return (
                         <Form>
                             <h4 className="mb-3 text-primary border-b pb-2 font-bold">1. ข้อมูลค่าใช้จ่ายหลัก</h4>
@@ -119,7 +126,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                         inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
                                     />
                                     {formik.errors.year && formik.touched.year && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.year as string}</div>
+                                        <ErrorMessage className="mt-1" message={formik.errors.year as string} />
                                     )}
                                 </Col>
                                 <Col md={9}>
@@ -142,7 +149,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                         </button>
                                     </div>
                                     {formik.errors.budget_id && formik.touched.budget_id && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.budget_id as string}</div>
+                                        <ErrorMessage className="mt-1" message={formik.errors.budget_id as string} />
                                     )}
                                 </Col>
                             </Row>
@@ -165,10 +172,8 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                         onChange={(val: string) => formik.setFieldValue('expense_type_id', val)}
                                         placeholder="-- เลือกประเภทค่าใช้จ่าย --"
                                         inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
+                                        error={formik.errors.expense_type_id && formik.touched.expense_type_id && (formik.errors.expense_type_id as string)}
                                     />
-                                    {formik.errors.expense_type_id && formik.touched.expense_type_id && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.expense_type_id as string}</div>
-                                    )}
                                 </Col>
                                 <Col md={9}>
                                     <label>โครงการ/กิจกรรม <span className="text-red-500">*</span></label>
@@ -178,15 +183,13 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                         onChange={(val: string) => formik.setFieldValue('project_id', val)}
                                         placeholder="-- เลือกโครงการ/กิจกรรม --"
                                         inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
+                                        error={formik.errors.project_id && formik.touched.project_id && (formik.errors.project_id as string)}
                                     />
-                                    {formik.errors.project_id && formik.touched.project_id && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.project_id as string}</div>
-                                    )}
                                 </Col>
                             </Row>
                             <Row className="mb-3">
-                                <Col md={4}>
-                                    <label>หน่วยนับ <span className="text-red-500">*</span></label>
+                                <Col md={3}>
+                                    <label>หน่วยนับ</label>
                                     <input
                                         type="text"
                                         name="unit_text"
@@ -196,11 +199,11 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                         disabled={isMasterSaved}
                                     />
                                     {formik.errors.unit_text && formik.touched.unit_text && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.unit_text as string}</div>
+                                        <ErrorMessage className='mt-1' message={formik.errors.unit_text as string} />
                                     )}
                                 </Col>
-                                <Col md={4}>
-                                    <label>เป้าหมาย <span className="text-red-500">*</span></label>
+                                <Col md={3}>
+                                    <label>เป้าหมาย</label>
                                     <input
                                         type="number"
                                         name="target"
@@ -209,23 +212,38 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                         value={formik.values.target}
                                         disabled={isMasterSaved}
                                     />
-                                    {formik.errors.target && formik.touched.target && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.target as string}</div>
-                                    )}
                                 </Col>
-                                <Col md={4}>
-                                    <label>จำนวนเงิน (บาท) <span className="text-red-500">*</span></label>
-                                    <input
-                                        type="number"
-                                        name="amount"
-                                        className={`form-control text-sm ${formik.errors.amount && formik.touched.amount ? 'is-invalid' : ''}`}
-                                        onChange={formik.handleChange}
-                                        value={formik.values.amount}
-                                        disabled={isMasterSaved}
-                                    />
-                                    {formik.errors.amount && formik.touched.amount && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.amount as string}</div>
-                                    )}
+                                <Col md={6}>
+                                    <label>เป้าหมาย (ครั้ง/คน/วัน)</label>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        <input
+                                            type="number"
+                                            name="target_details.times"
+                                            className={`form-control text-sm ${formik.errors.target_details?.times && formik.touched.target_details?.times ? 'is-invalid' : ''}`}
+                                            onChange={formik.handleChange}
+                                            value={formik.values.target_details.times}
+                                            disabled={isMasterSaved}
+                                            placeholder="ครั้ง"
+                                        />
+                                        <input
+                                            type="number"
+                                            name="target_details.persons"
+                                            className={`form-control text-sm ${formik.errors.target_details?.persons && formik.touched.target_details?.persons ? 'is-invalid' : ''}`}
+                                            onChange={formik.handleChange}
+                                            value={formik.values.target_details.persons}
+                                            disabled={isMasterSaved}
+                                            placeholder="คน"
+                                        />
+                                        <input
+                                            type="number"
+                                            name="target_details.days"
+                                            className={`form-control text-sm ${formik.errors.target_details?.days && formik.touched.target_details?.days ? 'is-invalid' : ''}`}
+                                            onChange={formik.handleChange}
+                                            value={formik.values.target_details.days}
+                                            disabled={isMasterSaved}
+                                            placeholder="วัน"
+                                        />
+                                    </div>
                                 </Col>
                             </Row>
                             <Row className="mb-3">

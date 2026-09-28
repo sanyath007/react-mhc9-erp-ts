@@ -74,17 +74,22 @@ const BudgetExpenseDetail = () => {
                                 <p>{expense.budget?.activity?.name} {expense.budget?.type && <BudgetTypeBadge type={expense.budget?.type} />}</p>
                             </div>
                         </div>
-                        <div className="col-span-2">
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-sm">
+                        <div className="col-span-3">
                             <span className="text-gray-500 font-semibold">โครงการ/กิจกรรม:</span> {expense.project?.name}
                         </div>
                         <div>
                             <span className="text-gray-500 font-semibold">หน่วยนับ:</span> {expense.unit_text || expense.unit || '-'}
                         </div>
                         <div>
-                            <span className="text-gray-500 font-semibold">เป้าหมาย:</span> {expense.target || '-'}
+                            <span className="text-gray-500 font-semibold">เป้าหมาย (บาท):</span> {expense.target || '-'}
                         </div>
                         <div>
-                            <span className="text-gray-500 font-semibold">จำนวนเงิน:</span> <span className="text-blue-600 font-bold">{currency.format(expense.amount || expense.budget || 0)}</span> บาท
+                            <span className="text-gray-500 font-semibold">เป้าหมาย (ครั้ง/คน/วัน):</span> {expense.target_details?.times || 0} / {expense.target_details?.persons || 0} / {expense.target_details?.days || 0}
+                        </div>
+                        <div>
+                            <span className="text-gray-500 font-semibold">ยอดใช้ไปทั้งสิ้น:</span> <span className="text-blue-600 font-bold">{currency.format(expense.amount || expense.budget || 0)}</span> บาท
                         </div>
                         <div>
                             <span className="text-gray-500 font-semibold">คำอธิบาย:</span> {expense.description || '-'}
@@ -138,7 +143,7 @@ const BudgetExpenseDetail = () => {
                                         <td>{detail.supplier?.name || '-'}</td>
                                         <td className="text-right">{currency.format(detail.net_total || detail.amount || 0)}</td>
                                         <td className="text-center">
-                                            <button 
+                                            <button
                                                 className="btn btn-warning btn-sm mx-1"
                                                 onClick={() => {
                                                     setSelectedDetail(detail);
