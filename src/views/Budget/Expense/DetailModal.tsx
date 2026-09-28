@@ -13,11 +13,19 @@ import { MONTH_TH_NAMES } from '../../../constants/date-time'
 import { Calendar1, Wallet, Receipt, Users, Paperclip, Store } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { storeDetail, updateDetail } from '../../../features/slices/budget-expense/budgetExpenseSlice'
+import ErrorMessage from '../../../components/ui/Forms/ErrorMessage'
 
 const mockSources = [
-    { value: '1', label: 'เงินงบประมาณ' },
-    { value: '2', label: 'เงินนอกงบประมาณ' },
-    { value: '3', label: 'เงินบริจาค' },
+    { value: '1', label: '11220 - ค่าตอบแทนใช้สอย' },
+    { value: '2', label: '11230 - ค่าวัสดุ' },
+    { value: '3', label: '11240 - ค่าสาธารณูปโภค' },
+    { value: '4', label: '11150 - ค่าตอบแทนพนักงานราชการ' },
+    { value: '5', label: '11150 - เงินค่าครองชีพ' },
+    { value: '6', label: '11220 - เงินสมทบกองทุนประกันสังคม' },
+    { value: '7', label: '11210 -ค่าล่วงเวลา' },
+    { value: '8', label: '10210 - เงินช่วยการศึกษาบุตร' },
+    { value: '9', label: '10210 - ค่ารักษาพยาบาล' },
+    { value: '10', label: '26000 - เงินนอกงบประมาณ' },
 ];
 
 const mockMonths = MONTH_TH_NAMES.map((name, index) => ({ value: String(index + 1), label: name }));
@@ -36,6 +44,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
     const { suppliers, isLoading } = useSelector((state: any) => state.supplier);
     const { loggedInUser } = useSelector((state: any) => state.auth);
     const [supplierSearchQuery, setSupplierSearchQuery] = useState('');
+    const [selectSupplier, setSelectSupplier] = useState<any>(null)
 
     useEffect(() => {
         if (detail) {
@@ -60,9 +69,13 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
     const initialValues = {
         month: detail?.month || moment().month() + 1,
         year: detail?.year || initialYear || moment().year(),
+        target: detail?.target || 0,
+        target_details: detail?.target_details || { times: 0, persons: 0, days: 0 },
         amount: detail?.amount || 0,
-        vat_amount: detail?.vat_amount || 0,
-        vat_rate: detail?.vat_rate || 0,
+        base_amount: detail?.base_amount || 0,
+        vat_rate: detail?.vat_rate || 7,
+        tax_amount: detail?.tax_amount || 0,
+        tax_rate: detail?.tax_rate || 0,
         net_total: detail?.net_total || 0,
         paid_to: detail?.paid_to || '',
         paid_at: detail?.paid_at || '',
@@ -84,20 +97,27 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
         month: Yup.number().required('กรุณาระบุเดือน'),
         year: Yup.number().required('กรุณาระบุปี'),
         amount: Yup.number().required('กรุณาระบุจำนวนเงิน').min(0, 'จำนวนเงินต้องไม่ติดลบ'),
-        vat_amount: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
-        vat_rate: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
+        tax_amount: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
+        tax_rate: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
         paid_to: Yup.string().required('กรุณาระบุผู้รับเงิน'),
         paid_at: Yup.string().required('กรุณาระบุวันที่'),
         paid_by: Yup.string().required('กรุณาระบุผู้ออกเงิน'),
-        source_id: Yup.string().required('กรุณาระบุแหล่งเงิน')
+        source_id: Yup.string().required('กรุณาระบุแหล่งเงิน'),
+        doc_no: Yup.string().required('กรุณาระบุเลขที่หนังสือขอเบิก'),
+        doc_date: Yup.string().required('กรุณาระบุวันที่หนังสือขอเบิก'),
     });
 
-    const handleCalculateTotal = (amount: number, vat: number) => {
-        return amount - vat;
+    const handleCalculateBaseAmount = (amount: number, vat_rate: number) => {
+        return parseFloat((amount - parseFloat(((amount * vat_rate) / (100 + vat_rate)).toFixed(2))).toFixed(2));
     }
 
-    const handleCalculateVat = (amount: number, vat_rate: number) => {
-        return amount * (vat_rate / 100);
+    const handleCalculateTaxAmount = (amount: number, tax_rate: number) => {
+
+        return parseFloat((amount * (tax_rate / 100)).toFixed(2));
+    }
+
+    const handleCalculateTotal = (amount: number, tax: number) => {
+        return parseFloat((amount - tax).toFixed(2));
     }
 
     return (
@@ -137,6 +157,8 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
                 }}
             >
                 {(formik) => {
+                    console.log(formik.values);
+
                     return (
                         <Form>
                             <Modal.Body>
@@ -174,56 +196,170 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
                                 </Row>
 
                                 <Row className="mb-3">
-                                    <Col md={4}>
-                                        <label className="text-sm font-semibold">จำนวนเงิน (บาท) <span className="text-red-500">*</span></label>
+                                    <Col md={6}>
+                                        <label className="text-sm font-semibold">เป้าหมาย <span className="text-red-500">*</span></label>
                                         <input
                                             type="number"
-                                            name="amount"
-                                            className={`form-control text-sm text-center ${formik.errors.amount && formik.touched.amount ? 'is-invalid' : ''}`}
-                                            onChange={(e) => formik.setFieldValue('amount', Number(e.target.value))}
-                                            onBlur={() => formik.setFieldValue('net_total', handleCalculateTotal(formik.values.amount, formik.values.vat_amount))}
-                                            value={formik.values.amount}
+                                            name="target"
+                                            className={`form-control text-sm text-center ${formik.errors.target && formik.touched.target ? 'is-invalid' : ''}`}
+                                            onChange={(e) => formik.setFieldValue('target', Number(e.target.value))}
+                                            value={formik.values.target}
                                             onFocus={(e) => e.target.select()}
                                         />
-                                        {formik.errors.amount && formik.touched.amount && (
-                                            <div className="text-red-500 text-xs mt-1">{formik.errors.amount as string}</div>
+                                        {formik.errors.target && formik.touched.target && (
+                                            <div className="text-red-500 text-xs mt-1">{formik.errors.target as string}</div>
                                         )}
                                     </Col>
-                                    <Col md={2}>
-                                        <label className="text-sm font-semibold">อัตราภาษีหัก ณ ที่จ่าย (%)</label>
-                                        <input
-                                            type="number"
-                                            name="vat_rate"
-                                            className="form-control text-sm text-center"
-                                            onChange={(e) => formik.setFieldValue('vat_rate', Number(e.target.value))}
-                                            onBlur={() => formik.setFieldValue('vat_amount', handleCalculateVat(formik.values.amount, formik.values.vat_rate))}
-                                            value={formik.values.vat_rate}
-                                            onFocus={(e) => e.target.select()}
-                                        />
-                                    </Col>
-                                    <Col md={2}>
-                                        <label className="text-sm font-semibold">ภาษีหัก ณ ที่จ่าย (บาท)</label>
-                                        <input
-                                            type="number"
-                                            name="vat_amount"
-                                            className="form-control text-sm text-center"
-                                            onChange={(e) => formik.setFieldValue('vat_amount', Number(e.target.value))}
-                                            onBlur={() => formik.setFieldValue('net_total', handleCalculateTotal(formik.values.amount, formik.values.vat_amount))}
-                                            value={formik.values.vat_amount}
-                                            onFocus={(e) => e.target.select()}
-                                        />
-                                    </Col>
-                                    <Col md={4}>
-                                        <label className="text-sm font-semibold">จำนวนเงินสุทธิ (บาท)</label>
-                                        <input
-                                            type="number"
-                                            name="net_total"
-                                            className="form-control text-sm text-center bg-gray-100 font-bold text-blue-600"
-                                            readOnly
-                                            value={formik.values.net_total}
-                                        />
+                                    <Col md={6}>
+                                        <label className="text-sm font-semibold">เป้าหมาย (ครั้ง/คน/วัน)</label>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            <input
+                                                type="number"
+                                                name="target_details.times"
+                                                className={`form-control text-sm`}
+                                                onChange={formik.handleChange}
+                                                value={formik.values.target_details.times}
+                                                placeholder="ครั้ง"
+                                            />
+                                            <input
+                                                type="number"
+                                                name="target_details.persons"
+                                                className={`form-control text-sm`}
+                                                onChange={formik.handleChange}
+                                                value={formik.values.target_details.persons}
+                                                placeholder="คน"
+                                            />
+                                            <input
+                                                type="number"
+                                                name="target_details.days"
+                                                className={`form-control text-sm`}
+                                                onChange={formik.handleChange}
+                                                value={formik.values.target_details.days}
+                                                placeholder="วัน"
+                                            />
+                                        </div>
                                     </Col>
                                 </Row>
+
+                                <div className="border border-gray-200 rounded p-3 mb-3 bg-gray-50">
+                                    <h5 className="text-primary text-sm font-bold border-b pb-1 mb-2 flex items-center gap-2">
+                                        <div className="bg-emerald-100 text-emerald-600 p-1.5 rounded-full flex items-center justify-center">
+                                            <Users className="w-4 h-4" />
+                                        </div>
+                                        ข้อมูลผู้รับเงินและการจ่ายเงิน
+                                    </h5>
+                                    <Row className="mb-2">
+                                        <Col md={6}>
+                                            <label className="text-xs font-semibold">ผู้รับเงิน (จ่ายให้) <span className="text-red-500">*</span></label>
+                                            <SearchableSelect
+                                                options={supplierOptions}
+                                                value={formik.values.paid_to}
+                                                loading={isLoading}
+                                                onSearch={(query) => setSupplierSearchQuery(query)}
+                                                onChange={(value) => {
+                                                    formik.setFieldValue('paid_to', value)
+
+                                                    const _supplier = suppliers.find((s: any) => s.id === value)
+                                                    setSelectSupplier(_supplier)
+                                                }}
+                                                error={formik.errors.paid_to && formik.touched.paid_to ? formik.errors.paid_to as string : undefined}
+                                                inputCss="!h-[34px] !bg-white !rounded-[0.375rem]"
+                                                prefixIcon={<Store className="w-4 h-4" />}
+                                            />
+                                        </Col>
+                                        <Col md={3}>
+                                            <label className="text-xs font-semibold">วันที่จ่าย <span className="text-red-500">*</span></label>
+                                            <DatePicker
+                                                value={formik.values.paid_at}
+                                                onChange={(date: string) => formik.setFieldValue('paid_at', date)}
+                                                inputCss={`!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full ${formik.errors.paid_at && formik.touched.paid_at ? '!border-red-500' : '!border-[#dee2e6]'}`}
+                                                error={formik.errors.paid_at && formik.touched.paid_at ? (formik.errors.paid_at as string) : undefined}
+                                            />
+                                        </Col>
+                                        <Col md={3}>
+                                            <label className="text-xs font-semibold">ผู้จ่ายเงิน <span className="text-red-500">*</span></label>
+                                            <EmployeeSelection fieldName="paid_by" />
+                                        </Col>
+                                    </Row>
+
+                                    <Row className="mb-3">
+                                        <Col md={3}>
+                                            <label className="text-sm font-semibold">จำนวนเงิน (บาท) <span className="text-red-500">*</span></label>
+                                            <input
+                                                type="number"
+                                                name="amount"
+                                                className={`form-control text-sm text-center ${formik.errors.amount && formik.touched.amount ? 'is-invalid' : ''}`}
+                                                onChange={(e) => formik.setFieldValue('amount', Number(e.target.value))}
+                                                onBlur={() => formik.setFieldValue('base_amount', handleCalculateBaseAmount(formik.values.amount, 7))}
+                                                value={formik.values.amount}
+                                                onFocus={(e) => e.target.select()}
+                                            />
+                                            {formik.errors.amount && formik.touched.amount && (
+                                                <div className="text-red-500 text-xs mt-1">{formik.errors.amount as string}</div>
+                                            )}
+                                        </Col>
+                                        <Col md={2}>
+                                            <label className="text-sm font-semibold">ฐานภาษี (บาท) <span className="text-red-500">*</span></label>
+                                            <input
+                                                type="number"
+                                                name="base_amount"
+                                                className={`form-control text-sm text-center cursor-not-allowed bg-gray-100`}
+                                                onChange={(e) => formik.setFieldValue('base_amount', Number(e.target.value))}
+                                                value={formik.values.base_amount}
+                                                onFocus={(e) => e.target.select()}
+                                                readOnly
+                                            />
+                                            {formik.errors.base_amount && formik.touched.base_amount && (
+                                                <div className="text-red-500 text-xs mt-1">{formik.errors.base_amount as string}</div>
+                                            )}
+                                        </Col>
+                                        <Col md={2}>
+                                            <label className="text-sm font-semibold">อัตราภาษีหัก ณ ที่จ่าย (%)</label>
+                                            <input
+                                                type="number"
+                                                name="tax_rate"
+                                                className="form-control text-sm text-center"
+                                                onChange={(e) => formik.setFieldValue('tax_rate', Number(e.target.value))}
+                                                onBlur={() => {
+                                                    let _taxAmount = 0;
+                                                    if (selectSupplier?.tax_type_id === 1) {
+                                                        _taxAmount = handleCalculateTaxAmount(formik.values.amount, formik.values.tax_rate)
+                                                        formik.setFieldValue('tax_amount', _taxAmount)
+                                                    } else {
+                                                        _taxAmount = handleCalculateTaxAmount(formik.values.base_amount, formik.values.tax_rate)
+                                                        formik.setFieldValue('tax_amount', _taxAmount)
+                                                    }
+                                                    formik.setFieldValue('net_total', handleCalculateTotal(formik.values.amount, _taxAmount))
+
+                                                }}
+                                                value={formik.values.tax_rate}
+                                                onFocus={(e) => e.target.select()}
+                                            />
+                                        </Col>
+                                        <Col md={2}>
+                                            <label className="text-sm font-semibold">ภาษีหัก ณ ที่จ่าย (บาท)</label>
+                                            <input
+                                                type="number"
+                                                name="tax_amount"
+                                                className="form-control text-sm text-center cursor-not-allowed bg-gray-100"
+                                                onChange={(e) => formik.setFieldValue('tax_amount', Number(e.target.value))}
+                                                value={formik.values.tax_amount}
+                                                onFocus={(e) => e.target.select()}
+                                                readOnly
+                                            />
+                                        </Col>
+                                        <Col md={3}>
+                                            <label className="text-sm font-semibold">จำนวนเงินสุทธิ (บาท)</label>
+                                            <input
+                                                type="number"
+                                                name="net_total"
+                                                className="form-control text-sm text-center bg-gray-100 font-bold text-blue-600"
+                                                readOnly
+                                                value={formik.values.net_total}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </div>
 
                                 <div className="border border-gray-200 rounded p-3 mb-3 bg-gray-50">
                                     <h5 className="text-primary text-sm font-bold border-b pb-1 mb-2 flex items-center gap-2">
@@ -272,43 +408,6 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
                                     </Row>
                                 </div>
 
-                                <div className="border border-gray-200 rounded p-3 mb-3 bg-gray-50">
-                                    <h5 className="text-primary text-sm font-bold border-b pb-1 mb-2 flex items-center gap-2">
-                                        <div className="bg-emerald-100 text-emerald-600 p-1.5 rounded-full flex items-center justify-center">
-                                            <Users className="w-4 h-4" />
-                                        </div>
-                                        ข้อมูลผู้รับเงินและการจ่ายเงิน
-                                    </h5>
-                                    <Row className="mb-2">
-                                        <Col md={6}>
-                                            <label className="text-xs font-semibold">ผู้รับเงิน (จ่ายให้) <span className="text-red-500">*</span></label>
-                                            <SearchableSelect
-                                                options={supplierOptions}
-                                                value={formik.values.paid_to}
-                                                loading={isLoading}
-                                                onSearch={(query) => setSupplierSearchQuery(query)}
-                                                onChange={(value) => formik.setFieldValue('paid_to', value)}
-                                                error={formik.errors.paid_to && formik.touched.paid_to ? formik.errors.paid_to as string : undefined}
-                                                inputCss="!h-[34px] !bg-white !rounded-[0.375rem]"
-                                                prefixIcon={<Store className="w-4 h-4" />}
-                                            />
-                                        </Col>
-                                        <Col md={3}>
-                                            <label className="text-xs font-semibold">วันที่จ่าย</label>
-                                            <DatePicker
-                                                value={formik.values.paid_at}
-                                                error={formik.errors.paid_at && formik.touched.paid_at ? formik.errors.paid_at as string : undefined}
-                                                onChange={(date: string) => formik.setFieldValue('paid_at', date)}
-                                                inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
-                                            />
-                                        </Col>
-                                        <Col md={3}>
-                                            <label className="text-xs font-semibold">ผู้จ่ายเงิน</label>
-                                            <EmployeeSelection fieldName="paid_by" />
-                                        </Col>
-                                    </Row>
-                                </div>
-
                                 <div className="border border-gray-200 rounded p-3 mb-0 bg-gray-50">
                                     <h5 className="text-primary text-sm font-bold border-b pb-1 mb-2 flex items-center gap-2">
                                         <div className="bg-purple-100 text-purple-600 p-1.5 rounded-full flex items-center justify-center">
@@ -342,17 +441,24 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
                                             <input
                                                 type="text"
                                                 name="doc_no"
-                                                className="form-control text-sm"
+                                                className={`form-control text-sm ${formik.errors.doc_no && formik.touched.doc_no ? 'is-invalid' : ''}`}
                                                 onChange={formik.handleChange}
                                                 value={formik.values.doc_no}
                                             />
+                                            {formik.touched.doc_no && formik.errors.doc_no && (
+                                                <ErrorMessage
+                                                    message={formik.errors.doc_no as string}
+                                                    className="text-danger text-xs"
+                                                />
+                                            )}
                                         </Col>
                                         <Col md={3}>
                                             <label className="text-xs font-semibold">วันที่หนังสือขอเบิก</label>
                                             <DatePicker
                                                 value={formik.values.doc_date}
                                                 onChange={(date: string) => formik.setFieldValue('doc_date', date)}
-                                                inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
+                                                inputCss={`!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full ${formik.errors.doc_date && formik.touched.doc_date ? '!border-red-500' : '!border-[#dee2e6]'}`}
+                                                error={formik.errors.doc_date && formik.touched.doc_date ? (formik.errors.doc_date as string) : undefined}
                                             />
                                         </Col>
                                     </Row>
