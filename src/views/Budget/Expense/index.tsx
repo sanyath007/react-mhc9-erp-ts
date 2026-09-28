@@ -11,6 +11,7 @@ import FilteringInputs from './FilteringInputs';
 import Loading from '../../../components/ui/Loading';
 import Pagination from '../../../components/ui/Pagination';
 import BudgetTypeBadge from '../../../components/Badges/BudgetTypeBadge';
+import { ProgressBar } from '../../../components/ui/progress-bar';
 
 const BudgetExpenseSummary = () => {
     const [cookies] = useCookies();
@@ -29,9 +30,9 @@ const BudgetExpenseSummary = () => {
 
     useEffect(() => {
         if (apiEndpoint === '') {
-            dispatch(getBudgets({ url: `/api/budgets/search?page=&limit=5${params}` }));
+            dispatch(getBudgets({ url: `/api/budgets/search?page=&limit=20${params}` }));
         } else {
-            dispatch(getBudgets({ url: `${apiEndpoint}&limit=5${params}` }));
+            dispatch(getBudgets({ url: `${apiEndpoint}&limit=20${params}` }));
         }
     }, [apiEndpoint]);
 
@@ -39,22 +40,21 @@ const BudgetExpenseSummary = () => {
         <div className="content-wrapper">
             <Breadcrumb>
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>หน้าหลัก</Breadcrumb.Item>
-                <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/budget-expense' }}>ค่าใช้จ่ายงบประมาณ</Breadcrumb.Item>
-                <Breadcrumb.Item active>สรุปค่าใช้จ่ายงบประมาณ</Breadcrumb.Item>
+                <Breadcrumb.Item active>ค่าใช้จ่ายงบประมาณ</Breadcrumb.Item>
             </Breadcrumb>
 
             <div className="content">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-xl">สรุปค่าใช้จ่ายงบประมาณ</h2>
+                    <h2 className="text-xl">ค่าใช้จ่ายงบประมาณ</h2>
                 </div>
 
-                <div>
-                    <table className="table table-bordered table-striped table-hover mb-0">
+                <div className="overflow-x-auto border border-gray-300 rounded-lg">
+                    <table className="table table-striped text-sm mb-0">
                         <thead>
                             <tr>
                                 <th className="text-center w-[5%]">#</th>
                                 <th>รายการงบประมาณ</th>
-                                <th className="text-center w-[20%]">ยอดจัดสรร</th>
+                                <th className="text-center w-[30%]">ยอดจัดสรร</th>
                                 <th className="text-center w-[10%]">ร้อยละการใช้จ่าย</th>
                             </tr>
                         </thead>
@@ -85,21 +85,28 @@ const BudgetExpenseSummary = () => {
                                                 <BudgetTypeBadge type={budget.type} />
                                             </p>
                                         </td>
-                                        <td className="px-2 text-sm">
+                                        <td className="px-2 text-sm leading-relaxed">
                                             <p className="grid grid-cols-3 items-center">
-                                                ยอดจัดสรร: <span className="font-semibold">100</span> บาท
+                                                ยอดจัดสรร:
+                                                <span className="w-full text-center font-semibold">100</span>
+                                                บาท
                                             </p>
                                             <p className="grid grid-cols-3 items-center">
-                                                ยอดใช้ไป: <Link to={`/budget-expense/list?budget_id=${budget.id}`}>
-                                                    <span className="font-semibold">50</span>
-                                                </Link> บาท
+                                                ยอดใช้ไป:
+                                                <Link to={`/budget-expense/list?budget_id=${budget.id}`} className="w-full text-center font-semibold hover:text-green-500 transition-colors cursor-pointer">
+                                                    50
+                                                </Link>
+                                                บาท
                                             </p>
                                             <p className="grid grid-cols-3 items-center">
-                                                ยอดคงเหลือ: <span className="font-semibold">50</span> บาท
+                                                ยอดคงเหลือ:
+                                                <span className="w-full text-center font-semibold">50</span>
+                                                บาท
                                             </p>
                                         </td>
                                         <td className="text-center">
-
+                                            {/* 100% */}
+                                            <ProgressBar value={100} max={100} />
                                         </td>
                                     </tr>
                                 ))
@@ -107,12 +114,14 @@ const BudgetExpenseSummary = () => {
                         </tbody>
                     </table>
 
-                    {pager && (
-                        <Pagination
-                            pager={pager}
-                            onPageClick={(url) => setApiEndpoint(url)}
-                        />
-                    )}
+                    {/* {pager && (
+                        <div className="px-3 py-2">
+                            <Pagination
+                                pager={pager}
+                                onPageClick={(url) => setApiEndpoint(url)}
+                            />
+                        </div>
+                    )} */}
                 </div>
             </div>
         </div>
