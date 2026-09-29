@@ -380,7 +380,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
     if (onSearch) {
       const timer = setTimeout(() => {
         onSearch(val);
-      }, 500);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   };

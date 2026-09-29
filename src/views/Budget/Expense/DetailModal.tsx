@@ -96,7 +96,8 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
     const validationSchema = Yup.object().shape({
         month: Yup.number().required('กรุณาระบุเดือน'),
         year: Yup.number().required('กรุณาระบุปี'),
-        amount: Yup.number().required('กรุณาระบุจำนวนเงิน').min(0, 'จำนวนเงินต้องไม่ติดลบ'),
+        amount: Yup.number().required('กรุณาระบุจำนวนเงิน').positive('จำนวนเงินต้องมากกว่า 0'),
+        net_total: Yup.number().required('กรุณาระบุจำนวนเงินสุทธิ').positive('จำนวนเงินสุทธิมากกว่า 0'),
         tax_amount: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
         tax_rate: Yup.number().min(0, 'ภาษีต้องไม่ติดลบ'),
         paid_to: Yup.string().required('กรุณาระบุผู้รับเงิน'),
@@ -293,7 +294,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
                                                 onFocus={(e) => e.target.select()}
                                             />
                                             {formik.errors.amount && formik.touched.amount && (
-                                                <div className="text-red-500 text-xs mt-1">{formik.errors.amount as string}</div>
+                                                <ErrorMessage className="mt-1" message={formik.errors.amount as string} />
                                             )}
                                         </Col>
                                         <Col md={2}>
@@ -308,7 +309,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
                                                 readOnly
                                             />
                                             {formik.errors.base_amount && formik.touched.base_amount && (
-                                                <div className="text-red-500 text-xs mt-1">{formik.errors.base_amount as string}</div>
+                                                <ErrorMessage className="mt-1" message={formik.errors.base_amount as string} />
                                             )}
                                         </Col>
                                         <Col md={2}>
@@ -351,10 +352,13 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
                                             <input
                                                 type="number"
                                                 name="net_total"
-                                                className="form-control text-sm text-center bg-gray-100 font-bold text-blue-600"
-                                                readOnly
                                                 value={formik.values.net_total}
+                                                className={`form-control text-sm text-center bg-gray-100 font-bold text-blue-600 ${formik.errors.net_total && formik.touched.net_total ? 'is-invalid' : ''}`}
+                                                readOnly
                                             />
+                                            {formik.errors.net_total && formik.touched.net_total && (
+                                                <ErrorMessage className="mt-1" message={formik.errors.net_total as string} />
+                                            )}
                                         </Col>
                                     </Row>
                                 </div>
