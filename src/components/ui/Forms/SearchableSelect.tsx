@@ -372,11 +372,16 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
     const val = e.target.value;
     setSearchQuery(val);
     setIsTyping(val.length > 0);
+
     if (!isOpen) {
       openDropdown();
     }
+
     if (onSearch) {
-      onSearch(val);
+      const timer = setTimeout(() => {
+        onSearch(val);
+      }, 500);
+      return () => clearTimeout(timer);
     }
   };
 

@@ -52,8 +52,8 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
     }, [dispatch]);
 
     const projectOptions = useMemo(() => {
-        return selectedBudget ? projects?.filter((p: any) => String(p.budget_id) === String(selectedBudget.id))
-            .map((p: any) => ({ value: String(p.id), label: p.name })) : []
+        //.filter((p: any) => String(p.budget_id) === String(selectedBudget.id)) 
+        return selectedBudget ? projects?.map((p: any) => ({ value: String(p.id), label: p.name })) : []
     }, [projects, selectedBudget]);
 
     const initialValues = {
