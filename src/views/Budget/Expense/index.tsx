@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import { Breadcrumb } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import moment from 'moment';
-import { generateQueryString, getUrlParam } from '../../../utils';
+import { currency, generateQueryString, getUrlParam } from '../../../utils';
 import { getBudgets } from '../../../features/slices/budget/budgetSlice';
 import { useGetInitialFormDataQuery } from '../../../features/services/budget/budgetApi';
 import FilteringInputs from './FilteringInputs';
@@ -35,6 +35,24 @@ const BudgetExpenseSummary = () => {
             dispatch(getBudgets({ url: `${apiEndpoint}&limit=20${params}` }));
         }
     }, [apiEndpoint]);
+
+    const handleCalculateBalance = (total: number, expenses: number): number => {
+        return expenses > 0 ? parseFloat((total - expenses).toFixed(2)) : total;
+    };
+
+    const handleCalculatePercent = (total: number, expenses: number): number => {
+        if (total <= 0) return 0;
+
+        return expenses > 0 ? parseFloat((expenses / total * 100).toFixed(2)) : 0;
+    };
+
+    const renderBalance = (balance: number): React.ReactNode => {
+        return balance < 0 ? (
+            <span className="text-red-500">{currency.format(balance)}</span>
+        ) : (
+            <span className="text-emerald-500">{currency.format(balance)}</span>
+        );
+    };
 
     return (
         <div className="content-wrapper">
@@ -88,25 +106,29 @@ const BudgetExpenseSummary = () => {
                                         <td className="px-2 text-sm leading-relaxed">
                                             <p className="grid grid-cols-3 items-center">
                                                 ยอดจัดสรร:
-                                                <span className="w-full text-center font-semibold">100</span>
+                                                <span className="w-full text-center font-semibold">
+                                                    {currency.format(budget.total)}
+                                                </span>
                                                 บาท
                                             </p>
                                             <p className="grid grid-cols-3 items-center">
                                                 ยอดใช้ไป:
-                                                <Link to={`/budget-expense/list?budget_id=${budget.id}`} className="w-full text-center font-semibold hover:text-green-500 transition-colors cursor-pointer">
-                                                    50
+                                                <Link to={`/budget-expense/list?budget_id=${budget.id}`} className="w-full text-center font-semibold text-slate-400 hover:text-slate-600 transition-colors cursor-pointer">
+                                                    {currency.format(budget.total_expenses)}
                                                 </Link>
                                                 บาท
                                             </p>
                                             <p className="grid grid-cols-3 items-center">
                                                 ยอดคงเหลือ:
-                                                <span className="w-full text-center font-semibold">50</span>
+                                                <span className="w-full text-center font-semibold">
+                                                    {renderBalance(handleCalculateBalance(budget.total, budget.total_expenses))}
+                                                </span>
                                                 บาท
                                             </p>
                                         </td>
                                         <td className="text-center">
                                             {/* 100% */}
-                                            <ProgressBar value={100} max={100} />
+                                            <ProgressBar value={handleCalculatePercent(budget.total, budget.total_expenses)} max={100} />
                                         </td>
                                     </tr>
                                 ))

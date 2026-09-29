@@ -58,23 +58,68 @@ export interface Inspection {
     [key: string]: any;
 }
 
-export interface Budget {
-    id: number | string;
+export interface BudgetType {
+    id: number;
+    name: string;
+    created_at?: string;
+    updated_at?: string;
     [key: string]: any;
 }
 
 export interface BudgetPlan {
     id: number | string;
+    plan_no?: string;
+    name?: string;
+    year?: number;
+    plan_type_id?: number;
+    status?: number;
+    created_at?: string;
+    updated_at?: string;
     [key: string]: any;
 }
 
 export interface BudgetProject {
     id: number | string;
+    name?: string;
+    year?: number;
+    project_type_id?: number;
+    plan_id?: number | string;
+    division_id?: number | string | null;
+    owner_id?: number | string | null;
+    gfmis_id?: string | null;
+    activity_count?: number | null;
+    status?: number;
+    created_at?: string;
+    updated_at?: string;
+    plan?: BudgetPlan;
     [key: string]: any;
 }
 
 export interface BudgetActivity {
     id: number | string;
+    activity_no?: string;
+    name?: string;
+    year?: number;
+    gfmis_id?: string | null;
+    project_id?: number | string;
+    status?: number;
+    created_at?: string;
+    updated_at?: string;
+    project?: BudgetProject;
+    [key: string]: any;
+}
+
+export interface Budget {
+    id: number | string;
+    activity_id?: number | string;
+    budget_type_id?: number;
+    total?: string | number;
+    latest_total?: string | number | null;
+    total_expenses?: string | number;
+    created_at?: string;
+    updated_at?: string;
+    activity?: BudgetActivity;
+    type?: BudgetType;
     [key: string]: any;
 }
 
