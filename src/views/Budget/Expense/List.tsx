@@ -91,7 +91,7 @@ const BudgetExpenseList = () => {
                             <tr className="bg-gray-100">
                                 <th className="text-center align-middle" rowSpan={2} style={{ width: '3%' }}>#</th>
                                 <th className="align-middle" rowSpan={2} style={{ width: '25%' }}>โครงการ/กิจกรรม</th>
-                                <th className="text-center align-middle" rowSpan={2} style={{ width: '8%' }}>หน่วยนับ/เป้า/งบ</th>
+                                <th className="text-center align-middle" rowSpan={2} style={{ width: '8%' }}>หน่วยนับ/เป้า</th>
                                 <th className="text-center" colSpan={12}>เดือนที่ใช้จ่าย</th>
                                 <th className="text-center align-middle" rowSpan={2} style={{ width: '6%' }}>รวมทั้งสิ้น</th>
                             </tr>

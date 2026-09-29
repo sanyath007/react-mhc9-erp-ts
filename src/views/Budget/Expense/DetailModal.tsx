@@ -174,7 +174,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
                                         />
                                     </Col>
                                     <Col md={3}>
-                                        <label className="text-sm font-semibold">ปีงบประมาณ <span className="text-red-500">*</span></label>
+                                        <label className="text-sm font-semibold">พ.ศ. <span className="text-red-500">*</span></label>
                                         <YearPicker
                                             value={String(formik.values.year)}
                                             onChange={(year: string) => formik.setFieldValue('year', Number(year))}
