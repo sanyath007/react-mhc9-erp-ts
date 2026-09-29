@@ -92,46 +92,48 @@ const BudgetExpenseSummary = () => {
                                 </tr>
                             )}
                             {(!isLoading && budgets) &&
-                                [...budgets].sort((a: any, b: any) => a.activity.project.plan_id - b.activity.project.plan_id).map((budget, index) => (
-                                    <tr key={budget.id}>
-                                        <td className="text-center">{index + pager?.from}</td>
-                                        <td>
-                                            <p className="text-gray-400 text-xs">{budget.activity?.project?.plan?.plan_no} {budget.activity?.project?.plan?.name}</p>
-                                            <p className="text-xs font-semibold">{budget.activity?.project?.name}</p>
-                                            <p className="text-blue-500 text-sm">
-                                                {budget.activity?.name}
-                                                <BudgetTypeBadge type={budget.type} />
-                                            </p>
-                                        </td>
-                                        <td className="px-2 text-sm leading-relaxed">
-                                            <p className="grid grid-cols-3 items-center">
-                                                ยอดจัดสรร:
-                                                <span className="w-full text-center font-semibold">
-                                                    {currency.format(budget.total)}
-                                                </span>
-                                                บาท
-                                            </p>
-                                            <p className="grid grid-cols-3 items-center">
-                                                ยอดใช้ไป:
-                                                <Link to={`/budget-expense/list?budget_id=${budget.id}`} className="w-full text-center font-semibold text-slate-400 hover:text-slate-600 transition-colors cursor-pointer">
-                                                    {currency.format(budget.total_expenses)}
-                                                </Link>
-                                                บาท
-                                            </p>
-                                            <p className="grid grid-cols-3 items-center">
-                                                ยอดคงเหลือ:
-                                                <span className="w-full text-center font-semibold">
-                                                    {renderBalance(handleCalculateBalance(budget.total, budget.total_expenses))}
-                                                </span>
-                                                บาท
-                                            </p>
-                                        </td>
-                                        <td className="text-center">
-                                            {/* 100% */}
-                                            <ProgressBar value={handleCalculatePercent(budget.total, budget.total_expenses)} max={100} />
-                                        </td>
-                                    </tr>
-                                ))
+                                [...budgets]
+                                    .sort((a: any, b: any) => a.activity?.project?.plan?.plan_no.localeCompare(b.activity?.project?.plan?.plan_no))
+                                    .map((budget, index) => (
+                                        <tr key={budget.id}>
+                                            <td className="text-center">{index + pager?.from}</td>
+                                            <td>
+                                                <p className="text-gray-400 text-xs">{budget.activity?.project?.plan?.plan_no} {budget.activity?.project?.plan?.name}</p>
+                                                <p className="text-xs font-semibold">{budget.activity?.project?.name}</p>
+                                                <p className="text-blue-500 text-sm">
+                                                    {budget.activity?.name}
+                                                    <BudgetTypeBadge type={budget.type} />
+                                                </p>
+                                            </td>
+                                            <td className="px-2 text-sm leading-relaxed">
+                                                <p className="grid grid-cols-3 items-center">
+                                                    ยอดจัดสรร:
+                                                    <span className="w-full text-center font-semibold">
+                                                        {currency.format(budget.total)}
+                                                    </span>
+                                                    บาท
+                                                </p>
+                                                <p className="grid grid-cols-3 items-center">
+                                                    ยอดใช้ไป:
+                                                    <Link to={`/budget-expense/list?budget_id=${budget.id}`} className="w-full text-center font-semibold text-slate-400 hover:text-slate-600 transition-colors cursor-pointer">
+                                                        {currency.format(budget.total_expenses)}
+                                                    </Link>
+                                                    บาท
+                                                </p>
+                                                <p className="grid grid-cols-3 items-center">
+                                                    ยอดคงเหลือ:
+                                                    <span className="w-full text-center font-semibold">
+                                                        {renderBalance(handleCalculateBalance(budget.total, budget.total_expenses))}
+                                                    </span>
+                                                    บาท
+                                                </p>
+                                            </td>
+                                            <td className="text-center">
+                                                {/* 100% */}
+                                                <ProgressBar value={handleCalculatePercent(budget.total, budget.total_expenses)} max={100} />
+                                            </td>
+                                        </tr>
+                                    ))
                             }
                         </tbody>
                     </table>
