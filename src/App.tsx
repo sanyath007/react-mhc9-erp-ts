@@ -123,6 +123,7 @@ import BudgetExpenseSummary from './views/Budget/Expense';
 import BudgetExpenseList from './views/Budget/Expense/List';
 import AddBudgetExpense from './views/Budget/Expense/Add';
 import BudgetExpenseDetail from './views/Budget/Expense/BudgetExpense';
+import WithholdingTaxPrintPage from './views/Budget/Expense/print/WithholdingTax';
 /** Place */
 import PlaceList from './views/Place/List';
 import AddPlace from './views/Place/Add';
@@ -265,6 +266,7 @@ function App() {
                 <Route path="budget-expense/list" element={<GuardRoute><BudgetExpenseList /></GuardRoute>} />
                 <Route path="budget-expense/add" element={<GuardRoute><AddBudgetExpense /></GuardRoute>} />
                 <Route path="budget-expense/:id/detail" element={<GuardRoute><BudgetExpenseDetail /></GuardRoute>} />
+                <Route path="budget-expense/:id/withholding-tax/:detailId/print" element={<GuardRoute><WithholdingTaxPrintPage /></GuardRoute>} />
 
                 {/* Places */}
                 <Route path="place" element={<GuardRoute><PlaceList /></GuardRoute>} />

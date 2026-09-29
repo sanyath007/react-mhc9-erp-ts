@@ -9,17 +9,17 @@ export const formatThaiDate = (dateStr: string, includeTime = false): string => 
     if (!dateStr) return '';
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return '';
-    
+
     const day = date.getDate();
     const month = MONTH_TH_NAMES[date.getMonth()];
     const year = date.getFullYear() + 543;
-    
+
     if (includeTime) {
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
         return `${day} ${month} ${year} ${hours}:${minutes}`;
     }
-    
+
     return `${day} ${month} ${year}`;
 };
 
@@ -27,11 +27,11 @@ export const formatThaiDateShort = (dateStr: string): string => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return '';
-    
+
     const day = date.getDate();
     const month = MONTH_TH_SHNAMES[date.getMonth()];
     const year = date.getFullYear() + 543;
-    
+
     return `${day} ${month} ${year}`;
 };
 
@@ -56,7 +56,7 @@ export const isTodayInBangkok = (dateStr: string): boolean => {
  */
 export function startOfDay(d: Date): Date {
     const x = new Date(d);
-    x.setHours(0,0,0,0);
+    x.setHours(0, 0, 0, 0);
 
     return x;
 }
@@ -64,8 +64,8 @@ export function startOfDay(d: Date): Date {
 export function sameDay(a: Date | null, b: Date | null) {
     return a && b
         && a.getFullYear() === b.getFullYear()
-        && a.getMonth()    === b.getMonth()
-        && a.getDate()     === b.getDate();
+        && a.getMonth() === b.getMonth()
+        && a.getDate() === b.getDate();
 }
 
 export function diffDays(a: Date | null, b: Date | null) {
@@ -79,7 +79,7 @@ export function fmt(date: Date | null, opts: any = { day: "2-digit", month: "sho
 }
 
 export function getDaysInMonth(y: any, m: any) {
-    return new Date(y, m+1, 0).getDate();
+    return new Date(y, m + 1, 0).getDate();
 }
 
 export function getFirstDayOfMonth(y: any, m: any) {

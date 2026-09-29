@@ -2,18 +2,18 @@
 
 export const ThaiNumberToText = (value) => {
 	let number = '';
-	number = value.toString().replace(/๐/gi,'0');  
-	number = value.toString().replace(/๑/gi,'1');  
-	number = value.toString().replace(/๒/gi,'2');
-	number = value.toString().replace(/๓/gi,'3');
-	number = value.toString().replace(/๔/gi,'4');
-	number = value.toString().replace(/๕/gi,'5');
-	number = value.toString().replace(/๖/gi,'6');
-	number = value.toString().replace(/๗/gi,'7');
-	number = value.toString().replace(/๘/gi,'8');
-	number = value.toString().replace(/๙/gi,'9');
+	number = value.toString().replace(/๐/gi, '0');
+	number = value.toString().replace(/๑/gi, '1');
+	number = value.toString().replace(/๒/gi, '2');
+	number = value.toString().replace(/๓/gi, '3');
+	number = value.toString().replace(/๔/gi, '4');
+	number = value.toString().replace(/๕/gi, '5');
+	number = value.toString().replace(/๖/gi, '6');
+	number = value.toString().replace(/๗/gi, '7');
+	number = value.toString().replace(/๘/gi, '8');
+	number = value.toString().replace(/๙/gi, '9');
 
-	return 	ArabicNumberToText(number);
+	return ArabicNumberToText(number);
 }
 
 export const ArabicNumberToText = (value) => {
@@ -29,13 +29,13 @@ export const ArabicNumberToText = (value) => {
 		if ((Number - 0) > 9999999.9999) {
 			return "ข้อมูลนำเข้าเกินขอบเขตที่ตั้งไว้";
 		} else {
-			Number = Number.split (".");
+			Number = Number.split(".");
 			if (Number[1].length > 0) {
 				Number[1] = Number[1].substring(0, 2);
 			}
 
 			var NumberLen = Number[0].length - 0;
-			for(var i = 0; i < NumberLen; i++) {
+			for (var i = 0; i < NumberLen; i++) {
 				var tmp = Number[0].substring(i, i + 1) - 0;
 
 				if (tmp !== 0) {
@@ -88,17 +88,35 @@ export const ArabicNumberToText = (value) => {
 
 export const CheckNumber = (value) => {
 	var decimal = false;
-	let number = value.toString().replace(/ |,|บาท|฿/gi,'');
+	let number = value.toString().replace(/ |,|บาท|฿/gi, '');
 
-	for (var i = 0; i < number.length; i++)	{
-		if(number[i] === '.') {
+	for (var i = 0; i < number.length; i++) {
+		if (number[i] === '.') {
 			decimal = true;
 		}
 	}
 
-	if(!decimal) {
-		number = number+'.00';
+	if (!decimal) {
+		number = number + '.00';
 	}
 
 	return number
+}
+
+const thaiCurrencyFormatter = new Intl.NumberFormat(
+	"th-TH",
+	{
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2,
+	}
+);
+
+export function formatMoney(
+	value?: number | null
+): string {
+	if (value === undefined || value === null) {
+		return "";
+	}
+
+	return thaiCurrencyFormatter.format(value);
 }

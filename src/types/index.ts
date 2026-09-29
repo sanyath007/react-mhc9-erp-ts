@@ -264,3 +264,5 @@ export type BudgetExpenseDetail = {
     remark?: string;            // หมายเหตุ
     created_by: number;         // ผู้บันทึก (User ID)
 }
+
+export * from './witholding-tax'
