@@ -13,6 +13,14 @@ import Pagination from '../../../components/ui/Pagination';
 import BudgetTypeBadge from '../../../components/Badges/BudgetTypeBadge';
 import { ProgressBar } from '../../../components/ui/progress-bar';
 
+export const renderBalance = (balance: number): React.ReactNode => {
+    return balance < 0 ? (
+        <span className="text-red-500">{currency.format(balance)}</span>
+    ) : (
+        <span className="text-emerald-500">{currency.format(balance)}</span>
+    );
+};
+
 const BudgetExpenseSummary = () => {
     const [cookies] = useCookies();
     const initialFilters = {
@@ -44,14 +52,6 @@ const BudgetExpenseSummary = () => {
         if (total <= 0) return 0;
 
         return expenses > 0 ? parseFloat((expenses / total * 100).toFixed(2)) : 0;
-    };
-
-    const renderBalance = (balance: number): React.ReactNode => {
-        return balance < 0 ? (
-            <span className="text-red-500">{currency.format(balance)}</span>
-        ) : (
-            <span className="text-emerald-500">{currency.format(balance)}</span>
-        );
     };
 
     return (

@@ -9,6 +9,7 @@ import DetailModal from './DetailModal';
 import MasterModal from './MasterModal';
 import BudgetTypeBadge from '../../../components/Badges/BudgetTypeBadge';
 import { MONTH_TH_SHNAMES } from '../../../constants/date-time';
+import { renderBalance } from '.';
 
 const BudgetExpenseDetail = () => {
     const { id } = useParams();
@@ -43,8 +44,10 @@ const BudgetExpenseDetail = () => {
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>หน้าหลัก</Breadcrumb.Item>
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/budget-plan' }}>งบประมาณ</Breadcrumb.Item>
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/budget-expense' }}>ค่าใช้จ่ายงบประมาณ</Breadcrumb.Item>
+                <Breadcrumb.Item linkAs={Link} linkProps={{ to: `/budget-expense/list?budget_id=${expense.budget_id}` }}>รายการค่าใช้จ่ายงบประมาณ</Breadcrumb.Item>
                 <Breadcrumb.Item active>รายละเอียดค่าใช้จ่าย</Breadcrumb.Item>
             </Breadcrumb>
+
             <div className="content">
                 <div className="flex justify-between items-center mb-3">
                     <h2 className="text-xl">รายละเอียดค่าใช้จ่าย</h2>
@@ -75,7 +78,7 @@ const BudgetExpenseDetail = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 text-sm">
+                    <div className="grid grid-cols-3 gap-2 text-sm mt-2">
                         <div className="col-span-3">
                             <span className="text-gray-500 font-semibold">โครงการ/กิจกรรม:</span> {expense.project?.name}
                         </div>
@@ -141,7 +144,13 @@ const BudgetExpenseDetail = () => {
                                             {detail.payment_at ? toShortTHDate(detail.payment_at) : '-'}
                                         </td>
                                         <td>{detail.supplier?.name || '-'}</td>
-                                        <td className="text-right">{currency.format(detail.net_total || detail.amount || 0)}</td>
+                                        <td className="text-right">
+                                            <div className="grid grid-cols-1 gap-0 mb-0">
+                                                <span className="text-muted">{currency.format(detail.amount || 0)}</span>
+                                                <span className="text-indigo-500">{currency.format(detail.net_total || 0)}</span>
+                                                {renderBalance((detail.net_total || 0) - (detail.amount || 0))}
+                                            </div>
+                                        </td>
                                         <td className="text-center">
                                             <button
                                                 className="btn btn-warning btn-sm mx-1"

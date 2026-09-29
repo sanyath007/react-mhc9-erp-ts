@@ -8,13 +8,7 @@ import { getBudgetExpenses } from '../../../features/slices/budget-expense/budge
 import FilteringInputs from './FilteringInputs'
 import BudgetTypeBadge from '../../../components/Badges/BudgetTypeBadge'
 import Pagination from '../../../components/ui/Pagination'
-
-const getMonthTotal = (item: any, month: number) => {
-    if (!item.details) return item.expenses ? item.expenses[['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'][month - 1]] || 0 : 0;
-    return item.details
-        .filter((d: any) => Number(d.month) === month)
-        .reduce((acc: number, curr: any) => acc + Number(curr.net_total || curr.amount || 0), 0);
-};
+import { renderBalance } from '.'
 
 const BudgetExpenseList = () => {
     const dispatch = useDispatch<any>();
@@ -32,6 +26,32 @@ const BudgetExpenseList = () => {
             dispatch(getBudgetExpenses({ url: `${apiEndpoint}${params}` }));
         }
     }, [apiEndpoint]);
+
+    const getMonthTotal = (item: any, month: number) => {
+        if (!item.details) return item.expenses ? item.expenses[['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'][month - 1]] || 0 : 0;
+        const target = item.details
+            .filter((d: any) => Number(d.month) === month)
+            .reduce((acc: number, curr: any) => acc + Number(curr.target || 0), 0)
+        const actual = item.details
+            .filter((d: any) => Number(d.month) === month)
+            .reduce((acc: number, curr: any) => acc + Number(curr.net_total || 0), 0)
+
+        return {
+            target: target,
+            actual: actual,
+            balance: target - actual,
+        }
+    };
+
+    const renderTargetActual = (item: any, month: number): React.ReactNode => {
+        return (
+            <div className="grid grid-cols-1 gap-0 mb-0">
+                <span className="text-muted">{currency.format(getMonthTotal(item, month).target)}</span>
+                <span className="text-indigo-500">{currency.format(getMonthTotal(item, month).actual)}</span>
+                {renderBalance(getMonthTotal(item, month).balance)}
+            </div>
+        )
+    };
 
     return (
         <div className="content-wrapper">
@@ -121,18 +141,18 @@ const BudgetExpenseList = () => {
                                             <span>{item.target_details?.times || 0} / {item.target_details?.persons || 0} / {item.target_details?.days || 0}</span>
                                         </p>
                                     </td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 10))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 11))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 12))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 1))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 2))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 3))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 4))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 5))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 6))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 7))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 8))}</td>
-                                    <td className="text-right">{currency.format(getMonthTotal(item, 9))}</td>
+                                    <td className="text-right">{renderTargetActual(item, 10)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 11)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 12)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 1)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 2)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 3)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 4)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 5)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 6)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 7)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 8)}</td>
+                                    <td className="text-right">{renderTargetActual(item, 9)}</td>
                                     <td className="text-right font-bold text-green-700 bg-green-50">
                                         {currency.format(item.details?.reduce((acc: number, d: any) => acc + Number(d.net_total || d.amount || 0), 0) || item.total || 0)}
                                     </td>
