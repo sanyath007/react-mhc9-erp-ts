@@ -138,6 +138,7 @@ import ProjectList from './views/Project';
 import AddProject from './views/Project/Add';
 import EditProject from './views/Project/Edit';
 import ProjectDetail from './views/Project/Detail';
+import TaxVoucherAttachmentPrintPage from './views/Budget/Expense/print/TaxVoucherAttachment.tsx';
 
 function App() {
     return (
@@ -266,7 +267,14 @@ function App() {
                 <Route path="budget-expense/list" element={<GuardRoute><BudgetExpenseList /></GuardRoute>} />
                 <Route path="budget-expense/add" element={<GuardRoute><AddBudgetExpense /></GuardRoute>} />
                 <Route path="budget-expense/:id/detail" element={<GuardRoute><BudgetExpenseDetail /></GuardRoute>} />
-                <Route path="budget-expense/:id/withholding-tax/:detailId/print" element={<GuardRoute><WithholdingTaxPrintPage /></GuardRoute>} />
+                <Route
+                    path="budget-expense/:id/withholding-tax/:detailId/print"
+                    element={<GuardRoute><WithholdingTaxPrintPage /></GuardRoute>}
+                />
+                <Route
+                    path="budget-expense/:id/attachment/:detailId/print"
+                    element={<GuardRoute><TaxVoucherAttachmentPrintPage /></GuardRoute>}
+                />
 
                 {/* Places */}
                 <Route path="place" element={<GuardRoute><PlaceList /></GuardRoute>} />

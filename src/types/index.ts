@@ -266,3 +266,5 @@ export type BudgetExpenseDetail = {
 }
 
 export * from './witholding-tax'
+
+export * from './taxVoucher-attachment'

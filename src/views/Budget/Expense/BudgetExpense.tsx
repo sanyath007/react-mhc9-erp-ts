@@ -10,6 +10,7 @@ import MasterModal from './MasterModal';
 import BudgetTypeBadge from '../../../components/Badges/BudgetTypeBadge';
 import { MONTH_TH_SHNAMES } from '../../../constants/date-time';
 import { renderBalance } from '.';
+import { Printer } from 'lucide-react';
 
 const BudgetExpenseDetail = () => {
     const { id } = useParams();
@@ -143,7 +144,28 @@ const BudgetExpenseDetail = () => {
                                             {detail.payment_no || '-'}{' | '}
                                             {detail.payment_at ? toShortTHDate(detail.payment_at) : '-'}
                                         </td>
-                                        <td>{detail.supplier?.name || '-'}</td>
+                                        <td>
+                                            <div className="grid grid-cols-1 gap-2">
+                                                {detail.supplier?.name || '-'}
+
+                                                <div className="flex justify-center items-center gap-2">
+                                                    <Link
+                                                        className="btn btn-primary btn-sm flex flex-row"
+                                                        to={`/budget-expense/${id}/withholding-tax/${detail.id}/print`}
+                                                        target="_blank"
+                                                    >
+                                                        <Printer className="w-4 h-4 mr-1" />พิมพ์ใบหัก ณ ที่จ่าย
+                                                    </Link>
+                                                    <Link
+                                                        className="btn btn-primary btn-sm flex flex-row"
+                                                        to={`/budget-expense/${id}/attachment/${detail.id}/print`}
+                                                        target="_blank"
+                                                    >
+                                                        <Printer className="w-4 h-4 mr-1" />พิมพ์ฎีกาเสียภาษี
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td className="text-right">
                                             <div className="grid grid-cols-1 gap-0 mb-0">
                                                 <span className="text-muted">{currency.format(detail.target || 0)}</span>
@@ -158,8 +180,12 @@ const BudgetExpenseDetail = () => {
                                                     setSelectedDetail(detail);
                                                     setShowDetailModal(true);
                                                 }}
-                                            ><FaPencilAlt /></button>
-                                            <button className="btn btn-danger btn-sm mx-1"><FaTrash /></button>
+                                            >
+                                                <FaPencilAlt />
+                                            </button>
+                                            <button className="btn btn-danger btn-sm mx-1">
+                                                <FaTrash />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))

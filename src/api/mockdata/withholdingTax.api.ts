@@ -44,9 +44,7 @@ const mockData: WithholdingTaxCertificate = {
     status: "APPROVED",
 };
 
-export async function getWithholdingTaxCertificate(
-    id: string
-): Promise<WithholdingTaxCertificate> {
+export async function getWithholdingTaxCertificate(id: string): Promise<WithholdingTaxCertificate> {
     await new Promise((resolve) => setTimeout(resolve, 400));
 
     return {

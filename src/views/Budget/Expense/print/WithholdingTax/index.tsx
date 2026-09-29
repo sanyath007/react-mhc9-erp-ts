@@ -103,7 +103,7 @@ function PrintToolbar({
 
                 <div className="flex items-center gap-2">
                     <Link
-                        to={`/withholding-tax/${id}`}
+                        to={`/budget-expense/${id}/detail`}
                         className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                     >
                         ย้อนกลับ

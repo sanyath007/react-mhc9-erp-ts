@@ -1,13 +1,6 @@
-@page {
-    size: A4 portrait;
-    margin: 12mm 15mm;
-}
-
-@media screen {
-    .print-document {
-        box-sizing: border-box;
-    }
-}
+/* ==========================================
+   Common print styles
+   ========================================== */
 
 @media print {
 
@@ -17,10 +10,7 @@
         margin: 0 !important;
         padding: 0 !important;
 
-        width: 100% !important;
-        min-height: 100% !important;
-
-        background: #ffffff !important;
+        background: #fff !important;
     }
 
     body {
@@ -32,23 +22,8 @@
         display: none !important;
     }
 
-    .print-document {
-        width: auto !important;
-        min-height: auto !important;
-
-        margin: 0 !important;
-        padding: 0 !important;
-
-        box-shadow: none !important;
-
-        background: #ffffff !important;
-    }
-
     table {
         border-collapse: collapse;
-
-        break-inside: avoid;
-        page-break-inside: avoid;
     }
 
     thead {
@@ -61,13 +36,59 @@
         break-inside: avoid;
         page-break-inside: avoid;
     }
+}
 
-    section {
-        break-inside: avoid;
+
+/* ==========================================
+   Portrait document
+   หนังสือรับรองหัก ณ ที่จ่าย
+   ========================================== */
+
+@page portrait-page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+}
+
+.print-document {
+    page: portrait-page;
+}
+
+@media print {
+    .print-document {
+        width: auto !important;
+        min-height: auto !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        box-shadow: none !important;
     }
+}
 
-    button,
-    a {
-        print-color-adjust: exact;
+
+/* ==========================================
+   Landscape document
+   แบบแนบฎีกา 4117
+   ========================================== */
+
+@page landscape-page {
+    size: A4 landscape;
+    margin: 8mm 10mm;
+}
+
+.tax-voucher-landscape {
+    page: landscape-page;
+}
+
+@media print {
+    .tax-voucher-landscape {
+        width: auto !important;
+        height: auto !important;
+        min-height: auto !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        box-shadow: none !important;
     }
 }
