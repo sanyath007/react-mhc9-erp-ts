@@ -10,14 +10,7 @@ export function SignatureSection({
     signer,
 }: SignatureSectionProps) {
     return (
-        <section
-            className="
-        mt-[14mm]
-        ml-auto
-        w-[55%]
-        text-center
-      "
-        >
+        <section className="mt-[10mm] print:mt-[6mm] ml-auto w-[55%] text-center">
             <div>
                 ลงชื่อ
                 <span className="ml-2 inline-block w-[65mm] border-b border-dotted border-black">
@@ -25,9 +18,9 @@ export function SignatureSection({
                 </span>
             </div>
 
-            <div className="mt-2">
+            <div className="mt-2 pl-12">
                 (
-                <span className="inline-block min-w-[58mm]">
+                <span className="inline-block min-w-[60mm]">
                     {signer?.name ?? ""}
                 </span>
                 )

@@ -38,7 +38,7 @@ export function TaxTable({
     totalTax,
 }: TaxTableProps) {
     return (
-        <section className="mt-[18mm]">
+        <section className="mt-[6mm]">
             <table className="w-full table-fixed border-collapse">
                 <thead>
                     <tr>
@@ -68,72 +68,36 @@ export function TaxTable({
 
                 <tbody>
                     {defaultRows.map((row) => {
-                        const item = items.find(
-                            (currentItem) =>
-                                currentItem.taxType === row.taxType
-                        );
-
+                        const item = items.find((currentItem) => currentItem.taxType === row.taxType);
                         return (
-                            <tr
-                                key={row.taxType}
-                                className="h-[11mm]"
-                            >
+                            <tr key={row.taxType} className="h-[11mm]">
                                 <TableCell>
-                                    {item?.taxTypeLabel ||
-                                        row.label}
+                                    {item?.taxTypeLabel || row.label}
                                 </TableCell>
-
                                 <TableCell align="center">
                                     {item?.incomeType ?? ""}
                                 </TableCell>
-
                                 <TableCell align="center">
-                                    {formatThaiDate(
-                                        item?.paymentDate
-                                    )}
+                                    {formatThaiDate(item?.paymentDate)}
                                 </TableCell>
-
                                 <TableCell align="right">
-                                    {item
-                                        ? formatMoney(item.amount)
-                                        : ""}
+                                    {item ? formatMoney(item.amount) : ""}
                                 </TableCell>
-
                                 <TableCell align="right">
-                                    {item
-                                        ? formatMoney(
-                                            item.taxAmount
-                                        )
-                                        : ""}
+                                    {item ? formatMoney(item.taxAmount) : ""}
                                 </TableCell>
                             </tr>
                         );
                     })}
 
                     <tr className="h-[10mm]">
-                        <td
-                            colSpan={3}
-                            className="
-                border
-                border-black
-                px-2
-                text-right
-              "
-                        >
+                        <td colSpan={3} className="border border-black px-2 text-right">
                             รวม
                         </td>
-
-                        <TableCell
-                            align="right"
-                            className="font-medium"
-                        >
+                        <TableCell align="right" className="font-medium">
                             {formatMoney(totalIncome)}
                         </TableCell>
-
-                        <TableCell
-                            align="right"
-                            className="font-medium"
-                        >
+                        <TableCell align="right" className="font-medium">
                             {formatMoney(totalTax)}
                         </TableCell>
                     </tr>
@@ -153,17 +117,7 @@ function TableHeader({
     className = "",
 }: TableHeaderProps) {
     return (
-        <th
-            className={`
-        border
-        border-black
-        px-2
-        py-2
-        text-center
-        font-normal
-        ${className}
-      `}
-        >
+        <th className={`border border-black px-2 py-1 text-center font-normal ${className}`}>
             {children}
         </th>
     );
@@ -187,17 +141,7 @@ function TableCell({
     }[align];
 
     return (
-        <td
-            className={`
-        border
-        border-black
-        px-2
-        py-1
-        tabular-nums
-        ${alignClass}
-        ${className}
-      `}
-        >
+        <td className={`border border-black px-2 py-1 tabular-nums ${alignClass} ${className}`}>
             {children}
         </td>
     );

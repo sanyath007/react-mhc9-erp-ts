@@ -9,7 +9,7 @@ export function AttachmentHeader({ data }: Props) {
     const isIndividual = data.taxpayerEntityType === "INDIVIDUAL";
 
     return (
-        <header>
+        <header className="mt-8">
             {/* Form code */}
             <div className="flex justify-end">
                 <div className="text-[13px]">
@@ -23,7 +23,7 @@ export function AttachmentHeader({ data }: Props) {
             </h1>
 
             {/* Taxpayer type + CGD */}
-            <div className="mt-[3mm] grid grid-cols-[20%_60%_20%] gap-x-4">
+            <div className="mt-[3mm] grid grid-cols-[20%_50%_25%] gap-x-4">
                 {/* Left */}
                 <div></div>
                 {/* Center */}
@@ -45,7 +45,7 @@ export function AttachmentHeader({ data }: Props) {
                 </div>
 
                 {/* Right */}
-                <div>
+                <div className="ml-10">
                     <div className="text-center">
                         สำหรับกรมบัญชีกลาง
                     </div>

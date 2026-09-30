@@ -6,13 +6,16 @@
 
     html,
     body,
-    #root {
+    #root,
+    .min-h-screen,
+    main {
         margin: 0 !important;
         padding: 0 !important;
         background: #fff !important;
         /* ป้องกัน scrollbar ติดเข้ามา */
         overflow: visible !important;
         height: auto !important;
+        min-height: 0 !important;
     }
 
     /* ซ่อน scrollbar ทุกชนิดขณะพิมพ์ */
@@ -57,22 +60,23 @@
 
 @page portrait-page {
     size: A4 portrait;
-    margin: 12mm 15mm;
-}
-
-.print-document {
-    page: portrait-page;
+    margin: 15mm 20mm;
 }
 
 @media print {
     .print-document {
-        width: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
         min-height: auto !important;
 
         margin: 0 !important;
         padding: 0 !important;
 
         box-shadow: none !important;
+        overflow: visible !important;
+        page: auto !important;
+        break-after: auto !important;
+        page-break-after: auto !important;
     }
 }
 
@@ -84,16 +88,13 @@
 
 @page landscape-page {
     size: A4 landscape;
-    margin: 8mm 10mm;
-}
-
-.tax-voucher-landscape {
-    page: landscape-page;
+    margin: 10mm 15mm;
 }
 
 @media print {
     .tax-voucher-landscape {
-        width: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
         height: auto !important;
         min-height: auto !important;
 
@@ -101,5 +102,9 @@
         padding: 0 !important;
 
         box-shadow: none !important;
+        overflow: visible !important;
+        page: auto !important;
+        break-after: auto !important;
+        page-break-after: auto !important;
     }
 }

@@ -2,7 +2,8 @@ export function CertificateNotes() {
     return (
         <section
             className="
-        mt-[14mm]
+        mt-[10mm]
+        print:mt-[6mm]
         text-[12px]
         leading-[1.55]
       "

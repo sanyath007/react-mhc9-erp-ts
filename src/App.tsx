@@ -65,9 +65,7 @@ import AddSupplier from './views/Supplier/Add';
 import EditSupplier from './views/Supplier/Edit';
 import SupplierDetail from './views/Supplier/Detail';
 import Unit from './views/Unit'
-/** Viewer */
-import WordViewer from './components/ReportViewer/WordViewer';
-/** Report */
+/** Report Preview */
 import RequisitionForm from './components/Preview/Requisition/Form';
 import RequisitionReport from './components/Preview/Requisition/Report';
 import RequisitionCommittee from './components/Preview/Requisition/Committee';
@@ -267,15 +265,6 @@ function App() {
                 <Route path="budget-expense/list" element={<GuardRoute><BudgetExpenseList /></GuardRoute>} />
                 <Route path="budget-expense/add" element={<GuardRoute><AddBudgetExpense /></GuardRoute>} />
                 <Route path="budget-expense/:id/detail" element={<GuardRoute><BudgetExpenseDetail /></GuardRoute>} />
-                <Route
-                    path="budget-expense/:id/withholding-tax/:detailId/print"
-                    element={<GuardRoute><WithholdingTaxPrintPage /></GuardRoute>}
-                />
-                <Route
-                    path="budget-expense/:id/attachment/:detailId/print"
-                    element={<GuardRoute><TaxVoucherAttachmentPrintPage /></GuardRoute>}
-                />
-
                 {/* Places */}
                 <Route path="place" element={<GuardRoute><PlaceList /></GuardRoute>} />
                 <Route path="place/add" element={<GuardRoute><AddPlace /></GuardRoute>} />
@@ -297,9 +286,15 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            {/* Report Viewer */}
-            <Route path="report-viewer" element={<GuardRoute><WordViewer /></GuardRoute>} />
-            {/* Preview */}
+            {/* Report Preview */}
+            <Route
+                path="/budget-expense/:id/withholding-tax/:detailId/print"
+                element={<GuardRoute><WithholdingTaxPrintPage /></GuardRoute>}
+            />
+            <Route
+                path="/budget-expense/:id/attachment/:detailId/print"
+                element={<GuardRoute><TaxVoucherAttachmentPrintPage /></GuardRoute>}
+            />
             <Route path="/preview/requisition/:id" element={<RequisitionForm />} />
             <Route path="/preview/requisition/:id/report" element={<RequisitionReport />} />
             <Route path="/preview/requisition/:id/committee" element={<RequisitionCommittee />} />

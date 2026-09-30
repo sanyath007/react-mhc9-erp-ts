@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getWithholdingTaxCertificate } from "../../../../../api/mockdata/withholdingTax.api";
 import { WithholdingTaxCertificate } from "../../../../../components/WithholdingTex/WithholdingTaxCertificate";
 import type { WithholdingTaxCertificate as WithholdingTaxCertificateModel } from "../../../../../types";
@@ -63,14 +63,20 @@ export default function WithholdingTaxPrintPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-100 print:bg-white">
+        <div className="min-h-screen bg-slate-100 print:bg-white print:min-h-0 print:h-auto">
+            <style>{`
+                @page {
+                    size: A4 portrait;
+                    margin: 15mm 20mm;
+                }
+            `}</style>
             <PrintToolbar
                 id={data.id}
                 certificateNo={data.certificateNo}
                 onPrint={handlePrint}
             />
 
-            <main className="overflow-auto py-8 print:overflow-visible print:py-0">
+            <main className="overflow-auto py-8 px-4 print:overflow-visible print:p-0 print:m-0">
                 <WithholdingTaxCertificate data={data} />
             </main>
         </div>
@@ -102,12 +108,13 @@ function PrintToolbar({
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <Link
-                        to={`/budget-expense/${id}/detail`}
+                    <button
+                        type="button"
+                        onClick={() => window.close()}
                         className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                     >
-                        ย้อนกลับ
-                    </Link>
+                        ปิด
+                    </button>
 
                     <button
                         type="button"
