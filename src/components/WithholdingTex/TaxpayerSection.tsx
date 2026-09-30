@@ -22,7 +22,7 @@ export function TaxpayerSection({
     contract,
 }: TaxpayerSectionProps) {
     return (
-        <section>
+        <section className="text-[16pt]">
             <div className="font-semibold">
                 ผู้มีหน้าที่หักภาษี ณ ที่จ่าย :
             </div>

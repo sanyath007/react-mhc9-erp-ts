@@ -4,7 +4,7 @@ export function CertificateNotes() {
             className="
         mt-[10mm]
         print:mt-[6mm]
-        text-[12px]
+        text-[12pt]
         leading-[1.55]
       "
         >

@@ -15,7 +15,7 @@ export function WithholdingTaxCertificate({ data }: WithholdingTaxCertificatePro
             className="print-document mx-auto min-h-[297mm] w-[210mm] bg-white px-[20mm] py-[15mm] font-sarabun text-[14px] leading-[1.6] text-black shadow-xl"
         >
             <header className="mb-[6mm] mt-8">
-                <h1 className="text-center text-[18px] font-semibold">
+                <h1 className="text-center text-[18pt] font-semibold">
                     หนังสือรับรองการหักภาษี ณ ที่จ่าย
                 </h1>
             </header>
@@ -33,12 +33,12 @@ export function WithholdingTaxCertificate({ data }: WithholdingTaxCertificatePro
                 totalTax={data.totalTax}
             />
 
-            <section className="mt-[8mm] print:mt-[4mm] grid grid-cols-[35mm_1fr] items-center gap-3">
+            <section className="mt-[4mm] print:mt-[4mm] grid grid-cols-[35mm_1fr] items-center gap-3 text-[16pt]">
                 <div>
                     เงินภาษี (ตัวอักษร)
                 </div>
 
-                <div className="border border-black px-3 py-2 text-center">
+                <div className="border border-black px-3 py-0.5 text-center">
                     {data.totalTaxText}
                 </div>
             </section>

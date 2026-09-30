@@ -17,11 +17,11 @@ interface Props {
 export function AttachmentTaxTable({ items, totals }: Props) {
     return (
         <section className="mt-[5mm]">
-            <table className="w-full table-fixed border-collapse text-[10px] leading-[1.25]">
+            <table className="w-full table-fixed border-collapse text-[16pt] leading-[1.25]">
                 <thead>
                     {/* Header row 1 */}
                     <tr>
-                        <HeaderCell rowSpan={2} className="w-[7mm]">ลำดับ<br />ที่</HeaderCell>
+                        <HeaderCell rowSpan={2} className="w-[12mm]">ลำดับ<br />ที่</HeaderCell>
                         <HeaderCell rowSpan={2} className="w-[52mm]">เลขประจำตัวผู้เสียภาษีอากร<br />ชื่อและที่อยู่ของผู้ประกอบการ</HeaderCell>
                         <HeaderCell rowSpan={2} className="w-[14mm]">สาขาที่</HeaderCell>
                         <HeaderCell rowSpan={2} className="w-[29mm]">ประเภทเงินได้<br />พึงประเมิน</HeaderCell>

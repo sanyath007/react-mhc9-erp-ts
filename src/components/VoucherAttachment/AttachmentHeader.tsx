@@ -12,18 +12,18 @@ export function AttachmentHeader({ data }: Props) {
         <header className="mt-8">
             {/* Form code */}
             <div className="flex justify-end">
-                <div className="text-[13px]">
+                <div className="text-[14pt]">
                     แบบ {data.formCode}
                 </div>
             </div>
 
             {/* Main title */}
-            <h1 className="mt-[-2mm] text-center text-[18px] font-semibold">
+            <h1 className="mt-[-2mm] text-center text-[18pt] font-semibold">
                 แบบแนบฎีกาแสดงรายการเสียภาษี
             </h1>
 
             {/* Taxpayer type + CGD */}
-            <div className="mt-[3mm] grid grid-cols-[20%_50%_25%] gap-x-4">
+            <div className="mt-[3mm] grid grid-cols-[20%_50%_25%] gap-x-4 text-[16pt]">
                 {/* Left */}
                 <div></div>
                 {/* Center */}
@@ -61,7 +61,7 @@ export function AttachmentHeader({ data }: Props) {
             </div>
 
             {/* Payment request */}
-            <div className="mt-[3mm] flex items-end justify-center gap-2">
+            <div className="mt-[3mm] flex items-end justify-center gap-2 text-[16pt]">
                 <span>เลขที่ขอเบิก</span>
                 <UnderlineValue value={data.paymentRequestNo} className="w-[30mm]" />/
                 <UnderlineValue value={"2569"} className="w-[20mm]" />
@@ -74,7 +74,7 @@ export function AttachmentHeader({ data }: Props) {
             </div>
 
             {/* Agency */}
-            <div className="mt-[3mm] flex flex-col items-center justify-center">
+            <div className="mt-[3mm] flex flex-col items-center justify-center text-[16pt]">
                 <div>
                     ที่ตั้งส่วนราชการ{" "}
                     <span className="font-medium">{data.agency.name}</span>
