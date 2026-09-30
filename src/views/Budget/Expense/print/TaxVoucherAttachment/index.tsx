@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { getTaxVoucherAttachment } from "../../../../../api/mockdata/voucherAttachment.api";
 import { TaxVoucherAttachment } from "../../../../../components/VoucherAttachment/TaxVoucherAttachment";
 import type { TaxVoucherAttachment as TaxVoucherAttachmentModel } from "../../../../../types";
+import '../print.css'
 
 export default function TaxVoucherAttachmentPrintPage() {
     const { id } = useParams<{ id: string }>();
@@ -98,7 +99,7 @@ function Toolbar({ id, onPrint }: ToolbarProps) {
                         onClick={onPrint}
                         className="rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700"
                     >
-                        พิมพ์ A4 แนวนอน
+                        พิมพ์เอกสาร
                     </button>
                 </div>
             </div>

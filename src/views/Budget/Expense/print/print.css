@@ -9,8 +9,19 @@
     #root {
         margin: 0 !important;
         padding: 0 !important;
-
         background: #fff !important;
+        /* ป้องกัน scrollbar ติดเข้ามา */
+        overflow: visible !important;
+        height: auto !important;
+    }
+
+    /* ซ่อน scrollbar ทุกชนิดขณะพิมพ์ */
+    ::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    * {
+        scrollbar-width: none !important;
     }
 
     body {

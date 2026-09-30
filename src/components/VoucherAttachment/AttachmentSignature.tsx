@@ -7,27 +7,10 @@ interface Props {
 
 export function AttachmentSignature({ signer }: Props) {
     return (
-        <section
-            className="
-        mt-[8mm]
-        ml-auto
-        w-[85mm]
-        text-[12px]
-      "
-        >
+        <section className="mt-[8mm] ml-auto w-[85mm] text-[12px]">
             <div className="flex items-end">
                 <span>ลงชื่อ</span>
-
-                <span
-                    className="
-            mx-2
-            flex-1
-            border-b
-            border-dotted
-            border-black
-            text-center
-          "
-                >
+                <span className="mx-2 flex-1 border-b border-dotted border-black text-center">
                     {signer?.name || "\u00A0"}
                 </span>
 

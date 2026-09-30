@@ -124,6 +124,7 @@ import BudgetExpenseList from './views/Budget/Expense/List';
 import AddBudgetExpense from './views/Budget/Expense/Add';
 import BudgetExpenseDetail from './views/Budget/Expense/BudgetExpense';
 import WithholdingTaxPrintPage from './views/Budget/Expense/print/WithholdingTax';
+import TaxVoucherAttachmentPrintPage from './views/Budget/Expense/print/TaxVoucherAttachment';
 /** Place */
 import PlaceList from './views/Place/List';
 import AddPlace from './views/Place/Add';
@@ -138,7 +139,6 @@ import ProjectList from './views/Project';
 import AddProject from './views/Project/Add';
 import EditProject from './views/Project/Edit';
 import ProjectDetail from './views/Project/Detail';
-import TaxVoucherAttachmentPrintPage from './views/Budget/Expense/print/TaxVoucherAttachment.tsx';
 
 function App() {
     return (
