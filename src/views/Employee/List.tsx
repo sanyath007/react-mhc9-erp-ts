@@ -127,7 +127,7 @@ const EmployeeList = () => {
                                     </td>
                                 </tr>
                             ))}
-                            {!isLoading && employees.length <= 0 && (
+                            {!isLoading && employees?.length <= 0 && (
                                 <tr>
                                     <td colSpan={4} className="text-center">
                                         -- ไม่มีข้อมูล --
