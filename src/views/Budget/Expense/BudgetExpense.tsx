@@ -116,7 +116,7 @@ const BudgetExpenseDetail = () => {
                         <thead className="bg-gray-100">
                             <tr>
                                 <th className="text-center w-[5%]">#</th>
-                                <th className="text-center w-[10%]">เดือน/ปี</th>
+                                <th className="text-center w-[10%]">เดือน ปี</th>
                                 <th className="text-center w-[15%]">เลขที่ขอเบิก | วันที่ขอเบิก</th>
                                 <th className="text-center w-[15%]">เลขที่ขอจ่าย | วันที่ขอจ่าย</th>
                                 <th className="text-center">ผู้รับเงิน</th>
@@ -135,7 +135,7 @@ const BudgetExpenseDetail = () => {
                                 expense.details.map((detail: any, index: number) => (
                                     <tr key={detail.id || index}>
                                         <td className="text-center">{index + 1}</td>
-                                        <td className="text-center">{MONTH_TH_SHNAMES[detail.month - 1]}/{detail.year + 543}</td>
+                                        <td className="text-center">{MONTH_TH_SHNAMES[detail.month - 1]} {detail.year + 543}</td>
                                         <td className="text-center">
                                             {detail.withdrawal_no || '-'}{' | '}
                                             {detail.withdrawal_at ? toShortTHDate(detail.withdrawal_at) : '-'}
@@ -148,20 +148,21 @@ const BudgetExpenseDetail = () => {
                                             <div className="grid grid-cols-1 gap-2">
                                                 {detail.supplier?.name || '-'}
 
-                                                <div className="flex justify-center items-center gap-2">
+                                                <div className="flex justify-start items-center gap-2">
                                                     <Link
-                                                        className="btn btn-primary btn-sm flex flex-row"
+                                                        className="text-primary flex flex-row"
                                                         to={`/budget-expense/${id}/withholding-tax/${detail.id}/print`}
                                                         target="_blank"
                                                     >
-                                                        <Printer className="w-4 h-4 mr-1" />พิมพ์ใบหัก ณ ที่จ่าย
+                                                        <Printer className="w-4 h-4 mr-1" />หัก ณ ที่จ่าย
                                                     </Link>
+                                                    <span className="text-gray-300"> | </span>
                                                     <Link
-                                                        className="btn btn-primary btn-sm flex flex-row"
+                                                        className="text-primary flex flex-row"
                                                         to={`/budget-expense/${id}/attachment/${detail.id}/print`}
                                                         target="_blank"
                                                     >
-                                                        <Printer className="w-4 h-4 mr-1" />พิมพ์ฎีกาเสียภาษี
+                                                        <Printer className="w-4 h-4 mr-1" />ฎีกาเสียภาษี
                                                     </Link>
                                                 </div>
                                             </div>
