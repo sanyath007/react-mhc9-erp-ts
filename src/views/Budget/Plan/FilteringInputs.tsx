@@ -1,27 +1,23 @@
 import React, { useState } from 'react'
-import { DatePicker } from '@material-ui/pickers'
 import moment from 'moment'
 import { generateQueryString } from '../../../utils'
-import { useStyles } from '../../../hooks/useStyles'
+import YearPicker from '../../../components/ui/Forms/YearPicker'
 
 const FilteringInputs = ({ initialFilters, onFilter }: any) => {
-    const classes = useStyles();
     const [filters, setFilters] = useState(initialFilters);
-    const [selectedYear, setSelectedYear] = useState(moment(`${filters.year}-01-01`));
+    const [selectedYear, setSelectedYear] = useState(filters.year);
 
     return (
         <div className="border rounded-md py-2 px-3 mb-4 flex items-center gap-1">
             <div className="flex max-md:flex-col items-center min-md:gap-2">
-                <label htmlFor="" className="w-[25%] max-md:w-[100%]">ปีงบ :</label>
-                <DatePicker
-                    format="YYYY"
-                    views={['year']}
+                <label className="mr-1 max-md:w-[100%]">ปีงบ :</label>
+                <YearPicker
                     value={selectedYear}
-                    onChange={(date) => {
-                        setSelectedYear(date);
-                        setFilters(prev => ({ ...prev, ['year']: moment(date).year() }));
+                    onChange={(year: string) => {
+                        setSelectedYear(year);
+                        setFilters(prev => ({ ...prev, ['year']: year }));
                     }}
-                    className={classes.muiTextFieldInput}
+                    inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
                 />
             </div>
             <button

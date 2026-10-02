@@ -6,7 +6,6 @@ import { useStyles } from '../../../hooks/useStyles'
 import { useGetInitialFormDataQuery } from '../../../features/services/requisition/requisitionApi';
 
 const FilteringInputs = ({ initialFilters, onFilter }: any) => {
-    const classes = useStyles();
     const [filters, setFilters] = useState(initialFilters);
     const [selectedYear, setSelectedYear] = useState(filters.year);
     const { data: formData } = useGetInitialFormDataQuery();

@@ -7,11 +7,11 @@ import moment from 'moment';
 import { currency, generateQueryString, getUrlParam } from '../../../utils';
 import { getBudgets } from '../../../features/slices/budget/budgetSlice';
 import { useGetInitialFormDataQuery } from '../../../features/services/budget/budgetApi';
-import FilteringInputs from './FilteringInputs';
+import FilteringInputs from '../Plan/FilteringInputs';
 import Loading from '../../../components/ui/Loading';
 import Pagination from '../../../components/ui/Pagination';
 import BudgetTypeBadge from '../../../components/Badges/BudgetTypeBadge';
-import { ProgressBar } from '../../../components/ui/progress-bar';
+import ProgressBar from '../../../components/ui/ProgressBar';
 
 export const renderBalance = (balance: number): React.ReactNode => {
     return balance < 0 ? (
@@ -33,7 +33,7 @@ const BudgetExpenseSummary = () => {
     const { budgets, pager, isLoading } = useSelector((state: any) => state.budget);
     const [apiEndpoint, setApiEndpoint] = useState('');
     const [params, setParams] = useState(generateQueryString(initialFilters));
-    const [year, setYear] = useState(moment(`${cookies.budgetYear}-01-01`).year())
+    const [year, setYear] = useState<number>(moment(`${cookies.budgetYear}-01-01`).year())
     const { data: formData } = useGetInitialFormDataQuery({ year });
 
     useEffect(() => {
@@ -58,7 +58,7 @@ const BudgetExpenseSummary = () => {
         <div className="content-wrapper">
             <Breadcrumb>
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>หน้าหลัก</Breadcrumb.Item>
-                <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/budget' }}>งบประมาณ</Breadcrumb.Item>
+                <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/budget-plan' }}>งบประมาณ</Breadcrumb.Item>
                 <Breadcrumb.Item active>ค่าใช้จ่ายงบประมาณ</Breadcrumb.Item>
             </Breadcrumb>
 
@@ -66,6 +66,15 @@ const BudgetExpenseSummary = () => {
                 <div className="flex items-center justify-between mb-2">
                     <h2 className="text-xl">ค่าใช้จ่ายงบประมาณ</h2>
                 </div>
+
+                <FilteringInputs
+                    initialFilters={{ year: year }}
+                    onFilter={(queryStr) => {
+                        setParams(queryStr);
+                        setApiEndpoint(prev => prev === '' ? `/api/budgets/search?page=` : '');
+                        setYear(Number(getUrlParam(queryStr, 'year')));
+                    }}
+                />
 
                 <div className="overflow-x-auto border border-gray-300 rounded-lg">
                     <table className="table table-striped text-sm mb-0">
