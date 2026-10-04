@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { FaInfoCircle, FaUniversity, FaUserAlt, FaMap } from 'react-icons/fa'
 import { MapPin, Landmark, Building2, User } from 'lucide-react'
 import { Formik, Form } from 'formik'
@@ -11,7 +11,6 @@ import SearchableSelect from '../../components/ui/Forms/SearchableSelect'
 import ButtonGroupSelection, { ButtonGroupOption } from '../../components/ui/Forms/ButtonGroupSelection'
 import Loading from '../../components/ui/Loading';
 import ErrorMessage from '../../components/ui/Forms/ErrorMessage'
-import { amber } from '@material-ui/core/colors'
 
 const supplierSchema = Yup.object().shape({
     name: Yup.string().required('กรุณาระบุชื่อผู้ขาย'),

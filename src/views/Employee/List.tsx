@@ -86,7 +86,7 @@ const EmployeeList = () => {
                                     </td>
                                 </tr>
                             )}
-                            {(!isLoading && employees) && employees.map((employee, index) => (
+                            {!isLoading && employees?.map((employee: any, index: number) => (
                                 <tr key={employee.id} className="font-thin">
                                     <td className="text-center">{index + pager.from}</td>
                                     <td className="text-center">{employee.employee_no}</td>

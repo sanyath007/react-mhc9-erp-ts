@@ -3,14 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { FormGroup, Col, Row } from 'react-bootstrap'
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
-import moment from 'moment'
-import OverWriteMomentBE from '../../../utils/OverwriteMomentBE'
 import { filterAmphursByChangwat, filterTambonsByAmphur } from '../../../utils'
 import { store, update, upload } from '../../../features/slices/employee/employeeSlice'
 import { useGetInitialFormDataQuery } from '../../../features/services/employee/employeeApi'
-import './Form.css'
 import Loading from '../../../components/ui/Loading'
+import DatePicker from '../../../components/ui/Forms/DatePicker'
+import './Form.css'
 
 const employeeSchema = Yup.object().shape({
     prefix_id: Yup.string().required(),
@@ -39,18 +37,11 @@ const EmployeeForm = ({ employee }: any) => {
     const [filteredLevels, setFilteredLevels] = useState([]);
     const [filteredAmphurs, setFilteredAmphurs] = useState([]);
     const [filteredTambons, setFilteredTambons] = useState([]);
-    const [selectedBirthdate, setSelectedBirthdate] = useState(moment());
-    const [selectedAssignedAt, setSelectedAssignedAt] = useState(moment());
-    const [selectedStartedAt, setSelectedStartedAt] = useState(moment());
     const [selectedImage, setSelectedImage] = useState(null);
     const { data: formData = initialFormData, isLoading } = useGetInitialFormDataQuery();
 
     useEffect(() => {
         if (employee) {
-            employee.birthdate && setSelectedBirthdate(moment(employee.birthdate));
-            employee.assigned_at && setSelectedAssignedAt(moment(employee.assigned_at));
-            employee.started_at && setSelectedStartedAt(moment(employee.started_at));
-
             formData && setFilteredLevels(formData.levels);
             formData && setFilteredAmphurs(filterAmphursByChangwat(employee.changwat_id.toString(), formData.amphurs));
             formData && setFilteredTambons(filterTambonsByAmphur(employee.amphur_id.toString(), formData.tambons));
@@ -82,9 +73,6 @@ const EmployeeForm = ({ employee }: any) => {
 
         /** Clear all values of local related form states */
         setSelectedImage(null);
-        setSelectedBirthdate(moment());
-        setSelectedAssignedAt(moment());
-        setSelectedStartedAt(moment());
     };
 
     const handleUpload = () => {
@@ -282,20 +270,12 @@ const EmployeeForm = ({ employee }: any) => {
                                 <FormGroup>
                                     <div className="flex flex-col">
                                         <label>วันเกิด</label>
-                                        <MuiPickersUtilsProvider utils={OverWriteMomentBE} locale="th">
-                                            <DatePicker
-                                                format="DD/MM/YYYY"
-                                                value={selectedBirthdate}
-                                                onChange={(date) => {
-                                                    setSelectedBirthdate(date);
-                                                    formik.setFieldValue('birthdate', date.format('YYYY-MM-DD'));
-                                                }}
-                                                inputVariant="outlined"
-                                            />
-                                        </MuiPickersUtilsProvider>
-                                        {(formik.errors.birthdate && formik.touched.birthdate) && (
-                                            <span className="text-red-500 text-sm">{formik.errors.birthdate as string}</span>
-                                        )}
+                                        <DatePicker
+                                            value={formik.values.birthdate}
+                                            onChange={(date: string) => formik.setFieldValue('birthdate', date)}
+                                            inputCss={`!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full ${formik.errors.birthdate && formik.touched.birthdate ? '!border-red-500' : '!border-[#dee2e6]'}`}
+                                            error={formik.errors.birthdate && formik.touched.birthdate ? (formik.errors.birthdate as string) : undefined}
+                                        />
                                     </div>
                                 </FormGroup>
                             </Col>
@@ -531,20 +511,12 @@ const EmployeeForm = ({ employee }: any) => {
                                 <FormGroup>
                                     <div className="flex flex-col">
                                         <label>วันที่บรรจุ</label>
-                                        <MuiPickersUtilsProvider utils={OverWriteMomentBE} locale="th">
-                                            <DatePicker
-                                                format="DD/MM/YYYY"
-                                                value={selectedAssignedAt}
-                                                onChange={(date) => {
-                                                    setSelectedAssignedAt(date);
-                                                    formik.setFieldValue('assigned_at', date.format('YYYY-MM-DD'));
-                                                }}
-                                                inputVariant="outlined"
-                                            />
-                                        </MuiPickersUtilsProvider>
-                                        {(formik.errors.assigned_at && formik.touched.assigned_at) && (
-                                            <span className="text-red-500 text-sm">{formik.errors.assigned_at as string}</span>
-                                        )}
+                                        <DatePicker
+                                            value={formik.values.assigned_at}
+                                            onChange={(date: string) => formik.setFieldValue('assigned_at', date)}
+                                            inputCss={`!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full ${formik.errors.assigned_at && formik.touched.assigned_at ? '!border-red-500' : '!border-[#dee2e6]'}`}
+                                            error={formik.errors.assigned_at && formik.touched.assigned_at ? (formik.errors.assigned_at as string) : undefined}
+                                        />
                                     </div>
                                 </FormGroup>
                             </Col>
@@ -552,20 +524,12 @@ const EmployeeForm = ({ employee }: any) => {
                                 <FormGroup>
                                     <div className="flex flex-col">
                                         <label>วันที่เริ่มงาน (ที่ศูนย์สุขภาพจิตที่ 9)</label>
-                                        <MuiPickersUtilsProvider utils={OverWriteMomentBE} locale="th">
-                                            <DatePicker
-                                                format="DD/MM/YYYY"
-                                                value={selectedStartedAt}
-                                                onChange={(date) => {
-                                                    setSelectedStartedAt(date);
-                                                    formik.setFieldValue('started_at', date.format('YYYY-MM-DD'));
-                                                }}
-                                                inputVariant="outlined"
-                                            />
-                                        </MuiPickersUtilsProvider>
-                                        {(formik.errors.started_at && formik.touched.started_at) && (
-                                            <span className="text-red-500 text-sm">{formik.errors.started_at as string}</span>
-                                        )}
+                                        <DatePicker
+                                            value={formik.values.started_at}
+                                            onChange={(date: string) => formik.setFieldValue('started_at', date)}
+                                            inputCss={`!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full ${formik.errors.started_at && formik.touched.started_at ? '!border-red-500' : '!border-[#dee2e6]'}`}
+                                            error={formik.errors.started_at && formik.touched.started_at ? (formik.errors.started_at as string) : undefined}
+                                        />
                                     </div>
                                 </FormGroup>
                             </Col>
