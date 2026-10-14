@@ -23,7 +23,7 @@ export function AttachmentHeader({ data }: Props) {
             </h1>
 
             {/* Taxpayer type + CGD */}
-            <div className="mt-[3mm] grid grid-cols-[20%_50%_25%] gap-x-4 text-[16pt]">
+            <div className="relative mt-[3mm] grid grid-cols-[20%_50%_25%] gap-x-4 text-[16pt]">
                 {/* Left */}
                 <div></div>
                 {/* Center */}
@@ -45,17 +45,15 @@ export function AttachmentHeader({ data }: Props) {
                 </div>
 
                 {/* Right */}
-                <div className="ml-10">
-                    <div className="text-center">
+                <div className="absolute right-[0mm] top-[-5mm] w-[55mm] border">
+                    <div className="text-center border-b">
                         สำหรับกรมบัญชีกลาง
                     </div>
-
-                    <div className="mt-1 flex items-end">
+                    <div className="flex items-end justify-center border-b px-2">
                         <span className="whitespace-nowrap">เลขที่รับ</span>
-
-                        <span className="ml-2 flex-1 border-b border-dotted border-black text-center">
-                            {data.receiptNo ?? "\u00A0"}
-                        </span>
+                    </div>
+                    <div className="flex items-end">
+                        &nbsp;
                     </div>
                 </div>
             </div>
@@ -63,14 +61,14 @@ export function AttachmentHeader({ data }: Props) {
             {/* Payment request */}
             <div className="mt-[3mm] flex items-end justify-center gap-2 text-[16pt]">
                 <span>เลขที่ขอเบิก</span>
-                <UnderlineValue value={data.paymentRequestNo} className="w-[30mm]" />/
-                <UnderlineValue value={"2569"} className="w-[20mm]" />
+                <UnderlineValue value={data.paymentRequestNo} className="w-[20mm]" />/
+                <UnderlineValue value={"2569"} className="w-[18mm]" />
 
                 <span className="ml-4">เดือน</span>
-                <UnderlineValue value={data.month} className="w-[30mm]" />
+                <UnderlineValue value={data.month} className="w-[28mm]" />
 
                 <span>พ.ศ.</span>
-                <UnderlineValue value={data.buddhistYearText} className="w-[20mm]" />
+                <UnderlineValue value={data.buddhistYearText} className="w-[18mm]" />
             </div>
 
             {/* Agency */}
