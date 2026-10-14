@@ -1,39 +1,24 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getTaxVoucherAttachment } from "../../../../../api/mockdata/voucherAttachment.api";
+import { useGetTaxVoucherAttachmentQuery } from "./api/taxVoucherAttachment.api";
+import { mapTaxVoucherAttachmentDtoToViewModel } from "./mappers/taxVoucherAttachment.mapper";
 import { TaxVoucherAttachment } from "../../../../../components/VoucherAttachment/TaxVoucherAttachment";
-import type { TaxVoucherAttachment as TaxVoucherAttachmentModel } from "../../../../../types";
-import '../print.css'
+import '../print.css';
 
 export default function TaxVoucherAttachmentPrintPage() {
-    const { id } = useParams<{ id: string }>();
-    const [data, setData] = useState<TaxVoucherAttachmentModel | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { id, detailId } = useParams<{ id: string, detailId: string }>();
+    const { data: dto, isLoading, isError, error } = useGetTaxVoucherAttachmentQuery({ id, detailId }, {
+        skip: !id || !detailId,
+    });
 
-    useEffect(() => {
-        if (!id) {
-            setError("ไม่พบรหัสเอกสาร");
-            setLoading(false);
-            return;
-        }
+    if (!id) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-slate-100">
+                ไม่พบรหัสเอกสาร
+            </div>
+        );
+    }
 
-        const loadData = async () => {
-            try {
-                setLoading(true);
-                const result = await getTaxVoucherAttachment(id);
-                setData(result);
-            } catch {
-                setError("ไม่สามารถโหลดแบบแนบฎีกาแสดงรายการเสียภาษีได้");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        void loadData();
-    }, [id]);
-
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-slate-100">
                 กำลังโหลดข้อมูล...
@@ -41,13 +26,16 @@ export default function TaxVoucherAttachmentPrintPage() {
         );
     }
 
-    if (error || !data) {
+    if (isError || !dto) {
+        const errorMessage = (error as any)?.data?.message ?? "ไม่สามารถโหลดแบบแนบฎีกาแสดงรายการเสียภาษีได้";
         return (
             <div className="flex min-h-screen items-center justify-center bg-slate-100">
-                {error ?? "ไม่พบข้อมูล"}
+                {errorMessage}
             </div>
         );
     }
+
+    const viewModel = mapTaxVoucherAttachmentDtoToViewModel(dto);
 
     return (
         <div className="min-h-screen bg-slate-100 print:bg-white print:min-h-0 print:h-auto">
@@ -58,16 +46,12 @@ export default function TaxVoucherAttachmentPrintPage() {
                 }
             `}</style>
             <Toolbar
-                id={data.id}
-                onPrint={() =>
-                    window.print()
-                }
+                id={viewModel.id}
+                onPrint={() => window.print()}
             />
 
             <main className="overflow-auto py-8 px-4 print:overflow-visible print:p-0 print:m-0">
-                <TaxVoucherAttachment
-                    data={data}
-                />
+                <TaxVoucherAttachment data={viewModel} />
             </main>
         </div>
     );
@@ -78,7 +62,7 @@ interface ToolbarProps {
     onPrint: () => void;
 }
 
-function Toolbar({ id, onPrint }: ToolbarProps) {
+function Toolbar({ onPrint }: ToolbarProps) {
     return (
         <header className="no-print sticky top-0 z-20 border-b bg-white shadow-sm">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">

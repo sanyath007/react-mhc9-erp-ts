@@ -1,10 +1,10 @@
 import { AttachmentHeader } from "./AttachmentHeader";
 import { AttachmentTaxTable } from "./AttachmentTaxTable";
 import { AttachmentSignature } from "./AttachmentSignature";
-import type { TaxVoucherAttachment as TaxVoucherAttachmentModel } from "../../types";
+import type { TaxVoucherAttachmentViewModel } from "../../views/Budget/Expense/print/TaxVoucherAttachment/models/taxVoucherAttachment.viewmodel";
 
 interface Props {
-    data: TaxVoucherAttachmentModel;
+    data: TaxVoucherAttachmentViewModel;
 }
 
 export function TaxVoucherAttachment({ data }: Props) {
@@ -15,4 +15,4 @@ export function TaxVoucherAttachment({ data }: Props) {
             <AttachmentSignature signer={data.signer} />
         </article>
     );
-}
+}

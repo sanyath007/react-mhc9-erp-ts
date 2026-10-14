@@ -1,66 +1,38 @@
-import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getWithholdingTaxCertificate } from "../../../../../api/mockdata/withholdingTax.api";
+import { useGetWithholdingTaxCertificateQuery } from "./api/withholdingTax.api";
+import { mapWithholdingTaxDtoToViewModel } from "./mappers/withholdingTax.mapper";
 import { WithholdingTaxCertificate } from "../../../../../components/WithholdingTex/WithholdingTaxCertificate";
-import type { WithholdingTaxCertificate as WithholdingTaxCertificateModel } from "../../../../../types";
-import '../print.css'
+import '../print.css';
 
 export default function WithholdingTaxPrintPage() {
-    const { id } = useParams<{ id: string; }>();
-    const [data, setData] = useState<WithholdingTaxCertificateModel | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    const loadData = useCallback(async () => {
-        if (!id) {
-            setError("ไม่พบรหัสหนังสือรับรอง");
-            setLoading(false);
-            return;
-        }
-
-        try {
-            setLoading(true);
-            setError(null);
-
-            const result = await getWithholdingTaxCertificate(id);
-            setData(result);
-        } catch (err) {
-            if (err) {
-                if (err.status === 404) {
-                    setError("ไม่พบข้อมูลหนังสือรับรองการหักภาษี ณ ที่จ่าย");
-                } else if (err.status === 401 || err.status === 403) {
-                    setError("คุณไม่มีสิทธิ์เข้าถึงเอกสารนี้");
-                } else {
-                    setError(err.message);
-                }
-            } else {
-                setError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
-            }
-        } finally {
-            setLoading(false);
-        }
-    }, [id]);
-
-    useEffect(() => {
-        void loadData();
-    }, [loadData]);
+    const { id, detailId } = useParams<{ id: string, detailId: string }>();
+    const { data: dto, isLoading, isError, error, refetch } = useGetWithholdingTaxCertificateQuery({ id, detailId }, {
+        skip: !id || !detailId,
+    });
 
     const handlePrint = () => {
         window.print();
     };
 
-    if (loading) {
+    if (!id) {
+        return <ErrorState message="ไม่พบรหัสหนังสือรับรอง" onRetry={() => { }} />;
+    }
+
+    if (isLoading) {
         return <LoadingState />;
     }
 
-    if (error || !data) {
+    if (isError || !dto) {
+        const errorMessage = (error as any)?.data?.message ?? "ไม่สามารถโหลดข้อมูลหนังสือรับรองการหักภาษี ณ ที่จ่าย ได้";
         return (
             <ErrorState
-                message={error ?? "ไม่พบข้อมูล"}
-                onRetry={loadData}
+                message={errorMessage}
+                onRetry={refetch}
             />
         );
     }
+
+    const viewModel = mapWithholdingTaxDtoToViewModel(dto);
 
     return (
         <div className="min-h-screen bg-slate-100 print:bg-white print:min-h-0 print:h-auto">
@@ -71,13 +43,13 @@ export default function WithholdingTaxPrintPage() {
                 }
             `}</style>
             <PrintToolbar
-                id={data.id}
-                certificateNo={data.certificateNo}
+                id={viewModel.id}
+                certificateNo={viewModel.certificateNo}
                 onPrint={handlePrint}
             />
 
             <main className="overflow-auto py-8 px-4 print:overflow-visible print:p-0 print:m-0">
-                <WithholdingTaxCertificate data={data} />
+                <WithholdingTaxCertificate data={viewModel} />
             </main>
         </div>
     );

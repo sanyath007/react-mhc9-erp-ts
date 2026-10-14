@@ -1,18 +1,10 @@
-import type {
-    ContractInfo,
-    PaymentDocument,
-    TaxPayee,
-    TaxPayer,
-} from "../../types";
-
-import { formatThaiDate } from "../../utils/date-time";
+import type { WithholdingTaxViewModel } from "../../views/Budget/Expense/print/WithholdingTax/models/withholdingTax.viewmodel";
 
 interface TaxpayerSectionProps {
-    payer: TaxPayer;
-    payee: TaxPayee;
-
-    paymentDocument: PaymentDocument;
-    contract?: ContractInfo;
+    payer: WithholdingTaxViewModel["payer"];
+    payee: WithholdingTaxViewModel["payee"];
+    paymentDocument: WithholdingTaxViewModel["paymentDocument"];
+    contract?: WithholdingTaxViewModel["contract"];
 }
 
 export function TaxpayerSection({
@@ -58,9 +50,7 @@ export function TaxpayerSection({
                 <div className="whitespace-nowrap">
                     ลงวันที่{" "}
                     <DocumentValue
-                        value={formatThaiDate(
-                            paymentDocument.documentDate
-                        )}
+                        value={paymentDocument.documentDateFormatted}
                     />
                 </div>
             </div>
@@ -76,9 +66,7 @@ export function TaxpayerSection({
                 <div className="whitespace-nowrap">
                     ลงวันที่{" "}
                     <DocumentValue
-                        value={formatThaiDate(
-                            contract?.contractDate
-                        )}
+                        value={contract?.contractDateFormatted}
                     />
                 </div>
             </div>
@@ -101,6 +89,11 @@ export function TaxpayerSection({
                         {payee.taxId}
                     </span>
                 </div>
+
+            </div>
+
+            <div>
+                ที่อยู่ {payee.address}
             </div>
         </section>
     );
@@ -113,7 +106,7 @@ interface DocumentValueProps {
 function DocumentValue({
     value,
 }: DocumentValueProps) {
-    if (value) {
+    if (value && value !== "-") {
         return (
             <span className="font-medium">
                 {value}

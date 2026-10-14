@@ -58,6 +58,9 @@ import { placeApi } from "./services/place/placeApi";
 import { comsetApi } from "./services/comset/comsetApi";
 import { userApi } from "./services/user/userApi";
 
+import { withholdingTaxApi } from "../views/Budget/Expense/print/WithholdingTax/api/withholdingTax.api";
+import { taxVoucherAttachmentApi } from "../views/Budget/Expense/print/TaxVoucherAttachment/api/taxVoucherAttachment.api";
+
 const store = configureStore({
     reducer: {
         [systemApi.reducerPath]: systemApi.reducer,
@@ -85,6 +88,8 @@ const store = configureStore({
         [placeApi.reducerPath]: placeApi.reducer,
         [comsetApi.reducerPath]: comsetApi.reducer,
         [userApi.reducerPath]: userApi.reducer,
+        [withholdingTaxApi.reducerPath]: withholdingTaxApi.reducer,
+        [taxVoucherAttachmentApi.reducerPath]: taxVoucherAttachmentApi.reducer,
         auth: authReducer,
         asset: asssetReducer,
         assetType: assetTypeReducer,
@@ -146,6 +151,8 @@ const store = configureStore({
             projectApi.middleware,
             placeApi.middleware,
             userApi.middleware,
+            withholdingTaxApi.middleware,
+            taxVoucherAttachmentApi.middleware,
         ),
 });
 

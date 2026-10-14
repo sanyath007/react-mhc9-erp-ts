@@ -2,10 +2,10 @@ import { CertificateNotes } from "./CertificateNotes";
 import { SignatureSection } from "./SignatureSection";
 import { TaxpayerSection } from "./TaxpayerSection";
 import { TaxTable } from "./TaxTable";
-import type { WithholdingTaxCertificate as WithholdingTaxCertificateModel } from "../../types";
+import type { WithholdingTaxViewModel } from "../../views/Budget/Expense/print/WithholdingTax/models/withholdingTax.viewmodel";
 
 interface WithholdingTaxCertificateProps {
-    data: WithholdingTaxCertificateModel;
+    data: WithholdingTaxViewModel;
 }
 
 export function WithholdingTaxCertificate({ data }: WithholdingTaxCertificateProps) {
@@ -29,8 +29,8 @@ export function WithholdingTaxCertificate({ data }: WithholdingTaxCertificatePro
 
             <TaxTable
                 items={data.taxItems}
-                totalIncome={data.totalIncome}
-                totalTax={data.totalTax}
+                totalIncomeFormatted={data.totalIncomeFormatted}
+                totalTaxFormatted={data.totalTaxFormatted}
             />
 
             <section className="mt-[4mm] print:mt-[4mm] grid grid-cols-[35mm_1fr] items-center gap-3 text-[16pt]">
@@ -44,7 +44,8 @@ export function WithholdingTaxCertificate({ data }: WithholdingTaxCertificatePro
             </section>
 
             <SignatureSection signer={data.signer} />
+
             <CertificateNotes />
         </article>
     );
-}
+}

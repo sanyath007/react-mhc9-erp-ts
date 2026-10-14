@@ -1,17 +1,8 @@
-import type { TaxVoucherAttachmentItem } from "../../types";
-import { formatMoney } from "../../utils/currencyText";
+import type { TaxVoucherItemViewModel, TaxVoucherTotalsViewModel } from "../../views/Budget/Expense/print/TaxVoucherAttachment/models/taxVoucherAttachment.viewmodel";
 
 interface Props {
-    items: TaxVoucherAttachmentItem[];
-
-    totals: {
-        voucherAmount: number;
-        vatAmount: number;
-        goodsServiceAmount: number;
-        withholdingTaxAmount: number;
-        penaltyAmount: number;
-        netAmount: number;
-    };
+    items: TaxVoucherItemViewModel[];
+    totals: TaxVoucherTotalsViewModel;
 }
 
 export function AttachmentTaxTable({ items, totals }: Props) {
@@ -48,26 +39,26 @@ export function AttachmentTaxTable({ items, totals }: Props) {
                                 <div className="font-medium">{item.vendorName}</div>
                                 {item.vendorAddress && <div>{item.vendorAddress}</div>}
                             </BodyCell>
-                            <BodyCell align="center">{item.branchNo ?? ""}</BodyCell>
+                            <BodyCell align="center">{item.branchNo}</BodyCell>
                             <BodyCell>{item.incomeType}</BodyCell>
-                            <MoneyCell value={item.voucherAmount} />
-                            <MoneyCell value={item.vatAmount} />
-                            <MoneyCell value={item.goodsServiceAmount} />
-                            <MoneyCell value={item.withholdingTaxAmount} />
-                            <MoneyCell value={item.penaltyAmount} hideZero />
-                            <MoneyCell value={item.netAmount} />
+                            <MoneyCell value={item.voucherAmountFormatted} />
+                            <MoneyCell value={item.vatAmountFormatted} />
+                            <MoneyCell value={item.goodsServiceAmountFormatted} />
+                            <MoneyCell value={item.withholdingTaxAmountFormatted} />
+                            <MoneyCell value={item.penaltyAmountFormatted} />
+                            <MoneyCell value={item.netAmountFormatted} />
                         </tr>
                     ))}
 
                     {/* Total */}
                     <tr className="font-medium">
                         <td colSpan={4} className="border border-black px-2 py-1.5 text-right">รวม</td>
-                        <MoneyCell value={totals.voucherAmount} />
-                        <MoneyCell value={totals.vatAmount} />
-                        <MoneyCell value={totals.goodsServiceAmount} />
-                        <MoneyCell value={totals.withholdingTaxAmount} />
-                        <MoneyCell value={totals.penaltyAmount} hideZero />
-                        <MoneyCell value={totals.netAmount} />
+                        <MoneyCell value={totals.voucherAmountFormatted} />
+                        <MoneyCell value={totals.vatAmountFormatted} />
+                        <MoneyCell value={totals.goodsServiceAmountFormatted} />
+                        <MoneyCell value={totals.withholdingTaxAmountFormatted} />
+                        <MoneyCell value={totals.penaltyAmountFormatted} />
+                        <MoneyCell value={totals.netAmountFormatted} />
                     </tr>
                 </tbody>
             </table>
@@ -89,7 +80,7 @@ function HeaderCell({
     className = "",
 }: HeaderCellProps) {
     return (
-        <th rowSpan={rowSpan} colSpan={colSpan} className={`border border-black px-1 py-1.5 text-center align-middle font-normal ${className}`}        >
+        <th rowSpan={rowSpan} colSpan={colSpan} className={`border border-black px-1 py-1.5 text-center align-middle font-normal ${className}`}>
             {children}
         </th>
     );
@@ -109,15 +100,13 @@ function BodyCell({ children, align = "left" }: BodyCellProps) {
 }
 
 interface MoneyCellProps {
-    value?: number;
-    hideZero?: boolean;
+    value?: string;
 }
 
-function MoneyCell({ value, hideZero = false }: MoneyCellProps) {
-    const displayValue = hideZero && (!value || value === 0) ? "" : formatMoney(value ?? 0);
+function MoneyCell({ value }: MoneyCellProps) {
     return (
         <td className="border border-black px-1.5 py-1.5 text-right align-top tabular-nums whitespace-nowrap">
-            {displayValue}
+            {value || ""}
         </td>
     );
-}
+}

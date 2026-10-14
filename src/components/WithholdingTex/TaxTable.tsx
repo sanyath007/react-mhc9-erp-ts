@@ -1,19 +1,13 @@
-import type {
-    TaxItem,
-    WithholdingTaxType,
-} from "../../types";
-
-import { formatMoney } from "../../utils/currencyText";
-import { formatThaiDate } from "../../utils/date-time";
+import type { TaxItemViewModel } from "../../views/Budget/Expense/print/WithholdingTax/models/withholdingTax.viewmodel";
 
 interface TaxTableProps {
-    items: TaxItem[];
-    totalIncome: number;
-    totalTax: number;
+    items: TaxItemViewModel[];
+    totalIncomeFormatted: string;
+    totalTaxFormatted: string;
 }
 
 interface TaxRow {
-    taxType: WithholdingTaxType;
+    taxType: string;
     label: string;
 }
 
@@ -34,8 +28,8 @@ const defaultRows: TaxRow[] = [
 
 export function TaxTable({
     items,
-    totalIncome,
-    totalTax,
+    totalIncomeFormatted,
+    totalTaxFormatted,
 }: TaxTableProps) {
     return (
         <section className="mt-[6mm] text-[16pt]">
@@ -78,13 +72,13 @@ export function TaxTable({
                                     {item?.incomeType ?? ""}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {formatThaiDate(item?.paymentDate)}
+                                    {item?.paymentDateFormatted ?? ""}
                                 </TableCell>
                                 <TableCell align="right">
-                                    {item ? formatMoney(item.amount) : ""}
+                                    {item ? item.amountFormatted : ""}
                                 </TableCell>
                                 <TableCell align="right">
-                                    {item ? formatMoney(item.taxAmount) : ""}
+                                    {item ? item.taxAmountFormatted : ""}
                                 </TableCell>
                             </tr>
                         );
@@ -95,10 +89,10 @@ export function TaxTable({
                             รวม
                         </td>
                         <TableCell align="right" className="font-medium">
-                            {formatMoney(totalIncome)}
+                            {totalIncomeFormatted}
                         </TableCell>
                         <TableCell align="right" className="font-medium">
-                            {formatMoney(totalTax)}
+                            {totalTaxFormatted}
                         </TableCell>
                     </tr>
                 </tbody>
@@ -145,4 +139,4 @@ function TableCell({
             {children}
         </td>
     );
-}
+}

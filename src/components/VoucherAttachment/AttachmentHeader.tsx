@@ -1,7 +1,7 @@
-import type { TaxVoucherAttachment } from "../../types";
+import type { TaxVoucherAttachmentViewModel } from "../../views/Budget/Expense/print/TaxVoucherAttachment/models/taxVoucherAttachment.viewmodel";
 
 interface Props {
-    data: TaxVoucherAttachment;
+    data: TaxVoucherAttachmentViewModel;
 }
 
 export function AttachmentHeader({ data }: Props) {
@@ -70,7 +70,7 @@ export function AttachmentHeader({ data }: Props) {
                 <UnderlineValue value={data.month} className="w-[30mm]" />
 
                 <span>พ.ศ.</span>
-                <UnderlineValue value={String(data.buddhistYear)} className="w-[20mm]" />
+                <UnderlineValue value={data.buddhistYearText} className="w-[20mm]" />
             </div>
 
             {/* Agency */}
