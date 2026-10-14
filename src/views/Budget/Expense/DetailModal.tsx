@@ -74,6 +74,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
         amount: detail?.amount || 0,
         base_amount: detail?.base_amount || 0,
         vat_rate: detail?.vat_rate || 7,
+        vat_amount: detail?.vat_amount || 0,
         tax_amount: detail?.tax_amount || 0,
         tax_rate: detail?.tax_rate || 0,
         net_total: detail?.net_total || 0,
@@ -108,8 +109,12 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
         doc_date: Yup.string().required('กรุณาระบุวันที่หนังสือขอเบิก'),
     });
 
+    const handleCalculateVatAmount = (amount: number, vat_rate: number) => {
+        return parseFloat(((amount * vat_rate) / (100 + vat_rate)).toFixed(2));
+    }
+
     const handleCalculateBaseAmount = (amount: number, vat_rate: number) => {
-        return parseFloat((amount - parseFloat(((amount * vat_rate) / (100 + vat_rate)).toFixed(2))).toFixed(2));
+        return parseFloat((amount - handleCalculateVatAmount(amount, vat_rate)).toFixed(2));
     }
 
     const handleCalculateTaxAmount = (amount: number, tax_rate: number) => {
@@ -289,7 +294,10 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
                                                 name="amount"
                                                 className={`form-control text-sm text-center ${formik.errors.amount && formik.touched.amount ? 'is-invalid' : ''}`}
                                                 onChange={(e) => formik.setFieldValue('amount', Number(e.target.value))}
-                                                onBlur={() => formik.setFieldValue('base_amount', handleCalculateBaseAmount(formik.values.amount, 7))}
+                                                onBlur={() => {
+                                                    formik.setFieldValue('base_amount', handleCalculateBaseAmount(formik.values.amount, 7))
+                                                    formik.setFieldValue('vat_amount', handleCalculateVatAmount(formik.values.amount, 7))
+                                                }}
                                                 value={formik.values.amount}
                                                 onFocus={(e) => e.target.select()}
                                             />
