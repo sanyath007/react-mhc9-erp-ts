@@ -149,8 +149,9 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
                         } else {
                             res = await dispatch(storeDetail({ id: expenseId, data: values })).unwrap();
                         }
+
                         if (res.status === 1) {
-                            onSave(res.detail || values);
+                            onSave({ supplier: selectSupplier, ...values });
                             resetForm();
                             onHide();
                         } else {

@@ -361,7 +361,6 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                     initialYear={masterData?.year || moment().year()}
                     expenseId={masterData?.id}
                     onSave={(newDetail) => {
-                        console.log(newDetail);
                         setDetails([...details, newDetail]);
                         toast.success('เพิ่มรายละเอียดเรียบร้อยแล้ว');
                     }}
