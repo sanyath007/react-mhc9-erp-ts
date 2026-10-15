@@ -48,6 +48,7 @@ const DetailModal = ({ isShow, onHide, onSave, initialYear, expenseId, detail }:
 
     useEffect(() => {
         if (detail) {
+            setSelectSupplier(detail.supplier);
             setSupplierSearchQuery(detail.supplier.name);
         }
     }, [detail, isShow]);
