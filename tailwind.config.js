@@ -10,7 +10,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sarabun: [
-          "'TH SarabunPSK'",
+          "'THSarabunPSK'",
           "'Sarabun'",
           ...defaultTheme.fontFamily.sans,
         ],

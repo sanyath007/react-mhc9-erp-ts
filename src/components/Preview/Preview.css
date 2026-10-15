@@ -1,4 +1,3 @@
-
 @font-face {
     font-family: "THSarabunNew";
     font-style: normal;
@@ -35,7 +34,8 @@
 }
 
 .memo-wrapper {
-    margin: 1.5cm 2cm 1.5cm 2.8cm; /* top right bottom left */
+    margin: 1.5cm 2cm 1.5cm 2.8cm;
+    /* top right bottom left */
     /* border: 1px solid red; */
 }
 
@@ -101,8 +101,8 @@
     margin-top: 0.5pt;
 }
 
-.memo-box .memo-header .memo-header-text > div,
-.memo-box .memo-header .memo-header-text > div > div {
+.memo-box .memo-header .memo-header-text>div,
+.memo-box .memo-header .memo-header-text>div>div {
     display: flex;
     align-items: center;
     justify-content: start;
@@ -118,7 +118,7 @@
     /* border: 1px dotted red; */
 }
 
-.memo-box .memo-header .memo-header-text:nth-child(3) > div {
+.memo-box .memo-header .memo-header-text:nth-child(3)>div {
     width: 96%;
     align-items: start;
 }
@@ -130,11 +130,11 @@
     padding: 0;
 }
 
-.memo-box .memo-header .memo-header-text:nth-child(2) > div:first-child {
+.memo-box .memo-header .memo-header-text:nth-child(2)>div:first-child {
     width: 48%;
 }
 
-.memo-box .memo-header .memo-header-text:nth-child(2) > div:last-child {
+.memo-box .memo-header .memo-header-text:nth-child(2)>div:last-child {
     width: 52%;
 }
 
@@ -208,7 +208,8 @@
 }
 
 .form-wrapper {
-    margin: 1cm 1.5cm 1.5cm 1.5cm; /* top right bottom left */
+    margin: 1cm 1.5cm 1.5cm 1.5cm;
+    /* top right bottom left */
     /* border: 1px solid black; */
 }
 
@@ -251,8 +252,8 @@
     margin-top: 0.5pt;
 }
 
-.form-box .form-header .memo-header-text > div,
-.form-box .form-header .memo-header-text > div > div {
+.form-box .form-header .memo-header-text>div,
+.form-box .form-header .memo-header-text>div>div {
     display: flex;
     align-items: center;
     justify-content: start;
@@ -291,19 +292,19 @@
     padding: 0;
 }
 
-.form-box .form-header .memo-header-text:first-child > .memo-header-value {
+.form-box .form-header .memo-header-text:first-child>.memo-header-value {
     width: 70%;
 }
 
-.form-box .form-header .memo-header-text:nth-child(3) > .memo-header-value {
+.form-box .form-header .memo-header-text:nth-child(3)>.memo-header-value {
     width: 70.5%;
 }
 
-.form-box .form-header .memo-header-text:nth-child(2) > div:first-child {
+.form-box .form-header .memo-header-text:nth-child(2)>div:first-child {
     width: 40%;
 }
 
-.form-box .form-header .memo-header-text:nth-child(2) > div:last-child {
+.form-box .form-header .memo-header-text:nth-child(2)>div:last-child {
     width: 34%;
 }
 

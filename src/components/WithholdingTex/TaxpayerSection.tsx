@@ -14,7 +14,7 @@ export function TaxpayerSection({
     contract,
 }: TaxpayerSectionProps) {
     return (
-        <section className="text-[16pt]">
+        <section className="text-[16pt] border rounded-md p-2">
             <div className="font-semibold">
                 ผู้มีหน้าที่หักภาษี ณ ที่จ่าย :
             </div>
@@ -39,7 +39,7 @@ export function TaxpayerSection({
             </div>
 
             <div className="mt-1 grid grid-cols-[1fr_auto] gap-x-4">
-                <div>
+                <div className="pl-8">
                     ขอรับรองว่า ได้หักภาษี ณ ที่จ่าย
                     ตามเอกสารขอเบิกเงิน เลขที่{" "}
                     <DocumentValue

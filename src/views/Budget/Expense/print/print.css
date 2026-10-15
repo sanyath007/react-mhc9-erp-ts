@@ -1,3 +1,31 @@
+@font-face {
+    font-family: "THSarabunPSK";
+    font-style: normal;
+    font-weight: normal;
+    src: url("/public/fonts/THSarabun.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "THSarabunPSK";
+    font-style: normal;
+    font-weight: bold;
+    src: url("/public/fonts/THSarabun Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "THSarabunPSK";
+    font-style: italic;
+    font-weight: normal;
+    src: url("/public/fonts/THSarabun Italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "THSarabunPSK";
+    font-style: italic;
+    font-weight: bold;
+    src: url("/public/fonts/THSarabun BoldItalic.ttf") format("truetype");
+}
+
 /* ==========================================
    Common print styles
    ========================================== */
@@ -9,6 +37,7 @@
     #root,
     .min-h-screen,
     main {
+        font-family: "THSarabunPSK";
         margin: 0 !important;
         padding: 0 !important;
         background: #fff !important;

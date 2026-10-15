@@ -35,7 +35,7 @@ export function TaxTable({
         <section className="mt-[6mm] text-[16pt]">
             <table className="w-full table-fixed border-collapse">
                 <thead>
-                    <tr>
+                    <tr className="bg-gray-200">
                         <TableHeader className="w-[26%]">
                             ประเภทภาษี
                         </TableHeader>
@@ -139,4 +139,4 @@ function TableCell({
             {children}
         </td>
     );
-}
+}
