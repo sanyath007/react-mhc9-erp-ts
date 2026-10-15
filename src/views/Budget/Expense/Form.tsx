@@ -39,25 +39,25 @@ type BudgetExpenseFormProp = {
 const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
     const [cookies] = useCookies();
     const dispatch = useDispatch<any>();
-    const { projects } = useSelector((state: any) => state.project);
+    const { projects, isLoading: isLoadingProject } = useSelector((state: any) => state.project);
     const [showBudgetModal, setShowBudgetModal] = useState(false);
     const [isMasterSaved, setIsMasterSaved] = useState(false);
     const [masterData, setMasterData] = useState<BudgetExpense | null>(null);
     const [details, setDetails] = useState<any[]>([]);
     const [selectedBudget, setSelectedBudget] = useState<any>(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
+    const [selectedYear, setSelecetedYear] = useState(cookies.budgetYear);
 
     useEffect(() => {
-        dispatch(getAllProjects({ url: `/api/projects?year=${cookies.budgetYear}` }));
-    }, [dispatch]);
+        dispatch(getAllProjects({ url: `/api/projects?year=${selectedYear}` }));
+    }, [dispatch, selectedYear]);
 
     const projectOptions = useMemo(() => {
-        //.filter((p: any) => String(p.budget_id) === String(selectedBudget.id)) 
-        return selectedBudget ? projects?.map((p: any) => ({ value: String(p.id), label: p.name })) : []
-    }, [projects, selectedBudget]);
+        return projects?.map((p: any) => ({ value: String(p.id), label: p.name })) ?? [];
+    }, [projects, selectedYear]);
 
     const initialValues = {
-        year: moment().year(),
+        year: cookies.budgetYear,
         budget_id: '',
         budget_name: '',        // สำหรับแสดงผล
         project_id: '',
@@ -113,7 +113,6 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                 }}
             >
                 {(formik) => {
-                    console.log(formik.errors);
                     return (
                         <Form>
                             <h4 className="mb-3 text-primary border-b pb-2 font-bold">1. ข้อมูลค่าใช้จ่ายหลัก</h4>
@@ -122,7 +121,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                     <label>ปีงบประมาณ <span className="text-red-500">*</span></label>
                                     <YearPicker
                                         value={formik.values.year}
-                                        onChange={(year: string) => formik.setFieldValue('year', year)}
+                                        onChange={(year: string) => { setSelecetedYear(year); formik.setFieldValue('year', year) }}
                                         inputCss="!bg-white !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm w-full"
                                     />
                                     {formik.errors.year && formik.touched.year && (
@@ -184,6 +183,7 @@ const BudgetExpenseForm = ({ visible, onClose }: BudgetExpenseFormProp) => {
                                         placeholder="-- เลือกโครงการ/กิจกรรม --"
                                         inputCss="!min-h-[34px] !h-[34px] !py-1 !px-3 !rounded-[0.375rem] !border-[#dee2e6] !text-sm"
                                         error={formik.errors.project_id && formik.touched.project_id && (formik.errors.project_id as string)}
+                                        loading={isLoadingProject}
                                     />
                                 </Col>
                             </Row>

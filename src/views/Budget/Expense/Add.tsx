@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb } from 'react-bootstrap'
 import { toast } from 'react-toastify'
@@ -7,7 +7,6 @@ import { resetSuccess } from '../../../features/slices/budget-activity/budgetAct
 import BudgetExpenseForm from './Form'
 
 const AddBudgetExpense = () => {
-    const { year, project } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch<any>();
     const { isSuccess } = useSelector((state: any) => state.budgetActivity);
