@@ -170,8 +170,8 @@ const BudgetExpenseDetail = () => {
                                         <td className="text-right">
                                             <div className="grid grid-cols-1 gap-0 mb-0">
                                                 <span className="text-muted">{currency.format(detail.target || 0)}</span>
-                                                <span className="text-indigo-500">{currency.format(detail.net_total || 0)}</span>
-                                                {renderBalance((detail.target || 0) - (detail.net_total || 0))}
+                                                <span className="text-indigo-500">{currency.format(detail.amount || 0)}</span>
+                                                {renderBalance((detail.target || 0) - (detail.amount || 0))}
                                             </div>
                                         </td>
                                         <td className="text-center">

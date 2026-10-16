@@ -109,4 +109,4 @@ function MoneyCell({ value }: MoneyCellProps) {
             {value || ""}
         </td>
     );
-}
+}

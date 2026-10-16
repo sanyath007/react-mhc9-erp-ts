@@ -34,7 +34,7 @@ const BudgetExpenseList = () => {
             .reduce((acc: number, curr: any) => acc + Number(curr.target || 0), 0)
         const actual = item.details
             .filter((d: any) => Number(d.month) === month)
-            .reduce((acc: number, curr: any) => acc + Number(curr.net_total || 0), 0)
+            .reduce((acc: number, curr: any) => acc + Number(curr.amount || 0), 0)
 
         return {
             target: target,
