@@ -106,7 +106,7 @@ const BudgetActivityForm = ({ activity, defaultYear, defaultProject }: any) => {
             initialValues={{
                 name: activity ? activity.name : '',
                 activity_no: activity ? activity.activity_no : '',
-                year: activity ? activity.year : (defaultYear ? defaultYear : moment().format('YYYY')),
+                year: activity ? activity.year : (defaultYear ? defaultYear : selectedYear.format('YYYY')),
                 gfmis_id: (activity && activity.gfmis_id) ? activity.gfmis_id : '',
                 plan_id: (activity && activity.project) ? activity.project.plan_id : (planId !== '' ? planId : ''),
                 project_id: activity ? activity.project_id : (defaultProject ? defaultProject : ''),

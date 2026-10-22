@@ -27,8 +27,6 @@ const BudgetPlanForm = ({ plan }: any) => {
         } else {
             dispatch(store(values));
         }
-
-        console.log(values);
     };
 
     return (
@@ -36,7 +34,7 @@ const BudgetPlanForm = ({ plan }: any) => {
             initialValues={{
                 plan_no: plan ? plan.plan_no : '',
                 name: plan ? plan.name : '',
-                year: plan ? plan.year : moment().format('YYYY'),
+                year: plan ? plan.year : selectedYear.format('YYYY'),
                 plan_type_id: plan ? plan.plan_type_id : ''
             }}
             validationSchema={budgetPlanSchema}

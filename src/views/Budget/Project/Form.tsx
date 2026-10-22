@@ -41,7 +41,7 @@ const BudgetProjectForm = ({ project, defaultYear, defaultPlan }: any) => {
                 name: project ? project.name : '',
                 plan_id: project ? project.plan_id : (defaultPlan ? defaultPlan : ''),
                 project_type_id: project ? project.project_type_id : 1,
-                year: project ? project.year : (defaultYear ? defaultYear : moment().format('YYYY')),
+                year: project ? project.year : (defaultYear ? defaultYear : selectedYear.format('YYYY')),
                 gfmis_id: project ? project.gfmis_id : '',
                 status: project ? project.status : ''
             }}
